@@ -1,5 +1,7 @@
 # Cotufah
 
+[Live site](https://cotufah.com) · [Source on GitHub](https://github.com/MrRoiz/cotufah)
+
 Phone-only party games for one phone passed hand to hand. Spanish first (Colombia),
 English supported. No accounts, no database, no ads: word decks live on the server and
 only the words for the current round ever reach the browser.

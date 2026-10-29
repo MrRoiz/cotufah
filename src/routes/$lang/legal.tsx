@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { ExternalLink } from "@/components/external-link";
 import { PageHeader } from "@/components/page-header";
 import { app } from "@/config/app";
 import { absoluteUrl } from "@/config/site";
@@ -114,6 +115,9 @@ const LegalPage = () => {
 						{m.legal.openSourceTitle}
 					</h2>
 					<p>{m.legal.openSourceBody}</p>
+					<ExternalLink className="w-fit" href={app.repo}>
+						GitHub
+					</ExternalLink>
 				</section>
 
 				<footer className="mt-auto border-t-2 border-border pt-4 text-muted-foreground">

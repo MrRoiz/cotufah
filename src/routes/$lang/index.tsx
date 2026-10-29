@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDownIcon, ArrowRightIcon, PlusIcon } from "lucide-react";
 
+import { ExternalLink } from "@/components/external-link";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QrCode, useAbsoluteUrl } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
@@ -306,6 +307,7 @@ const LandingPage = () => {
 					>
 						{m.common.legal}
 					</Link>
+					<ExternalLink href={app.repo}>GitHub</ExternalLink>
 				</div>
 			</footer>
 		</div>

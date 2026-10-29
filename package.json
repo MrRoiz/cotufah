@@ -2,6 +2,14 @@
   "name": "cotufah",
   "version": "1.1.0",
   "private": true,
+  "homepage": "https://cotufah.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrRoiz/cotufah.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MrRoiz/cotufah/issues"
+  },
   "packageManager": "pnpm@12.15.0",
   "type": "module",
   "scripts": {

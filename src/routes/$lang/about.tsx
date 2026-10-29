@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { ExternalLink } from "@/components/external-link";
 import { PageHeader } from "@/components/page-header";
 import { app } from "@/config/app";
 import { absoluteUrl } from "@/config/site";
@@ -24,12 +25,18 @@ const AboutPage = () => {
 					<p>{m.about.intro}</p>
 				</header>
 
-				{m.about.sections.map((section) => (
+				{m.about.sections.map((section, index) => (
 					<section className="flex flex-col gap-3" key={section.title}>
 						<h2 className="font-display text-2xl uppercase">
 							{interpolate(section.title, { app: app.name })}
 						</h2>
 						<p>{interpolate(section.body, { app: app.name })}</p>
+						{/* The last section is "how do I reach you": the repo link belongs there. */}
+						{index === m.about.sections.length - 1 ? (
+							<ExternalLink className="w-fit" href={app.repo}>
+								GitHub
+							</ExternalLink>
+						) : null}
 					</section>
 				))}
 

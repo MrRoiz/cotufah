@@ -25,4 +25,5 @@ export const app = {
 		en: "Party games for your crew: spy and charades. No accounts, no database, straight on your phone.",
 	} satisfies Localized,
 	defaultLocale: "es" satisfies Locale,
+	repo: "https://github.com/MrRoiz/cotufah",
 } as const;

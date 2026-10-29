@@ -9,6 +9,9 @@ import { localeFromPath } from "@/i18n";
 
 import appCss from "@/styles.css?url";
 
+// Open Graph requires absolute URLs; the card itself is language-neutral.
+const ogImage = "https://cotufah.com/og.png";
+
 const RootDocument = ({ children }: { children: React.ReactNode }) => {
 	const { locale } = Route.useRouteContext();
 
@@ -44,6 +47,14 @@ export const Route = createRootRoute({
 			// Routes override this with a localized title.
 			{ title: app.name },
 			{ name: "theme-color" },
+			{ property: "og:type", content: "website" },
+			{ property: "og:site_name", content: app.name },
+			{ property: "og:image", content: ogImage },
+			{ property: "og:image:width", content: "1200" },
+			{ property: "og:image:height", content: "630" },
+			{ property: "og:image:alt", content: app.name },
+			{ name: "twitter:card", content: "summary_large_image" },
+			{ name: "twitter:image", content: ogImage },
 			{ name: "apple-mobile-web-app-capable", content: "yes" },
 			{ name: "apple-mobile-web-app-status-bar-style", content: "default" },
 		],

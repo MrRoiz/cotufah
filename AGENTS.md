@@ -118,7 +118,8 @@ src/
 └─ router.tsx
 ```
 
-Also: `public/icons/**` + `public/robots.txt` (static assets); the PWA manifest is
+Also: `public/icons/**`, `public/robots.txt`, `public/sitemap.xml` and `public/og.png`
+(static assets); the PWA manifest is
 generated from `app.name` by a Vite plugin — never commit a manifest with the name in it.
 
 Planned (M7+): sound and haptics.

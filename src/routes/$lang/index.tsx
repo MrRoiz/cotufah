@@ -323,12 +323,9 @@ export const Route = createFileRoute("/$lang/")({
 			meta: [
 				{ title },
 				{ name: "description", content: app.description[lang] },
-				{ property: "og:type", content: "website" },
-				{ property: "og:site_name", content: app.name },
 				{ property: "og:title", content: title },
 				{ property: "og:description", content: app.description[lang] },
 				{ property: "og:locale", content: lang === "es" ? "es_CO" : "en_US" },
-				{ name: "twitter:card", content: "summary" },
 				...(canonical ? [{ property: "og:url", content: canonical }] : []),
 			],
 			links: [

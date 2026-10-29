@@ -2,3 +2,5 @@
 # carry <meta name="robots" content="noindex">.
 User-agent: *
 Allow: /
+
+Sitemap: https://cotufah.com/sitemap.xml

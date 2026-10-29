@@ -45,11 +45,14 @@ export const Route = createFileRoute("/$lang/about")({
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
 		const canonical = absoluteUrl(`/${params.lang}/about`);
+		const title = `${m.about.title} — ${app.name}`;
 
 		return {
 			meta: [
-				{ title: `${m.about.title} — ${app.name}` },
+				{ title },
 				{ name: "description", content: m.about.intro },
+				{ property: "og:title", content: title },
+				{ property: "og:description", content: m.about.intro },
 				...(canonical ? [{ property: "og:url", content: canonical }] : []),
 			],
 			links: canonical ? [{ rel: "canonical", href: canonical }] : [],

@@ -33,7 +33,9 @@ type TiltOptions = {
  * sideways, which is exactly how the first implementation missed every tilt.
  *
  * Baseline is captured on the first sample after a round starts. Tilting the
- * screen toward the floor (nodding forward) is negative z → "down".
+ * screen toward the floor (nodding forward) raises z → "down"; the spec's
+ * example suggests the opposite sign, but phones report it this way, so the
+ * mapping here is the tested one.
  *
  * Spam guards: the tilt must hold for 120ms, the phone must return near neutral
  * (hysteresis at 40% of the threshold) before the next gesture, and two answers
@@ -47,7 +49,9 @@ export const useTilt = ({
 	onTilt,
 }: TiltOptions) => {
 	const baseline = useRef<number | null>(null);
-	const smoothed = useRef(0);
+	/** `null` until the filter has seen a real sample, so the baseline is not
+	 * captured from a value still sliding away from zero. */
+	const smoothed = useRef<number | null>(null);
 	const armed = useRef(true);
 	const lastFire = useRef(0);
 	const pastSince = useRef<number | null>(null);
@@ -55,7 +59,6 @@ export const useTilt = ({
 	const tiltHandler = useRef(onTilt);
 	tiltHandler.current = onTilt;
 
-	const [delta, setDelta] = useState(0);
 	const [supported, setSupported] = useState(false);
 
 	useEffect(() => {
@@ -76,7 +79,10 @@ export const useTilt = ({
 			setSupported(true);
 
 			// Low-pass: raw accelerometer data is noisy enough to fire on a twitch.
-			smoothed.current = smoothed.current + 0.25 * (z - smoothed.current);
+			smoothed.current =
+				smoothed.current === null
+					? z
+					: smoothed.current + 0.25 * (z - smoothed.current);
 			const value = smoothed.current;
 
 			if (baseline.current === null) {
@@ -85,7 +91,6 @@ export const useTilt = ({
 			}
 
 			const difference = value - baseline.current;
-			setDelta(difference);
 
 			// Hysteresis: re-arm only once the phone is close to neutral again, so
 			// jitter around the threshold cannot fire twice.
@@ -103,7 +108,7 @@ export const useTilt = ({
 			}
 
 			const now = performance.now();
-			const direction: TiltDirection = difference < 0 ? "down" : "up";
+			const direction: TiltDirection = difference > 0 ? "down" : "up";
 
 			// A deliberate tilt is held; a knock or a bump is not.
 			if (pastSince.current === null || pastDirection.current !== direction) {
@@ -132,13 +137,13 @@ export const useTilt = ({
 
 	const recalibrate = useCallback(() => {
 		baseline.current = null;
-		smoothed.current = 0;
+		smoothed.current = null;
 		armed.current = true;
 		pastSince.current = null;
 		pastDirection.current = null;
 	}, []);
 
-	return { delta, supported, recalibrate };
+	return { supported, recalibrate };
 };
 
 type PermissionRequester = {

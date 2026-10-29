@@ -32,10 +32,10 @@ type TiltOptions = {
  * `deviceorientation.beta`, which rotates into `gamma` when the phone turns
  * sideways, which is exactly how the first implementation missed every tilt.
  *
- * Baseline is captured on the first sample after a round starts. Tilting the
- * screen toward the floor (nodding forward) raises z → "down"; the spec's
- * example suggests the opposite sign, but phones report it this way, so the
- * mapping here is the tested one.
+ * Baseline is captured on the first sample after a round starts. On a forehead
+ * mount the screen faces away from the head, so z is ~0. Nodding forward turns
+ * the screen toward the floor, which drops z below the baseline → "down";
+ * leaning back turns it toward the ceiling and raises z → "up".
  *
  * Spam guards: the tilt must hold for 120ms, the phone must return near neutral
  * (hysteresis at 40% of the threshold) before the next gesture, and two answers
@@ -108,7 +108,7 @@ export const useTilt = ({
 			}
 
 			const now = performance.now();
-			const direction: TiltDirection = difference > 0 ? "down" : "up";
+			const direction: TiltDirection = difference > 0 ? "up" : "down";
 
 			// A deliberate tilt is held; a knock or a bump is not.
 			if (pastSince.current === null || pastDirection.current !== direction) {

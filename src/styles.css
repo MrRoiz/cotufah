@@ -61,9 +61,9 @@
 
 	--background: oklch(0.1755 0.015 304.39);
 	--foreground: oklch(0.9766 0.0197 77.32);
-	--card: oklch(0.2157 0.0224 305.29);
+	--card: oklch(0.235 0.024 305.5);
 	--card-foreground: oklch(0.9766 0.0197 77.32);
-	--popover: oklch(0.2157 0.0224 305.29);
+	--popover: oklch(0.235 0.024 305.5);
 	--popover-foreground: oklch(0.9766 0.0197 77.32);
 	--primary: oklch(0.8946 0.2052 124.5);
 	--primary-foreground: oklch(0.1921 0.0176 312.7);
@@ -75,11 +75,11 @@
 	--accent-foreground: oklch(0.9766 0.0197 77.32);
 	--destructive: oklch(0.7171 0.1808 12.12);
 	--destructive-foreground: oklch(0.1921 0.0176 312.7);
-	--border: oklch(0.38 0.035 311.08);
-	--input: oklch(0.44 0.04 310.69);
+	--border: oklch(0.42 0.036 311.08);
+	--input: oklch(0.5 0.04 310.69);
 	--ring: oklch(0.8946 0.2052 124.5);
 
-	--sticker-color: oklch(0 0 0);
+	--sticker-color: oklch(0.34 0.035 306);
 
 	--game-spy-from: oklch(0.3261 0.0997 321.97);
 	--game-spy-to: oklch(0.1201 0.0153 305.14);

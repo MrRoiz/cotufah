@@ -1,0 +1,247 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/bricolage-grotesque";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens — two modes, one accent set.
+   Light ("papel"): warm paper, ink type, accents as stickers.
+   Dark ("noche"): dead-ink plum; accents get brighter, never dimmer.
+   Accent fills always carry ink text — that is what keeps contrast >= 5.5:1.
+   --------------------------------------------------------------------------- */
+
+:root {
+	color-scheme: light;
+
+	--radius: 1.5rem;
+
+	--background: oklch(0.9794 0.0169 76.12);
+	--foreground: oklch(0.1921 0.0176 312.7);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.1921 0.0176 312.7);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.1921 0.0176 312.7);
+	--primary: oklch(0.1921 0.0176 312.7);
+	--primary-foreground: oklch(0.9794 0.0169 76.12);
+	--secondary: oklch(0.9329 0.0261 76.79);
+	--secondary-foreground: oklch(0.1921 0.0176 312.7);
+	--muted: oklch(0.9329 0.0261 76.79);
+	--muted-foreground: oklch(0.4568 0.0347 309.73);
+	--accent: oklch(0.9132 0.0325 76.44);
+	--accent-foreground: oklch(0.1921 0.0176 312.7);
+	--destructive: oklch(0.494 0.1887 14.27);
+	--destructive-foreground: oklch(0.9794 0.0169 76.12);
+	--border: oklch(0.8851 0.027 74.74);
+	--input: oklch(0.8434 0.0337 74.75);
+	--ring: oklch(0.1921 0.0176 312.7);
+
+	--accent-lime: oklch(0.8946 0.2052 124.5);
+	--accent-fuchsia: oklch(0.6725 0.2332 1.92);
+	--accent-cyan: oklch(0.8397 0.1363 212.94);
+	--accent-plum: oklch(0.3261 0.0997 321.97);
+
+	/* Text that sits on an accent fill. Fixed ink in both modes: cream on lime
+	   fails contrast, so accent surfaces never use `foreground`. */
+	--accent-ink: oklch(0.1921 0.0176 312.7);
+
+	--sticker-color: oklch(0.1921 0.0176 312.7);
+
+	--game-spy-from: oklch(0.3261 0.0997 321.97);
+	--game-spy-to: oklch(0.1921 0.0176 312.7);
+	--game-spy-foreground: oklch(0.9794 0.0169 76.12);
+
+	--game-charades-from: oklch(0.8946 0.2052 124.5);
+	--game-charades-to: oklch(0.6725 0.2332 1.92);
+	--game-charades-foreground: oklch(0.1921 0.0176 312.7);
+}
+
+.dark {
+	color-scheme: dark;
+
+	--background: oklch(0.1755 0.015 304.39);
+	--foreground: oklch(0.9766 0.0197 77.32);
+	--card: oklch(0.2157 0.0224 305.29);
+	--card-foreground: oklch(0.9766 0.0197 77.32);
+	--popover: oklch(0.2157 0.0224 305.29);
+	--popover-foreground: oklch(0.9766 0.0197 77.32);
+	--primary: oklch(0.8946 0.2052 124.5);
+	--primary-foreground: oklch(0.1921 0.0176 312.7);
+	--secondary: oklch(0.2678 0.0295 308.69);
+	--secondary-foreground: oklch(0.9766 0.0197 77.32);
+	--muted: oklch(0.2678 0.0295 308.69);
+	--muted-foreground: oklch(0.7547 0.0324 310.9);
+	--accent: oklch(0.2949 0.0316 312.6);
+	--accent-foreground: oklch(0.9766 0.0197 77.32);
+	--destructive: oklch(0.7171 0.1808 12.12);
+	--destructive-foreground: oklch(0.1921 0.0176 312.7);
+	--border: oklch(0.38 0.035 311.08);
+	--input: oklch(0.44 0.04 310.69);
+	--ring: oklch(0.8946 0.2052 124.5);
+
+	--sticker-color: oklch(0 0 0);
+
+	--game-spy-from: oklch(0.3261 0.0997 321.97);
+	--game-spy-to: oklch(0.1201 0.0153 305.14);
+	--game-spy-foreground: oklch(0.9766 0.0197 77.32);
+
+	--game-charades-from: oklch(0.8946 0.2052 124.5);
+	--game-charades-to: oklch(0.6725 0.2332 1.92);
+	--game-charades-foreground: oklch(0.1921 0.0176 312.7);
+}
+
+@theme inline {
+	--font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--color-accent-lime: var(--accent-lime);
+	--color-accent-fuchsia: var(--accent-fuchsia);
+	--color-accent-cyan: var(--accent-cyan);
+	--color-accent-plum: var(--accent-plum);
+	--color-accent-ink: var(--accent-ink);
+
+	--color-game-spy-from: var(--game-spy-from);
+	--color-game-spy-to: var(--game-spy-to);
+	--color-game-spy-foreground: var(--game-spy-foreground);
+	--color-game-charades-from: var(--game-charades-from);
+	--color-game-charades-to: var(--game-charades-to);
+	--color-game-charades-foreground: var(--game-charades-foreground);
+
+	--radius-sm: calc(var(--radius) - 0.5rem);
+	--radius-md: calc(var(--radius) - 0.25rem);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 0.25rem);
+	--radius-2xl: calc(var(--radius) + 0.75rem);
+
+	--text-display: 3.25rem;
+	--text-display--line-height: 0.95;
+	--text-display--letter-spacing: -0.03em;
+	--text-display--font-weight: 800;
+}
+
+@utility shadow-sticker {
+	box-shadow: 4px 4px 0 0 var(--sticker-color);
+}
+
+@utility shadow-sticker-sm {
+	box-shadow: 2px 2px 0 0 var(--sticker-color);
+}
+
+@utility shadow-sticker-lg {
+	box-shadow: 6px 6px 0 0 var(--sticker-color);
+}
+
+/* Press feedback for sticker surfaces: the shadow collapses as the button sinks. */
+@utility sticker-press {
+	transition:
+		translate 120ms ease,
+		box-shadow 120ms ease;
+
+	&:active {
+		translate: 2px 2px;
+		box-shadow: 0 0 0 0 var(--sticker-color);
+	}
+}
+
+@utility pb-safe {
+	padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+}
+
+@utility pt-safe {
+	padding-top: max(env(safe-area-inset-top), 0.75rem);
+}
+
+@utility px-safe {
+	padding-left: max(env(safe-area-inset-left), 1.25rem);
+	padding-right: max(env(safe-area-inset-right), 1.25rem);
+}
+
+@utility tap {
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+
+	html {
+		-webkit-text-size-adjust: 100%;
+		/* Also lets the browser-chrome color be read from this element before
+		   <body> exists (see theme-provider). */
+		background-color: var(--background);
+	}
+
+	body {
+		@apply bg-background font-sans text-foreground antialiased;
+	}
+
+	button,
+	[role="button"] {
+		@apply tap;
+	}
+
+	/* iOS zooms any input under 16px; never let a form do that. */
+	input,
+	select,
+	textarea {
+		font-size: max(1rem, 1em);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* Charadas is played with the phone horizontal on the forehead. When the
+   device is rotation-locked (portrait viewport, physical phone sideways) we
+   rotate the stage so the word still reads upright to the player. */
+@layer components {
+	.stage-landscape {
+		position: fixed;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		background: var(--background);
+	}
+
+	@media (orientation: portrait) {
+		.stage-landscape {
+			inset: auto;
+			top: 50%;
+			left: 50%;
+			width: 100dvh;
+			height: 100vw;
+			translate: -50% -50%;
+			rotate: 90deg;
+		}
+	}
+}

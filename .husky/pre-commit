@@ -1,0 +1,3 @@
+# Biome (format + lint) and types must pass before a commit lands.
+pnpm check
+pnpm typecheck

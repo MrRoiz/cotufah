@@ -94,6 +94,7 @@ src/
 ├─ config/site.ts         # VITE_APP_ORIGIN -> absolute URLs (canonical/OG)
 ├─ hooks/use-wake-lock.ts # screen stays awake during a round
 ├─ hooks/use-tilt.ts      # devicemotion tilt + sensor probe + iOS permission
+├─ lib/sound.ts           # Web Audio cues + mute store (app.sound)
 ├─ lib/utils.ts           # cn()
 ├─ styles.css             # tokens (@theme inline) + utilities + base layer
 ├─ components/
@@ -124,9 +125,10 @@ generated from `app.name` by a Vite plugin — never commit a manifest with the 
 
 Planned (M7+): sound and haptics.
 
-**Sound (M7):** Web Audio only, no audio assets — a blip when a round starts, ticks in the
-last 5 seconds, a three-beep end cue and a hand-off tick, plus `navigator.vibrate` on
-Android. The AudioContext must be unlocked from the existing "start" tap. A mute toggle
+**Sound (M7):** Web Audio only, no audio assets — noise ticks in the last 10 seconds, three
+beeps plus a descending tail for the end cue, a deflating glide for "pass" and a rising
+arpeggio for "correct", all through one compressor so they carry in a loud room, plus
+`navigator.vibrate` on Android. The AudioContext must be unlocked from the existing "start" tap. A mute toggle
 persists in `localStorage` under the brand-free key `app.sound`. iOS honours the hardware
 silent switch, so sound is reinforcement, never the only cue — the visual countdown stays.
 
@@ -292,7 +294,7 @@ Known noise: Rolldown prints `MODULE_LEVEL_DIRECTIVE` warnings for `"use client"
 | M4 | Deck contract, ES/EN banks, shuffling, `getRound` | committed |
 | M5 | Spy end-to-end: setup, hold-to-reveal deal, timer, vote, reveal, another round | committed |
 | M6 | Charadas: setup, countdown, tilt correct/pass, tap fallback, results | awaiting test |
-| M7 | Timer sound + haptics (Web Audio, mute toggle) | |
+| M7 | Timer sound + haptics (Web Audio, mute toggle) | awaiting test |
 | M8 | Streamed home, a11y, bilingual Playwright, screenshots, deploy notes | |
 
 Each milestone ends with the verification list above, then a handoff asking the user to

@@ -278,6 +278,9 @@ export const es: Messages = {
 		subtitle: "Idioma, tema y lo aburrido.",
 		languageBody: "Se recuerda en este celular, no en una cuenta.",
 		themeBody: "Sistema sigue el modo oscuro de tu celular.",
+		soundTitle: "Sonido",
+		soundBody:
+			"Avisos cortos para la cuenta atrás, el final de la ronda y cada respuesta. El switch de silencio del iPhone manda.",
 		aboutTitle: "Acerca de",
 		aboutBody:
 			"{app} no guarda nada: sin cuentas, sin base de datos, sin rastreo.",

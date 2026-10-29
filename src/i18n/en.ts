@@ -280,6 +280,9 @@ export const en = {
 		subtitle: "Language, theme, and the boring stuff.",
 		languageBody: "Remembered on this device, not on an account.",
 		themeBody: "System follows your phone's dark mode.",
+		soundTitle: "Sound",
+		soundBody:
+			"Short cues for the countdown, the end of a round and each answer. The iPhone silent switch still wins.",
 		aboutTitle: "About",
 		aboutBody: "{app} stores nothing: no accounts, no database, no tracking.",
 	},

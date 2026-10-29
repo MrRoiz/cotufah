@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CategoryChoice } from "@/data/schema";
 import { getRoundFn } from "@/fns/decks.functions";
 import { assignSpies } from "@/games/spy/assign";
 import { useCountdown } from "@/hooks/use-countdown";
 import { useWakeLock } from "@/hooks/use-wake-lock";
+import { haptic } from "@/lib/haptics";
+import { playSound, TICK_LAST_SECONDS } from "@/lib/sound";
 
 export const DISCUSS_SECONDS = 120;
 export const HANDOFF_SECONDS = 5;
@@ -51,6 +53,33 @@ export const useSpyRound = ({
 		phase === "discuss" && !paused,
 	);
 	const [accused, setAccused] = useState<number | null>(null);
+
+	const lastTick = useRef<number | null>(null);
+	const ended = useRef(false);
+	useEffect(() => {
+		if (phase !== "discuss") {
+			lastTick.current = null;
+			ended.current = false;
+			return;
+		}
+		if (paused) {
+			return;
+		}
+		const second = Math.ceil(discussTimer.remainingMs / 1000);
+		if (
+			second > 0 &&
+			second <= TICK_LAST_SECONDS &&
+			lastTick.current !== second
+		) {
+			lastTick.current = second;
+			playSound("tick");
+		}
+		if (second === 0 && !ended.current) {
+			ended.current = true;
+			playSound("end");
+			haptic("end");
+		}
+	}, [phase, paused, discussTimer.remainingMs]);
 
 	const { data, isPending, refetch, isFetching } = useQuery({
 		queryKey: ["spy-word", lang, category],

@@ -13,6 +13,7 @@ import {
 } from "@/hooks/use-tilt";
 import { useWakeLock } from "@/hooks/use-wake-lock";
 import { haptic } from "@/lib/haptics";
+import { playSound, TICK_LAST_SECONDS } from "@/lib/sound";
 
 const COUNTDOWN_FROM = 3;
 /** Ignore answers that land within this window: taps are easy to double. */
@@ -97,7 +98,27 @@ export const useCharadesRound = ({
 
 	useEffect(() => {
 		if (phase === "playing" && remainingMs <= 0) {
+			playSound("end");
+			haptic("end");
 			setPhase("results");
+		}
+	}, [phase, remainingMs]);
+
+	// One tick per second for the last five, keyed by the second shown on screen.
+	const lastTick = useRef<number | null>(null);
+	useEffect(() => {
+		if (phase !== "playing") {
+			lastTick.current = null;
+			return;
+		}
+		const second = Math.ceil(remainingMs / 1000);
+		if (
+			second > 0 &&
+			second <= TICK_LAST_SECONDS &&
+			lastTick.current !== second
+		) {
+			lastTick.current = second;
+			playSound("tick");
 		}
 	}, [phase, remainingMs]);
 
@@ -120,6 +141,7 @@ export const useCharadesRound = ({
 		setFlash(correct ? "correct" : "pass");
 		window.setTimeout(() => setFlash(null), 320);
 		haptic(correct ? "correct" : "pass");
+		playSound(correct ? "correct" : "pass");
 		setAnswers((current) => [...current, { word: words[index], correct }]);
 
 		if (index + 1 >= words.length) {

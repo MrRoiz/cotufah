@@ -4,20 +4,24 @@ import {
 	LanguagesIcon,
 	MoonIcon,
 	PaletteIcon,
+	Volume2Icon,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { type Theme, useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { app, type Locale, locales } from "@/config/app";
 import { appVersion } from "@/config/version";
+import { useSoundMuted } from "@/hooks/use-sound";
 import {
 	getMessages,
 	interpolate,
 	localeLabel,
 	writeLocaleCookie,
 } from "@/i18n";
+import { playSound, setSoundMuted } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
 const SettingsPage = () => {
@@ -25,6 +29,7 @@ const SettingsPage = () => {
 	const m = getMessages(lang);
 	const navigate = useNavigate();
 	const { theme, setTheme } = useTheme();
+	const muted = useSoundMuted();
 
 	const themeLabels: Record<Theme, string> = {
 		light: m.common.light,
@@ -113,6 +118,32 @@ const SettingsPage = () => {
 							))}
 						</div>
 					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<div className="flex items-center justify-between gap-4">
+							<div className="flex min-w-0 flex-col gap-1">
+								<CardTitle className="flex items-center gap-2">
+									<Volume2Icon aria-hidden="true" className="size-5" />
+									{m.settings.soundTitle}
+								</CardTitle>
+								<p className="text-muted-foreground text-sm">
+									{m.settings.soundBody}
+								</p>
+							</div>
+							<Switch
+								aria-label={m.settings.soundTitle}
+								checked={!muted}
+								onCheckedChange={(checked) => {
+									setSoundMuted(!checked);
+									if (checked) {
+										playSound("correct");
+									}
+								}}
+							/>
+						</div>
+					</CardHeader>
 				</Card>
 
 				<Card>

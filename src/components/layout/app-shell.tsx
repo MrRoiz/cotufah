@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 
+import { installAudioUnlock } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,6 +16,9 @@ export const AppShell = ({
 	footer?: ReactNode;
 	className?: string;
 }) => {
+	// One listener for the first interaction of the page load, then it detaches.
+	useEffect(installAudioUnlock, []);
+
 	return (
 		<div
 			className={cn(

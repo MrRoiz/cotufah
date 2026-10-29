@@ -76,9 +76,9 @@ On `master`, the GitHub workflow runs the checks, semantic-release and then depl
 Point a custom domain at the Worker in the Cloudflare dashboard. Serve over HTTPS,
 otherwise wake lock and tilt fall back to their no-sensor behaviour.
 
-Canonical, hreflang and OG URLs need `VITE_APP_ORIGIN` (no trailing slash) when the build
-runs: Vite inlines it, so the Worker's runtime variables cannot supply it. Empty omits
-those tags, which is correct for local development.
+Canonical, hreflang and OG URLs need `VITE_APP_ORIGIN` (no trailing slash) when `vite
+build` runs; `.env.example` documents it. Vite inlines the value, so the Worker's runtime
+variables cannot supply it, and leaving it empty omits those tags.
 
 ## Project layout
 

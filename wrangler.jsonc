@@ -4,7 +4,11 @@
   "compatibility_date": "2026-10-26",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "workers_dev": false,
   "preview_urls": false,
+  "vars": {
+    "VITE_APP_ORIGIN": "https://cotufah.com"
+  },
   "observability": {
     "enabled": true,
     "logs": { "enabled": true }

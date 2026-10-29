@@ -1,9 +1,11 @@
-{
-	"id": "spy-es-family",
-	"game": "spy",
-	"locale": "es",
-	"label": "Espía · familiar",
-	"items": [
+import type { DeckInput } from "@/data/schema";
+
+export const spyEs = {
+	id: "spy-es-family",
+	game: "spy",
+	locale: "es",
+	label: "Espía · familiar",
+	items: [
 		"playa",
 		"aeropuerto",
 		"mercado",
@@ -53,6 +55,6 @@
 		"lavandería",
 		"joyería",
 		"zapatería",
-		"heladería"
-	]
-}
+		"heladería",
+	],
+} satisfies DeckInput;

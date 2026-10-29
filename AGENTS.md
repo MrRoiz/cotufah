@@ -5,7 +5,7 @@ Instructions for AI agents working in this repo. Read this before touching code.
 ## What this is
 
 **Cotufah** — phone-only party games (Espía / Charadas), Spanish-first with English
-support. No accounts, no database: word decks are JSON served through typed server
+support. No accounts, no database: word decks are TS modules served through typed server
 functions. Built on TanStack Start, React 19, Tailwind 4 and shadcn/ui.
 
 Status: design foundation (M1) complete. Games, i18n and the landing page are still
@@ -60,7 +60,7 @@ below are conventions, reviewed by hand.
    **Only `/$lang/_app/**` is gated**; the landing at `/$lang` is the desktop surface.
 6. **Aliases only.** `@/...` everywhere; `biome.json` has `noRestrictedImports` set to
    reject `./`, `../`, `./**` and `../**`.
-7. **No database, no auth, no backend service.** Decks are JSON; the server does
+7. **No database, no auth, no backend service.** Decks are typed TS modules; the server does
    filtering, seeding and signing only.
 8. **Decks never reach the client bundle.** Word lists are imported only from
    `server/*.server.ts` and delivered one round at a time through a server
@@ -149,7 +149,7 @@ with a latch that requires returning near the baseline before the next gesture.
 Data flow — no DB:
 
 ```
-JSON deck -> server/decks.server.ts -> getRound(game, locale, count, category) -> useQuery
+TS deck -> server/decks.server.ts -> getRound(game, locale, count, category) -> useQuery
 ```
 
 Screens are static until a round starts. The games list does **no** network work; the
@@ -163,12 +163,13 @@ reload starts a fresh round — that is the intended behaviour, not a bug. Play 
 `ssr: false` because they need sensors, timers and wake lock.
 
 Deck data has two shapes (`data/schema.ts`): each game owns a classic list
-(`data/<game>/<locale>.json`, `{ id, game, locale, label, items[] }`), and the themed packs
-are shared by both games per locale (`data/packs/<locale>.json`, `movies`, `disney`,
+(`data/<game>/<locale>.ts`, `{ id, game, locale, label, items[] }`), and the themed packs
+are shared by both games per locale (`data/packs/<locale>.ts`, `movies`, `disney`,
 `actors`, `objects`, `kitchen`, `gaming`, `animals`, `music`, `sports`, `food`, `places`).
-Both are validated by zod at server boot and live only in `server/decks.server.ts`; the
-client asks for a round by `game` + `locale` + `category` (`mixed` draws from the classic
-list and every pack) and gets back `count` words.
+Word banks are TS modules that `satisfies DeckInput` / `satisfies PackInput`, so a typo or a
+missing pack fails `typecheck`; zod still parses them at server boot as a last guard. They
+live only in `server/decks.server.ts`; the client asks for a round by `game` + `locale` +
+`category` (`mixed` draws from the classic list and every pack) and gets back `count` words.
 
 ## Principles
 

@@ -1,9 +1,11 @@
-{
-	"id": "charades-es-family",
-	"game": "charades",
-	"locale": "es",
-	"label": "Charadas · familiar",
-	"items": [
+import type { DeckInput } from "@/data/schema";
+
+export const charadesEs = {
+	id: "charades-es-family",
+	game: "charades",
+	locale: "es",
+	label: "Charadas · familiar",
+	items: [
 		"cepillarse los dientes",
 		"montar bicicleta",
 		"hacer una arepa",
@@ -49,6 +51,6 @@
 		"servir agua",
 		"subir escaleras",
 		"bajar escaleras",
-		"tender la cama"
-	]
-}
+		"tender la cama",
+	],
+} satisfies DeckInput;

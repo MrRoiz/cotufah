@@ -1,8 +1,10 @@
-{
-	"locale": "en",
-	"label": "Themed decks",
-	"categories": {
-		"movies": [
+import type { PackInput } from "@/data/schema";
+
+export const packsEn = {
+	locale: "en",
+	label: "Themed decks",
+	categories: {
+		movies: [
 			"Titanic",
 			"The Godfather",
 			"The Matrix",
@@ -32,9 +34,9 @@
 			"Alien",
 			"Forrest Gump",
 			"Life is Beautiful",
-			"The Silence of the Lambs"
+			"The Silence of the Lambs",
 		],
-		"disney": [
+		disney: [
 			"The Lion King",
 			"The Little Mermaid",
 			"Aladdin",
@@ -64,9 +66,9 @@
 			"WALL-E",
 			"Brave",
 			"Up",
-			"Big Hero 6"
+			"Big Hero 6",
 		],
-		"actors": [
+		actors: [
 			"Will Smith",
 			"Tom Cruise",
 			"Dwayne Johnson",
@@ -96,9 +98,9 @@
 			"Ana de Armas",
 			"Daniel Radcliffe",
 			"Jim Carrey",
-			"Jennifer Lawrence"
+			"Jennifer Lawrence",
 		],
-		"objects": [
+		objects: [
 			"toothbrush",
 			"umbrella",
 			"blender",
@@ -128,9 +130,9 @@
 			"headphones",
 			"blanket",
 			"chair",
-			"table"
+			"table",
 		],
-		"kitchen": [
+		kitchen: [
 			"frying pan",
 			"knife",
 			"cutting board",
@@ -160,9 +162,9 @@
 			"spatula",
 			"bottle",
 			"jar",
-			"chopper"
+			"chopper",
 		],
-		"gaming": [
+		gaming: [
 			"Mario Kart",
 			"Minecraft",
 			"FIFA",
@@ -192,9 +194,9 @@
 			"Candy Crush",
 			"Angry Birds",
 			"Clash Royale",
-			"Free Fire"
+			"Free Fire",
 		],
-		"animals": [
+		animals: [
 			"lion",
 			"elephant",
 			"octopus",
@@ -224,9 +226,9 @@
 			"monkey",
 			"pig",
 			"cow",
-			"chicken"
+			"chicken",
 		],
-		"music": [
+		music: [
 			"guitar",
 			"concert",
 			"karaoke",
@@ -256,9 +258,9 @@
 			"radio",
 			"anthem",
 			"orchestra",
-			"symphony"
+			"symphony",
 		],
-		"sports": [
+		sports: [
 			"football",
 			"basketball",
 			"tennis",
@@ -288,9 +290,9 @@
 			"motorcycling",
 			"motorsport",
 			"triathlon",
-			"skiing"
+			"skiing",
 		],
-		"food": [
+		food: [
 			"arepa",
 			"sushi",
 			"pizza",
@@ -320,9 +322,9 @@
 			"arequipe",
 			"obleas",
 			"mazamorra",
-			"churros"
+			"churros",
 		],
-		"places": [
+		places: [
 			"beach",
 			"airport",
 			"hospital",
@@ -352,7 +354,7 @@
 			"lighthouse",
 			"castle",
 			"jail",
-			"cemetery"
-		]
-	}
-}
+			"cemetery",
+		],
+	},
+} satisfies PackInput;

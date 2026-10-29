@@ -1,7 +1,7 @@
-import charadesEn from "@/data/charades/en.json";
-import charadesEs from "@/data/charades/es.json";
-import packsEn from "@/data/packs/en.json";
-import packsEs from "@/data/packs/es.json";
+import { charadesEn } from "@/data/charades/en";
+import { charadesEs } from "@/data/charades/es";
+import { packsEn } from "@/data/packs/en";
+import { packsEs } from "@/data/packs/es";
 import {
 	type CategoryChoice,
 	type Deck,
@@ -10,8 +10,8 @@ import {
 	packSchema,
 	themedCategories,
 } from "@/data/schema";
-import spyEn from "@/data/spy/en.json";
-import spyEs from "@/data/spy/es.json";
+import { spyEn } from "@/data/spy/en";
+import { spyEs } from "@/data/spy/es";
 import { pick } from "@/games/pick";
 
 /**

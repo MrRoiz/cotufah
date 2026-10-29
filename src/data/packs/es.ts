@@ -1,8 +1,10 @@
-{
-	"locale": "es",
-	"label": "Barajas temáticas",
-	"categories": {
-		"movies": [
+import type { PackInput } from "@/data/schema";
+
+export const packsEs = {
+	locale: "es",
+	label: "Barajas temáticas",
+	categories: {
+		movies: [
 			"Titanic",
 			"El Padrino",
 			"Matrix",
@@ -32,9 +34,9 @@
 			"Alien",
 			"Forrest Gump",
 			"La Vida es Bella",
-			"El Silencio de los Corderos"
+			"El Silencio de los Corderos",
 		],
-		"disney": [
+		disney: [
 			"El Rey León",
 			"La Sirenita",
 			"Aladdin",
@@ -64,9 +66,9 @@
 			"WALL-E",
 			"Valiente",
 			"Up",
-			"Grandes Héroes"
+			"Grandes Héroes",
 		],
-		"actors": [
+		actors: [
 			"Will Smith",
 			"Tom Cruise",
 			"Dwayne Johnson",
@@ -96,9 +98,9 @@
 			"Ana de Armas",
 			"Daniel Radcliffe",
 			"Jim Carrey",
-			"Jennifer Lawrence"
+			"Jennifer Lawrence",
 		],
-		"objects": [
+		objects: [
 			"cepillo de dientes",
 			"paraguas",
 			"licuadora",
@@ -128,9 +130,9 @@
 			"audífonos",
 			"cobija",
 			"silla",
-			"mesa"
+			"mesa",
 		],
-		"kitchen": [
+		kitchen: [
 			"sartén",
 			"cuchillo",
 			"tabla de picar",
@@ -160,9 +162,9 @@
 			"espátula",
 			"botella",
 			"frasco",
-			"picadora"
+			"picadora",
 		],
-		"gaming": [
+		gaming: [
 			"Mario Kart",
 			"Minecraft",
 			"FIFA",
@@ -192,9 +194,9 @@
 			"Candy Crush",
 			"Angry Birds",
 			"Clash Royale",
-			"Free Fire"
+			"Free Fire",
 		],
-		"animals": [
+		animals: [
 			"león",
 			"elefante",
 			"pulpo",
@@ -224,9 +226,9 @@
 			"mono",
 			"cerdo",
 			"vaca",
-			"gallina"
+			"gallina",
 		],
-		"music": [
+		music: [
 			"guitarra",
 			"concierto",
 			"karaoke",
@@ -256,9 +258,9 @@
 			"altavoz",
 			"radio",
 			"himno",
-			"orquesta"
+			"orquesta",
 		],
-		"sports": [
+		sports: [
 			"fútbol",
 			"baloncesto",
 			"tenis",
@@ -288,9 +290,9 @@
 			"motociclismo",
 			"automovilismo",
 			"triatlón",
-			"esquí"
+			"esquí",
 		],
-		"food": [
+		food: [
 			"arepa",
 			"sushi",
 			"pizza",
@@ -320,9 +322,9 @@
 			"arequipe",
 			"obleas",
 			"mazamorra",
-			"churros"
+			"churros",
 		],
-		"places": [
+		places: [
 			"playa",
 			"aeropuerto",
 			"hospital",
@@ -352,7 +354,7 @@
 			"faro",
 			"castillo",
 			"cárcel",
-			"cementerio"
-		]
-	}
-}
+			"cementerio",
+		],
+	},
+} satisfies PackInput;

@@ -64,3 +64,7 @@ export const packSchema = z.object({
 
 export type Deck = z.infer<typeof deckSchema>;
 export type Pack = z.infer<typeof packSchema>;
+
+/** Shapes the word banks must satisfy at compile time (`satisfies`). */
+export type DeckInput = z.input<typeof deckSchema>;
+export type PackInput = z.input<typeof packSchema>;

@@ -46,7 +46,8 @@ motion sensors are secure-context APIs. `localhost` counts as secure, a LAN IP d
 | Script | What it does |
 |---|---|
 | `pnpm dev` | Vite dev server |
-| `pnpm build` | Production build (Nitro output in `.output/`) |
+| `pnpm build` | Production Worker build (`dist/`) |
+| `pnpm run deploy` | Build and deploy with Wrangler |
 | `pnpm preview` | Preview the build |
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm check` | Biome check (format + lint) |
@@ -56,16 +57,28 @@ motion sensors are secure-context APIs. `localhost` counts as secure, a LAN IP d
 
 There is no test runner yet: verification is Biome, `tsc` and a production build.
 
-## Production
+## Deploy
+
+The app builds to a Cloudflare Worker with `@cloudflare/vite-plugin` and `wrangler.jsonc`.
 
 ```bash
-pnpm build
-PORT=3110 node .output/server/index.mjs
+pnpm exec wrangler login   # once, for manual deploys
+pnpm run deploy            # vite build && wrangler deploy
 ```
 
-Set `VITE_APP_ORIGIN` at build time to get canonical, hreflang and OG URLs; leaving it empty
-is correct for local development. Deploy behind HTTPS, otherwise wake lock and tilt fall back
-to their no-sensor behaviour.
+On `master`, the GitHub workflow runs the checks, semantic-release and then deploys with
+`wrangler deploy`. It needs these repository settings:
+
+- `CLOUDFLARE_API_TOKEN` — scoped to **Edit Cloudflare Workers** on this account
+- `CLOUDFLARE_ACCOUNT_ID`
+- optional variable `CLOUDFLARE_WORKER_NAME` — defaults to the `cotufah` name in `wrangler.jsonc`
+
+Point a custom domain at the Worker in the Cloudflare dashboard. Serve over HTTPS,
+otherwise wake lock and tilt fall back to their no-sensor behaviour.
+
+Canonical, hreflang and OG URLs need `VITE_APP_ORIGIN` (no trailing slash) when the build
+runs: Vite inlines it, so the Worker's runtime variables cannot supply it. Empty omits
+those tags, which is correct for local development.
 
 ## Project layout
 

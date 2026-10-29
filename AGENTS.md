@@ -21,7 +21,7 @@ ahead — see [Roadmap](#roadmap).
 | `components.json` | shadcn config (radix base, `nova` style, `@/` alias). |
 | `src/config/site.ts` | Public origin for canonical/OG URLs (`VITE_APP_ORIGIN`). |
 | `src/games/<game>/` | Panels and the round hook for each game. |
-| `vite.config.ts` | Nitro + the manifest plugin that keeps the PWA rename-safe. |
+| `vite.config.ts` | Cloudflare Workers + the manifest plugin that keeps the PWA rename-safe. |
 
 ## Commands
 
@@ -29,8 +29,9 @@ ahead — see [Roadmap](#roadmap).
 pnpm dev            # vite dev; falls back to :3001+ if 3000 is taken
 pnpm typecheck      # tsc --noEmit
 pnpm check          # biome check (format + lint + import order)
-pnpm build          # vite build + nitro -> .output/
-PORT=3110 node .output/server/index.mjs   # run the built server
+pnpm build          # vite build -> dist/ (Cloudflare Worker)
+pnpm run deploy     # vite build + wrangler deploy
+pnpm preview        # serve the built Worker locally
 ```
 
 `pnpm check --write` fixes formatting. There are no custom build guards — the rules
@@ -246,7 +247,7 @@ Then `pnpm check --write && pnpm typecheck`.
 
 1. `pnpm typecheck && pnpm check` — clean.
 2. `pnpm build` — succeeds; confirm the styleguide still 404s in production.
-3. Smoke the built server: `PORT=3110 node .output/server/index.mjs`.
+3. Smoke the built Worker: `pnpm build && pnpm preview`.
 4. Check SSR HTML: real content (not an empty shell), `<html lang>` matches the URL,
    title/description localized, `theme-color` resolves from the token.
 5. Check the locale entry: `/` 307s to `/es` by default, to `/en` with

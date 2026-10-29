@@ -1,12 +1,9 @@
 import { readFileSync } from "node:fs";
-
+import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
-
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-
 import viteReact from "@vitejs/plugin-react";
-import { nitro } from "nitro/vite";
 import { defineConfig, type Plugin } from "vite";
 
 import { app } from "./src/config/app.ts";
@@ -67,8 +64,8 @@ const config = defineConfig({
 	define: { __APP_VERSION__: JSON.stringify(version) },
 	resolve: { tsconfigPaths: true },
 	plugins: [
+		cloudflare({ viteEnvironment: { name: "ssr" } }),
 		devtools(),
-		nitro({ rollupConfig: { external: [/^@sentry\//] } }),
 		tailwindcss(),
 		tanstackStart(),
 		webManifest(),

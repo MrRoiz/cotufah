@@ -101,7 +101,7 @@ export const Route = createFileRoute("/$lang/_app/games/spy/play")({
 	// everyone the same notification and a hydration mismatch for the spy.
 	ssr: false,
 	validateSearch: (search: Record<string, unknown>) => ({
-		category: isCategoryChoice(search.category) ? search.category : "mixed",
+		category: isCategoryChoice(search.category) ? search.category : "clasico",
 		players: typeof search.players === "string" ? search.players : "",
 		spies: Number(search.spies ?? 1),
 	}),

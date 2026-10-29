@@ -66,7 +66,7 @@ export const getRoundWords = (
 	game: Deck["game"],
 	locale: Deck["locale"],
 	count: number,
-	category: CategoryChoice = "mixed",
+	category: CategoryChoice = "clasico",
 ): string[] => {
 	return pick(itemsFor(findDeck(game, locale), category), count);
 };

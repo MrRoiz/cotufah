@@ -15,7 +15,7 @@ export const getRoundFn = createServerFn({ method: "GET" })
 			game: z.enum(["spy", "charades"]),
 			locale: z.enum(locales),
 			count: z.number().int().min(1).max(40).default(12),
-			category: z.enum(categoryChoices).default("mixed"),
+			category: z.enum(categoryChoices).default("clasico"),
 		}),
 	)
 	.handler(({ data }) =>

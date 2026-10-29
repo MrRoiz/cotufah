@@ -17,7 +17,7 @@ const CharadesSetup = () => {
 	const m = getMessages(lang);
 	const navigate = useNavigate();
 	const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(90);
-	const [category, setCategory] = useState<CategoryChoice>("mixed");
+	const [category, setCategory] = useState<CategoryChoice>("clasico");
 
 	const labels: Record<(typeof DURATIONS)[number], string> = {
 		60: m.charades.duration60,

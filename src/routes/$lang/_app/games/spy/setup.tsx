@@ -23,7 +23,7 @@ const SpySetup = () => {
 	const navigate = useNavigate();
 	const nextPlayerId = useRef(MIN_PLAYERS + 1);
 	const [spies, setSpies] = useState(1);
-	const [category, setCategory] = useState<CategoryChoice>("mixed");
+	const [category, setCategory] = useState<CategoryChoice>("clasico");
 	const schema = useMemo(() => createPlayersSchema(m), [m]);
 
 	const form = useForm({

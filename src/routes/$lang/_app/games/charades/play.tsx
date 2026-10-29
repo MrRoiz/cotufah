@@ -76,7 +76,7 @@ const CharadesPlay = () => {
 export const Route = createFileRoute("/$lang/_app/games/charades/play")({
 	ssr: false,
 	validateSearch: (search: Record<string, unknown>) => ({
-		category: isCategoryChoice(search.category) ? search.category : "mixed",
+		category: isCategoryChoice(search.category) ? search.category : "clasico",
 		duration: Number(search.duration ?? 90),
 	}),
 	head: ({ params }) => {

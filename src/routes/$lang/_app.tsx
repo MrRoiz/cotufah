@@ -7,16 +7,12 @@ import { PhoneGate } from "@/components/phone-gate";
  * The landing page lives outside it, so a laptop can read about the game —
  * but it cannot play, because the gate covers every route below this point.
  */
-const AppLayout = () => {
-	const { lang } = Route.useParams();
-
-	return (
-		<>
-			<PhoneGate locale={lang} />
-			<Outlet />
-		</>
-	);
-};
+const AppLayout = () => (
+	<>
+		<PhoneGate />
+		<Outlet />
+	</>
+);
 export const Route = createFileRoute("/$lang/_app")({
 	component: AppLayout,
 });

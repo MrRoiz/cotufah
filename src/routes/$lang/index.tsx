@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { ExternalLink } from "@/components/external-link";
+import { GameCard } from "@/components/game-card";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QrCode, useAbsoluteUrl } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ import { absoluteUrl } from "@/config/site";
 import { appVersion } from "@/config/version";
 import { packChoices } from "@/data/schema";
 import { packIcons } from "@/games/pack-icons";
-import { gameCopy, games } from "@/games/registry";
+import { games } from "@/games/registry";
 import {
 	getMessages,
 	interpolate,
@@ -130,35 +131,14 @@ const LandingPage = () => {
 				</div>
 
 				<div className="grid gap-4 md:grid-cols-2">
-					{games.map((game) => {
-						const copy = gameCopy(m, game.slug);
-						return (
-							<article
-								className="flex flex-col overflow-hidden rounded-xl border-2 border-foreground bg-card"
-								key={game.slug}
-							>
-								<div
-									className={cn(
-										"flex flex-col gap-1 bg-linear-to-br p-5",
-										game.gradient,
-									)}
-								>
-									<h3 className="font-display text-2xl uppercase">
-										{copy.name}
-									</h3>
-									<p className="font-bold text-sm opacity-90">{copy.tagline}</p>
-								</div>
-								<div className="flex flex-1 flex-col gap-3 p-5">
-									<p className="text-sm">{copy.body}</p>
-									<div className="mt-auto flex flex-wrap items-center justify-between gap-2">
-										<p className="font-bold text-muted-foreground text-xs uppercase tracking-wide">
-											{copy.players}
-										</p>
-									</div>
-								</div>
-							</article>
-						);
-					})}
+					{games.map((game) => (
+						<GameCard
+							game={game}
+							key={game.slug}
+							lang={lang}
+							variant="landing"
+						/>
+					))}
 					<div className="flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-xl border-2 border-border border-dashed p-5 text-muted-foreground md:col-span-2">
 						<span className="flex size-10 items-center justify-center rounded-full border-2 border-border">
 							<PlusIcon aria-hidden="true" className="size-5" />

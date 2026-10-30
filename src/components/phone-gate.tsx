@@ -1,7 +1,8 @@
+import { useParams, useRouterState } from "@tanstack/react-router";
+
 import { QrCode, useAbsoluteUrl } from "@/components/qr-code";
-import type { Locale } from "@/config/app";
 import { app } from "@/config/app";
-import { getMessages, interpolate, localizedPath } from "@/i18n";
+import { getMessages, interpolate } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 /**
@@ -14,16 +15,17 @@ import { cn } from "@/lib/utils";
  * want. `pointer: fine` is deliberately avoided: it reports `none` in headless
  * browsers and on touchscreen laptops, so it would let desktops through.
  */
-export const PhoneGate = ({
-	locale,
-	className,
-}: {
-	locale: Locale;
-	className?: string;
-}) => {
-	const m = getMessages(locale);
-	const path = localizedPath(locale, "games");
-	const target = useAbsoluteUrl(path);
+export const PhoneGate = ({ className }: { className?: string }) => {
+	// Everything the overlay needs comes from the app it is covering: the locale
+	// for its copy and the location for the QR, so the layout stays a plain
+	// `PhoneGate + Outlet`.
+	const { lang } = useParams({ from: "/$lang" });
+	const m = getMessages(lang);
+	// "Open this on your phone" is the gate's own job, so the target is read
+	// here: path and search, so a laptop that clicked a game card hands the
+	// phone that exact game and setup instead of the games list.
+	const href = useRouterState({ select: (state) => state.location.href });
+	const target = useAbsoluteUrl(href);
 
 	return (
 		<div
@@ -48,14 +50,14 @@ export const PhoneGate = ({
 				<QrCode
 					alt={interpolate(m.gate.qrAlt, { app: app.name })}
 					className="size-44"
-					path={path}
+					path={href}
 				/>
 			</div>
 
 			<div className="flex flex-col gap-1">
 				<p className="text-muted-foreground text-sm">{m.gate.fallback}</p>
 				<code className="break-all font-mono text-foreground text-sm">
-					{target || path}
+					{target || href}
 				</code>
 			</div>
 

@@ -223,7 +223,9 @@
 
 /* Charadas is played with the phone horizontal on the forehead. When the
    device is rotation-locked (portrait viewport, physical phone sideways) we
-   rotate the stage so the word still reads upright to the player. */
+   rotate the stage so the word still reads upright to the player.
+   The stage owns its safe-area padding: in landscape the island and the home
+   bar eat ~59px on each side, so the floors below are just the Android case. */
 @layer components {
 	.stage-landscape {
 		position: fixed;
@@ -231,6 +233,10 @@
 		display: flex;
 		flex-direction: column;
 		background: var(--background);
+		padding-block: max(env(safe-area-inset-top), 1.5rem)
+			max(env(safe-area-inset-bottom), 1.5rem);
+		padding-inline: max(env(safe-area-inset-left), 2rem)
+			max(env(safe-area-inset-right), 2rem);
 	}
 
 	@media (orientation: portrait) {
@@ -242,6 +248,13 @@
 			height: 100vw;
 			translate: -50% -50%;
 			rotate: 90deg;
+			/* Rotating clockwise puts the stage's left edge on the phone's top
+			   edge, which is exactly where the island sits, so the inline and
+			   block insets swap. */
+			padding-block: max(env(safe-area-inset-right), 1.5rem)
+				max(env(safe-area-inset-left), 1.5rem);
+			padding-inline: max(env(safe-area-inset-bottom), 2rem)
+				max(env(safe-area-inset-top), 2rem);
 		}
 	}
 }

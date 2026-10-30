@@ -31,7 +31,7 @@ export const CharadesPlayStage = ({
 	const remaining = Math.ceil(remainingMs / 1000);
 
 	return (
-		<div className="stage-landscape items-center justify-center gap-6 px-8 py-6">
+		<div className="stage-landscape items-center justify-center gap-6">
 			{flash ? (
 				<div
 					className={cn(

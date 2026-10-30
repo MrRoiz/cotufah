@@ -3,11 +3,11 @@ import { charadesEs } from "@/data/charades/es";
 import { packsEn } from "@/data/packs/en";
 import { packsEs } from "@/data/packs/es";
 import {
-	type CategoryChoice,
 	type Deck,
 	deckSchema,
 	type Pack,
 	packSchema,
+	type ServerCategory,
 	themedCategories,
 } from "@/data/schema";
 import { spyEn } from "@/data/spy/en";
@@ -43,7 +43,7 @@ const findPack = (locale: Deck["locale"]): Pack => {
 	return pack;
 };
 
-const itemsFor = (deck: Deck, category: CategoryChoice): string[] => {
+const itemsFor = (deck: Deck, category: ServerCategory): string[] => {
 	if (category === "clasico") {
 		return deck.items;
 	}
@@ -66,7 +66,7 @@ export const getRoundWords = (
 	game: Deck["game"],
 	locale: Deck["locale"],
 	count: number,
-	category: CategoryChoice = "clasico",
+	category: ServerCategory = "clasico",
 ): string[] => {
 	return pick(itemsFor(findDeck(game, locale), category), count);
 };

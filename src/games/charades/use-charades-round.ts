@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 import type { CategoryChoice } from "@/data/schema";
-import { getRoundFn } from "@/fns/decks.functions";
 import type { CharadesAnswer } from "@/games/charades/results-screen";
+import { useRoundWords } from "@/games/use-round-words";
 import { useCountdown } from "@/hooks/use-countdown";
 import {
 	motionProbeReliable,
@@ -35,15 +34,12 @@ export const useCharadesRound = ({
 }) => {
 	useWakeLock();
 
-	const { data, isPending, refetch, isFetching } = useQuery({
-		queryKey: ["charades-round", lang, category],
-		queryFn: () =>
-			getRoundFn({
-				data: { game: "charades", locale: lang, count: 40, category },
-			}),
-		staleTime: 0,
+	const { words, isPending, refetch, isFetching } = useRoundWords({
+		game: "charades",
+		lang,
+		category,
+		count: 40,
 	});
-	const words = data ?? [];
 
 	const [phase, setPhase] = useState<CharadesPhase>("intro");
 	const [countdown, setCountdown] = useState(COUNTDOWN_FROM);

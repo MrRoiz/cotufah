@@ -11,6 +11,9 @@ only the words for the current round ever reach the browser.
 - **Espía** — everyone gets the same word except the spies. Talk, lie, vote, reveal.
 - **Charadas** — phone on the forehead; tilt down to score, tilt up to pass.
 
+On top of the server decks you can write your own **custom decks** (stored only on the
+phone) and hand them to another phone with a QR code that carries the whole deck in the link.
+
 Each game ships a **classic deck** plus eleven **themed packs** (movies, Disney, actors,
 objects, kitchen, gaming, animals, music, sports, food, places) and a **mixed** draw that
 pulls from all of them.

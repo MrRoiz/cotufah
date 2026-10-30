@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
-	ArrowLeftIcon,
 	LanguagesIcon,
+	LayersIcon,
 	MoonIcon,
 	PaletteIcon,
 	Volume2Icon,
 } from "lucide-react";
 
+import { BackLink } from "@/components/back-link";
 import { AppShell } from "@/components/layout/app-shell";
 import { type Theme, useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
@@ -48,14 +49,7 @@ const SettingsPage = () => {
 	return (
 		<AppShell>
 			<header className="flex flex-col gap-3 pt-6 pb-6">
-				<Link
-					className="inline-flex w-fit items-center gap-1 font-bold text-muted-foreground text-sm"
-					params={{ lang }}
-					to="/$lang"
-				>
-					<ArrowLeftIcon aria-hidden="true" className="size-4" />
-					{m.common.home}
-				</Link>
+				<BackLink label={m.common.home} lang={lang} />
 				<h1 className="font-display text-4xl uppercase">{m.settings.title}</h1>
 				<p className="text-muted-foreground">{m.settings.subtitle}</p>
 			</header>
@@ -144,6 +138,29 @@ const SettingsPage = () => {
 							/>
 						</div>
 					</CardHeader>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle className="flex items-center gap-2">
+							<LayersIcon aria-hidden="true" className="size-5" />
+							{m.settings.decksTitle}
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<p className="text-muted-foreground text-sm">
+							{m.settings.decksBody}
+						</p>
+						<div className="mt-3">
+							<Link
+								className="inline-flex font-bold text-sm underline-offset-4 hover:underline"
+								params={{ lang }}
+								to="/$lang/decks"
+							>
+								{m.decks.manage}
+							</Link>
+						</div>
+					</CardContent>
 				</Card>
 
 				<Card>

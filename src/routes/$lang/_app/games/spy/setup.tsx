@@ -1,8 +1,8 @@
 import { useForm } from "@tanstack/react-form";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeftIcon, MinusIcon, PlusIcon, XIcon } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
-
+import { BackLink } from "@/components/back-link";
 import { CategoryField } from "@/components/category-field";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { app } from "@/config/app";
-import type { CategoryChoice } from "@/data/schema";
+import { type CategoryChoice, isCategoryChoice } from "@/data/schema";
 import { createPlayersSchema } from "@/games/spy/setup-schema";
 import { MIN_PLAYERS } from "@/games/spy/use-spy-round";
 import { getMessages, interpolate } from "@/i18n";
@@ -19,11 +19,11 @@ const MAX_PLAYERS = 12;
 
 const SpySetup = () => {
 	const { lang } = Route.useParams();
+	const { category = "clasico" } = Route.useSearch();
 	const m = getMessages(lang);
 	const navigate = useNavigate();
 	const nextPlayerId = useRef(MIN_PLAYERS + 1);
 	const [spies, setSpies] = useState(1);
-	const [category, setCategory] = useState<CategoryChoice>("clasico");
 	const schema = useMemo(() => createPlayersSchema(m), [m]);
 
 	const form = useForm({
@@ -77,14 +77,7 @@ const SpySetup = () => {
 				}}
 			>
 				<header className="flex flex-col gap-3 pt-6 pb-6">
-					<Link
-						className="inline-flex w-fit items-center gap-1 font-bold text-muted-foreground text-sm"
-						params={{ lang }}
-						to="/$lang/games"
-					>
-						<ArrowLeftIcon aria-hidden="true" className="size-4" />
-						{m.common.games}
-					</Link>
+					<BackLink label={m.common.back} lang={lang} />
 					<h1 className="font-display text-4xl uppercase">
 						{m.games.spy.name}
 					</h1>
@@ -223,7 +216,14 @@ const SpySetup = () => {
 				<CategoryField
 					category={category}
 					locale={lang}
-					onChange={setCategory}
+					onChange={(value) =>
+						navigate({
+							to: "/$lang/games/spy/setup",
+							params: { lang },
+							search: { category: value },
+							replace: true,
+						})
+					}
 				/>
 			</form>
 		</AppShell>
@@ -231,6 +231,12 @@ const SpySetup = () => {
 };
 
 export const Route = createFileRoute("/$lang/_app/games/spy/setup")({
+	// In the URL so the deck survives a trip to "Manage decks" and back.
+	validateSearch: (
+		search: Record<string, unknown>,
+	): { category?: CategoryChoice } => ({
+		category: isCategoryChoice(search.category) ? search.category : undefined,
+	}),
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
 		return {

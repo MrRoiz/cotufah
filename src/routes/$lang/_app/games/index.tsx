@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
+import { BackLink } from "@/components/back-link";
 import { AppShell } from "@/components/layout/app-shell";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Badge } from "@/components/ui/badge";
@@ -18,14 +19,7 @@ const GamesPage = () => {
 		<AppShell>
 			<header className="flex flex-col gap-3 pt-6 pb-6">
 				<div className="flex items-start justify-between gap-4">
-					<Link
-						className="inline-flex w-fit items-center gap-1 font-bold text-muted-foreground text-sm"
-						params={{ lang }}
-						to="/$lang"
-					>
-						<ArrowLeftIcon aria-hidden="true" className="size-4" />
-						{m.common.home}
-					</Link>
+					<BackLink label={m.common.home} lang={lang} />
 					<ModeToggle className="rounded-full border-2" locale={lang} />
 				</div>
 				<h1 className="font-display text-4xl uppercase">{m.games.title}</h1>

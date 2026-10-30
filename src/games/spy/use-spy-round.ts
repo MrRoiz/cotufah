@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import type { CategoryChoice } from "@/data/schema";
-import { getRoundFn } from "@/fns/decks.functions";
 import { assignSpies } from "@/games/spy/assign";
+import { useRoundWords } from "@/games/use-round-words";
 import { useCountdown } from "@/hooks/use-countdown";
 import { useWakeLock } from "@/hooks/use-wake-lock";
 import { haptic } from "@/lib/haptics";
@@ -81,13 +80,13 @@ export const useSpyRound = ({
 		}
 	}, [phase, paused, discussTimer.remainingMs]);
 
-	const { data, isPending, refetch, isFetching } = useQuery({
-		queryKey: ["spy-word", lang, category],
-		queryFn: () =>
-			getRoundFn({ data: { game: "spy", locale: lang, count: 1, category } }),
-		staleTime: 0,
+	const { words, isPending, refetch, isFetching } = useRoundWords({
+		game: "spy",
+		lang,
+		category,
+		count: 1,
 	});
-	const word = data?.[0];
+	const word = words[0];
 
 	useEffect(() => {
 		if (phase !== "handoff" || handoffTimer.remainingMs > 0) {

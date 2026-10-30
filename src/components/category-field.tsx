@@ -1,6 +1,7 @@
-import { ChevronDownIcon, ShuffleIcon } from "lucide-react";
+import { ChevronDownIcon, ShuffleIcon, SparklesIcon } from "lucide-react";
 import { useState } from "react";
 
+import { CustomDeckPicker } from "@/components/custom-decks/picker-section";
 import {
 	Sheet,
 	SheetContent,
@@ -9,9 +10,15 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import type { Locale } from "@/config/app";
-import { type CategoryChoice, packChoices } from "@/data/schema";
+import {
+	type CategoryChoice,
+	isCustomCategory,
+	packChoices,
+} from "@/data/schema";
 import { packIcons } from "@/games/pack-icons";
-import { getMessages } from "@/i18n";
+import { useCustomDecks } from "@/hooks/use-custom-decks";
+import { getMessages, plural } from "@/i18n";
+import { findCustomDeck } from "@/lib/custom-decks";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,19 +37,30 @@ export const CategoryField = ({
 }) => {
 	const m = getMessages(locale);
 	const [open, setOpen] = useState(false);
+	const { decks } = useCustomDecks();
 
-	const current =
-		category === "mixed"
-			? {
-					icon: ShuffleIcon,
-					name: m.category.mixed,
-					body: m.category.mixedBody,
-				}
-			: {
-					icon: packIcons[category],
-					name: m.category.packs[category].name,
-					body: m.category.packs[category].body,
+	const current = (() => {
+		if (category === "mixed") {
+			return {
+				icon: ShuffleIcon,
+				name: m.category.mixed,
+				body: m.category.mixedBody,
+			};
+		}
+		if (isCustomCategory(category)) {
+			const deck = findCustomDeck(category);
+			if (deck) {
+				return {
+					icon: SparklesIcon,
+					name: deck.name,
+					body: plural(locale, deck.words.length, m.decks.wordCount),
 				};
+			}
+			// Deleted after being picked: show the classic deck instead.
+			return { icon: packIcons.clasico, ...m.category.packs.clasico };
+		}
+		return { icon: packIcons[category], ...m.category.packs[category] };
+	})();
 	const CurrentIcon = current.icon;
 
 	const choose = (choice: CategoryChoice) => {
@@ -134,6 +152,13 @@ export const CategoryField = ({
 								);
 							})}
 						</div>
+
+						<CustomDeckPicker
+							decks={decks}
+							locale={locale}
+							onChoose={choose}
+							selected={category}
+						/>
 					</div>
 				</SheetContent>
 			</Sheet>

@@ -9,12 +9,12 @@ export const en = {
 	common: {
 		appTagline: "party games for your crew",
 		home: "Home",
-		games: "Games",
 		settings: "Settings",
 		soon: "Coming soon",
 		legal: "Legal",
 		about: "About us",
 		play: "Play",
+		back: "Back",
 		language: "Language",
 		theme: "Theme",
 		light: "Light",
@@ -54,6 +54,52 @@ export const en = {
 			places: { name: "Places", body: "Spots you end up in." },
 		},
 	},
+	decks: {
+		title: "My decks",
+		subtitle:
+			"Words you write yourself. They live on this phone and nowhere else.",
+		createTitle: "New deck",
+		nameLabel: "Deck name",
+		namePlaceholder: "Mom's birthday",
+		wordsLabel: "Words",
+		wordsHint: "One per line. Between {min} and {max}.",
+		wordsPlaceholder: "piñata\nbirthday cake\ngrandma",
+		save: "Save deck",
+		saveChanges: "Save changes",
+		edit: "Edit",
+		editTitle: "Edit deck",
+		wordCount: { one: "{count} word", other: "{count} words" },
+		empty: "No custom decks yet. Write one and it shows up in both games.",
+		notFound: "That deck is no longer on this phone.",
+		share: "Share",
+		remove: "Delete",
+		removeConfirm: "Tap again to delete",
+		shareTitle: "Share “{name}”",
+		shareBody:
+			"Scan this on the other phone. The words travel inside the link.",
+		shareTooBig:
+			"This deck is too long for a QR code. Remove a few words and share it again.",
+		copy: "Copy link",
+		copied: "Link copied",
+		pickerTitle: "Your decks",
+		pickerEmpty: "None yet.",
+		manage: "Manage decks",
+		nameError: "Write a name.",
+		wordsError: "Add between {min} and {max} words, one per line.",
+		wordLengthError: "Each word can be up to {max} characters.",
+		limitError: "You already have {max} decks. Delete one to make room.",
+		saveError:
+			"This browser wouldn't save the deck. Check private mode or free space.",
+		removeError: "This browser wouldn't delete the deck. Try again.",
+		importedTitle: "Deck added",
+		importedBody: "“{name}” is now on this phone, with {count} words.",
+		importFailedTitle: "That link is broken",
+		importFailedBody:
+			"The deck did not arrive complete. Ask for a new QR and scan it again.",
+		importSaveTitle: "Couldn't save it",
+		importHome: "Back home",
+		importSee: "See my decks",
+	},
 	home: {
 		kicker: "Party games",
 		intro:
@@ -68,6 +114,9 @@ export const en = {
 		packsTitle: "{count} decks per game",
 		packsBody:
 			"The usual one and {themed} themed packs, for when the crew wants a change.",
+		customTitle: "Your own words",
+		customBody:
+			"Write a deck on your phone and hand it to another phone with a QR code. It lives on yours: no account, no cloud.",
 		howTitle: "How it works",
 		step1Title: "Pick a game",
 		step1Body:
@@ -283,6 +332,9 @@ export const en = {
 		soundTitle: "Sound",
 		soundBody:
 			"Short cues for the countdown, the end of a round and each answer. The iPhone silent switch still wins.",
+		decksTitle: "Custom decks",
+		decksBody:
+			"Write your own words. They stay on this phone; share them with a QR.",
 		aboutTitle: "About",
 		aboutBody: "{app} stores nothing: no accounts, no database, no tracking.",
 	},

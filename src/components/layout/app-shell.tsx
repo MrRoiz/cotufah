@@ -30,7 +30,9 @@ export const AppShell = ({
 				{children}
 			</div>
 			{footer ? (
-				<div className="mt-auto border-t-2 border-border px-safe pt-3 pb-safe">
+				// Sticks to the bottom so the main action stays reachable on long
+				// lists (a full deck list, a setup form with many players).
+				<div className="sticky bottom-0 z-10 mt-auto border-t-2 border-border bg-background px-safe pt-3 pb-safe">
 					{footer}
 				</div>
 			) : null}

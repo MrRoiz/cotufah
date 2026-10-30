@@ -92,6 +92,8 @@ src/
 ├─ games/charades/*-screen.tsx  # intro / stage / results
 ├─ games/*/use-*-round.ts # round state, timers and handlers per game
 ├─ config/site.ts         # VITE_APP_ORIGIN -> absolute URLs (canonical/OG)
+├─ lib/custom-decks.ts    # local decks: storage, limits, share payload
+├─ lib/deflate.ts         # browser deflate/inflate for share links
 ├─ hooks/use-wake-lock.ts # screen stays awake during a round
 ├─ hooks/use-tilt.ts      # devicemotion tilt + sensor probe + iOS permission
 ├─ lib/sound.ts           # Web Audio cues + mute store (app.sound)
@@ -112,6 +114,10 @@ src/
 │  ├─ $lang/index.tsx     # landing (all devices, indexable)
 │  ├─ $lang/_app.tsx      # pathless layout: phone gate for app routes only
 │  ├─ $lang/_app/games/index.tsx          # static list, no network
+│  ├─ $lang/_app/decks/index.tsx          # custom decks: list, share, delete
+│  ├─ $lang/_app/decks/new.tsx            # custom decks: create
+│  ├─ $lang/_app/decks/$deckId.tsx        # custom decks: edit
+│  ├─ $lang/_app/decks/import.tsx         # shared deck link -> localStorage
 │  ├─ $lang/_app/games/spy/setup.tsx      # names + spy count
 │  ├─ $lang/_app/games/spy/play.tsx       # ssr:false, handoff → deal → discuss → vote → reveal
 │  ├─ $lang/_app/settings.tsx
@@ -136,6 +142,14 @@ Spy round state lives entirely in the play component: assignment (`assignSpies`)
 word (`getRound`, count 1) are created once when the round starts. `ssr: false` on the play
 route is deliberate — dealing roles on the server would leak the spy through the payload and
 mismatch on hydration.
+
+Custom decks are the one exception to the server path: they live in
+`localStorage` under `app.decks`, are picked on the phone by `useRoundWords`, and are shared
+as a whole deck inside a URL (`/decks/import?d=<deflate-raw + base64url>`) that the receiving phone
+decodes, validates with zod and stores. The JSON is deflated before base64url so even a full
+60-word deck fits a QR (~330 chars); links without the `2.` prefix are the old plain-base64
+format and still import. Nothing about them reaches the server or the client bundle; the QR is
+generated from that same link.
 
 The role card looks the same for spy and word (same surface, same border): only the ink
 changes, so the phone's glow cannot give the spy away in a dark room. Every role is preceded

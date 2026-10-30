@@ -17,6 +17,10 @@ import { Route as LangAboutRouteImport } from './routes/$lang/about'
 import { Route as LangLegalRouteImport } from './routes/$lang/legal'
 import { Route as DevTokensRouteImport } from './routes/dev/tokens'
 import { Route as LangAppSettingsRouteImport } from './routes/$lang/_app/settings'
+import { Route as LangAppDecksIndexRouteImport } from './routes/$lang/_app/decks/index'
+import { Route as LangAppDecksDeckIdRouteImport } from './routes/$lang/_app/decks/$deckId'
+import { Route as LangAppDecksImportRouteImport } from './routes/$lang/_app/decks/import'
+import { Route as LangAppDecksNewRouteImport } from './routes/$lang/_app/decks/new'
 import { Route as LangAppGamesIndexRouteImport } from './routes/$lang/_app/games/index'
 import { Route as LangAppGamesCharadesPlayRouteImport } from './routes/$lang/_app/games/charades/play'
 import { Route as LangAppGamesCharadesSetupRouteImport } from './routes/$lang/_app/games/charades/setup'
@@ -62,6 +66,26 @@ const LangAppSettingsRoute = LangAppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => LangAppRoute,
 } as any)
+const LangAppDecksIndexRoute = LangAppDecksIndexRouteImport.update({
+  id: '/decks/',
+  path: '/decks/',
+  getParentRoute: () => LangAppRoute,
+} as any)
+const LangAppDecksDeckIdRoute = LangAppDecksDeckIdRouteImport.update({
+  id: '/decks/$deckId',
+  path: '/decks/$deckId',
+  getParentRoute: () => LangAppRoute,
+} as any)
+const LangAppDecksImportRoute = LangAppDecksImportRouteImport.update({
+  id: '/decks/import',
+  path: '/decks/import',
+  getParentRoute: () => LangAppRoute,
+} as any)
+const LangAppDecksNewRoute = LangAppDecksNewRouteImport.update({
+  id: '/decks/new',
+  path: '/decks/new',
+  getParentRoute: () => LangAppRoute,
+} as any)
 const LangAppGamesIndexRoute = LangAppGamesIndexRouteImport.update({
   id: '/games/',
   path: '/games/',
@@ -98,6 +122,10 @@ export interface FileRoutesByFullPath {
   '/dev/tokens': typeof DevTokensRoute
   '/$lang/': typeof LangIndexRoute
   '/$lang/settings': typeof LangAppSettingsRoute
+  '/$lang/decks/$deckId': typeof LangAppDecksDeckIdRoute
+  '/$lang/decks/import': typeof LangAppDecksImportRoute
+  '/$lang/decks/new': typeof LangAppDecksNewRoute
+  '/$lang/decks/': typeof LangAppDecksIndexRoute
   '/$lang/games/': typeof LangAppGamesIndexRoute
   '/$lang/games/charades/play': typeof LangAppGamesCharadesPlayRoute
   '/$lang/games/charades/setup': typeof LangAppGamesCharadesSetupRoute
@@ -111,6 +139,10 @@ export interface FileRoutesByTo {
   '/$lang/legal': typeof LangLegalRoute
   '/dev/tokens': typeof DevTokensRoute
   '/$lang/settings': typeof LangAppSettingsRoute
+  '/$lang/decks/$deckId': typeof LangAppDecksDeckIdRoute
+  '/$lang/decks/import': typeof LangAppDecksImportRoute
+  '/$lang/decks/new': typeof LangAppDecksNewRoute
+  '/$lang/decks': typeof LangAppDecksIndexRoute
   '/$lang/games': typeof LangAppGamesIndexRoute
   '/$lang/games/charades/play': typeof LangAppGamesCharadesPlayRoute
   '/$lang/games/charades/setup': typeof LangAppGamesCharadesSetupRoute
@@ -127,6 +159,10 @@ export interface FileRoutesById {
   '/dev/tokens': typeof DevTokensRoute
   '/$lang/': typeof LangIndexRoute
   '/$lang/_app/settings': typeof LangAppSettingsRoute
+  '/$lang/_app/decks/$deckId': typeof LangAppDecksDeckIdRoute
+  '/$lang/_app/decks/import': typeof LangAppDecksImportRoute
+  '/$lang/_app/decks/new': typeof LangAppDecksNewRoute
+  '/$lang/_app/decks/': typeof LangAppDecksIndexRoute
   '/$lang/_app/games/': typeof LangAppGamesIndexRoute
   '/$lang/_app/games/charades/play': typeof LangAppGamesCharadesPlayRoute
   '/$lang/_app/games/charades/setup': typeof LangAppGamesCharadesSetupRoute
@@ -143,6 +179,10 @@ export interface FileRouteTypes {
     | '/dev/tokens'
     | '/$lang/'
     | '/$lang/settings'
+    | '/$lang/decks/$deckId'
+    | '/$lang/decks/import'
+    | '/$lang/decks/new'
+    | '/$lang/decks/'
     | '/$lang/games/'
     | '/$lang/games/charades/play'
     | '/$lang/games/charades/setup'
@@ -156,6 +196,10 @@ export interface FileRouteTypes {
     | '/$lang/legal'
     | '/dev/tokens'
     | '/$lang/settings'
+    | '/$lang/decks/$deckId'
+    | '/$lang/decks/import'
+    | '/$lang/decks/new'
+    | '/$lang/decks'
     | '/$lang/games'
     | '/$lang/games/charades/play'
     | '/$lang/games/charades/setup'
@@ -171,6 +215,10 @@ export interface FileRouteTypes {
     | '/dev/tokens'
     | '/$lang/'
     | '/$lang/_app/settings'
+    | '/$lang/_app/decks/$deckId'
+    | '/$lang/_app/decks/import'
+    | '/$lang/_app/decks/new'
+    | '/$lang/_app/decks/'
     | '/$lang/_app/games/'
     | '/$lang/_app/games/charades/play'
     | '/$lang/_app/games/charades/setup'
@@ -242,6 +290,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangAppSettingsRouteImport
       parentRoute: typeof LangAppRoute
     }
+    '/$lang/_app/decks/': {
+      id: '/$lang/_app/decks/'
+      path: '/decks'
+      fullPath: '/$lang/decks/'
+      preLoaderRoute: typeof LangAppDecksIndexRouteImport
+      parentRoute: typeof LangAppRoute
+    }
+    '/$lang/_app/decks/$deckId': {
+      id: '/$lang/_app/decks/$deckId'
+      path: '/decks/$deckId'
+      fullPath: '/$lang/decks/$deckId'
+      preLoaderRoute: typeof LangAppDecksDeckIdRouteImport
+      parentRoute: typeof LangAppRoute
+    }
+    '/$lang/_app/decks/import': {
+      id: '/$lang/_app/decks/import'
+      path: '/decks/import'
+      fullPath: '/$lang/decks/import'
+      preLoaderRoute: typeof LangAppDecksImportRouteImport
+      parentRoute: typeof LangAppRoute
+    }
+    '/$lang/_app/decks/new': {
+      id: '/$lang/_app/decks/new'
+      path: '/decks/new'
+      fullPath: '/$lang/decks/new'
+      preLoaderRoute: typeof LangAppDecksNewRouteImport
+      parentRoute: typeof LangAppRoute
+    }
     '/$lang/_app/games/': {
       id: '/$lang/_app/games/'
       path: '/games'
@@ -282,6 +358,10 @@ declare module '@tanstack/react-router' {
 
 interface LangAppRouteChildren {
   LangAppSettingsRoute: typeof LangAppSettingsRoute
+  LangAppDecksDeckIdRoute: typeof LangAppDecksDeckIdRoute
+  LangAppDecksImportRoute: typeof LangAppDecksImportRoute
+  LangAppDecksNewRoute: typeof LangAppDecksNewRoute
+  LangAppDecksIndexRoute: typeof LangAppDecksIndexRoute
   LangAppGamesIndexRoute: typeof LangAppGamesIndexRoute
   LangAppGamesCharadesPlayRoute: typeof LangAppGamesCharadesPlayRoute
   LangAppGamesCharadesSetupRoute: typeof LangAppGamesCharadesSetupRoute
@@ -291,6 +371,10 @@ interface LangAppRouteChildren {
 
 const LangAppRouteChildren: LangAppRouteChildren = {
   LangAppSettingsRoute: LangAppSettingsRoute,
+  LangAppDecksDeckIdRoute: LangAppDecksDeckIdRoute,
+  LangAppDecksImportRoute: LangAppDecksImportRoute,
+  LangAppDecksNewRoute: LangAppDecksNewRoute,
+  LangAppDecksIndexRoute: LangAppDecksIndexRoute,
   LangAppGamesIndexRoute: LangAppGamesIndexRoute,
   LangAppGamesCharadesPlayRoute: LangAppGamesCharadesPlayRoute,
   LangAppGamesCharadesSetupRoute: LangAppGamesCharadesSetupRoute,

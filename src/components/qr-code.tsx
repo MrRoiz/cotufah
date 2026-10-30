@@ -19,11 +19,13 @@ export const QrCode = ({
 	path,
 	alt,
 	className,
+	size = 176,
 }: {
 	/** Path on this origin, e.g. `/es/games`. */
 	path: string;
 	alt: string;
 	className?: string;
+	size?: number;
 }) => {
 	const [src, setSrc] = useState("");
 	const url = useAbsoluteUrl(path);
@@ -40,7 +42,7 @@ export const QrCode = ({
 			}
 			// Inline SVG as a data URI: no dangerouslySetInnerHTML, no request.
 			setSrc(
-				`data:image/svg+xml;utf8,${encodeURIComponent(renderSVG(url, { border: 1 }))}`,
+				`data:image/svg+xml;utf8,${encodeURIComponent(renderSVG(url, { border: 1, ecc: "M" }))}`,
 			);
 		});
 
@@ -54,6 +56,6 @@ export const QrCode = ({
 	}
 
 	return (
-		<img alt={alt} className={className} height={176} src={src} width={176} />
+		<img alt={alt} className={className} height={size} src={src} width={size} />
 	);
 };

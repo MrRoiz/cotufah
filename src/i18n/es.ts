@@ -8,12 +8,12 @@ export const es: Messages = {
 	common: {
 		appTagline: "juegos pa' tu parche",
 		home: "Inicio",
-		games: "Juegos",
 		settings: "Ajustes",
 		soon: "Pronto",
 		legal: "Legal",
 		about: "Quiénes somos",
 		play: "Jugar",
+		back: "Volver",
 		language: "Idioma",
 		theme: "Tema",
 		light: "Claro",
@@ -53,6 +53,53 @@ export const es: Messages = {
 			places: { name: "Lugares", body: "Sitios donde uno termina." },
 		},
 	},
+	decks: {
+		title: "Mis barajas",
+		subtitle:
+			"Palabras que escribes tú. Viven en este celular y en ningún otro lado.",
+		createTitle: "Nueva baraja",
+		nameLabel: "Nombre",
+		namePlaceholder: "Cumpleaños de mamá",
+		wordsLabel: "Palabras",
+		wordsHint: "Una por línea. Entre {min} y {max}.",
+		wordsPlaceholder: "piñata\npastel\nabuela",
+		save: "Guardar baraja",
+		saveChanges: "Guardar cambios",
+		edit: "Editar",
+		editTitle: "Editar baraja",
+		wordCount: { one: "{count} palabra", other: "{count} palabras" },
+		empty:
+			"Todavía no tienes barajas. Escribe una y aparece en los dos juegos.",
+		notFound: "Esa baraja ya no está en este celular.",
+		share: "Compartir",
+		remove: "Borrar",
+		removeConfirm: "Toca otra vez para borrar",
+		shareTitle: "Compartir «{name}»",
+		shareBody:
+			"Escanea esto en el otro celular. Las palabras van dentro del link.",
+		shareTooBig:
+			"Esta baraja es muy larga para un QR. Quita unas palabras y vuelve a compartirla.",
+		copy: "Copiar link",
+		copied: "Link copiado",
+		pickerTitle: "Tus barajas",
+		pickerEmpty: "Ninguna todavía.",
+		manage: "Administrar",
+		nameError: "Ponle un nombre.",
+		wordsError: "Agrega entre {min} y {max} palabras, una por línea.",
+		wordLengthError: "Cada palabra puede tener hasta {max} caracteres.",
+		limitError: "Ya tienes {max} barajas. Borra una pa' hacer espacio.",
+		saveError:
+			"Este navegador no dejó guardar la baraja. Revisa si estás en modo privado o sin espacio.",
+		removeError: "Este navegador no dejó borrar la baraja. Inténtalo otra vez.",
+		importedTitle: "Baraja agregada",
+		importedBody: "«{name}» ya está en este celular, con {count} palabras.",
+		importFailedTitle: "Ese link no sirve",
+		importFailedBody:
+			"La baraja no llegó completa. Pide otro QR y escanéalo de nuevo.",
+		importSaveTitle: "No se pudo guardar",
+		importHome: "Volver al inicio",
+		importSee: "Ver mis barajas",
+	},
 	home: {
 		kicker: "Juegos de fiesta",
 		intro:
@@ -67,6 +114,9 @@ export const es: Messages = {
 		packsTitle: "{count} barajas por juego",
 		packsBody:
 			"La de siempre y {themed} temáticas, para cuando el parche pide cambiar.",
+		customTitle: "Tus propias palabras",
+		customBody:
+			"Escribe una baraja en tu celular y pásala a otro con un QR. Vive en el tuyo: sin cuentas ni nube.",
 		howTitle: "Cómo se juega",
 		step1Title: "Escoge un juego",
 		step1Body:
@@ -281,6 +331,9 @@ export const es: Messages = {
 		soundTitle: "Sonido",
 		soundBody:
 			"Avisos cortos para la cuenta atrás, el final de la ronda y cada respuesta. El switch de silencio del iPhone manda.",
+		decksTitle: "Barajas propias",
+		decksBody:
+			"Escribe tus propias palabras. Se quedan en este celular; compártelas con un QR.",
 		aboutTitle: "Acerca de",
 		aboutBody:
 			"{app} no guarda nada: sin cuentas, sin base de datos, sin rastreo.",

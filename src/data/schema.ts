@@ -28,11 +28,23 @@ export const packChoices = ["clasico", ...themedCategories] as const;
 
 export const categoryChoices = ["mixed", ...packChoices] as const;
 
-export type CategoryChoice = (typeof categoryChoices)[number];
+export const CUSTOM_PREFIX = "custom:";
+
+/** A deck the player wrote on their own phone, addressed as `custom:<id>`. */
+export type CustomCategory = `${typeof CUSTOM_PREFIX}${string}`;
+
+export type CategoryChoice = (typeof categoryChoices)[number] | CustomCategory;
+
+/** What the server can resolve: custom decks never leave the phone. */
+export type ServerCategory = (typeof categoryChoices)[number];
+
+export const isCustomCategory = (value: string): value is CustomCategory =>
+	value.startsWith(CUSTOM_PREFIX);
 
 export const isCategoryChoice = (value: unknown): value is CategoryChoice =>
 	typeof value === "string" &&
-	(categoryChoices as readonly string[]).includes(value);
+	((categoryChoices as readonly string[]).includes(value) ||
+		isCustomCategory(value));
 
 const words = z.array(z.string().trim().min(1)).min(8);
 

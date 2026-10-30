@@ -91,6 +91,12 @@ export const es: Messages = {
 		saveError:
 			"Este navegador no dejó guardar la baraja. Revisa si estás en modo privado o sin espacio.",
 		removeError: "Este navegador no dejó borrar la baraja. Inténtalo otra vez.",
+		importConfirmTitle: "¿Agregar esta baraja?",
+		importConfirmBody: "Llegó desde otro celular. ¿La agregas a este?",
+		importAdd: "Agregar baraja",
+		importCancel: "Cancelar",
+		importExists:
+			"Ya tienes esta baraja. Si la agregas, reemplaza la que tienes.",
 		importedTitle: "Baraja agregada",
 		importedBody: "«{name}» ya está en este celular, con {count} palabras.",
 		importFailedTitle: "Ese link no sirve",

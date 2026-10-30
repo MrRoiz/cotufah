@@ -1,20 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { SparklesIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { app } from "@/config/app";
-import { getMessages, interpolate } from "@/i18n";
+import { getMessages, interpolate, plural } from "@/i18n";
 import {
 	type CustomDeck,
+	customCategoryId,
 	type DeckWriteFailure,
 	decodeDeck,
+	findCustomDeck,
 	MAX_DECKS,
 	saveCustomDeck,
 } from "@/lib/custom-decks";
+import { cn } from "@/lib/utils";
 
-/** A write can only fail after mount, so its reason is part of the state. */
-type ImportState = "loading" | "ok" | "invalid" | DeckWriteFailure;
+/** The link is decoded on mount; nothing is stored until the player agrees. */
+type ImportState = "loading" | "confirm" | "ok" | "invalid" | DeckWriteFailure;
 
 const ImportPage = () => {
 	const { lang } = Route.useParams();
@@ -22,6 +26,7 @@ const ImportPage = () => {
 	const m = getMessages(lang);
 	const [state, setState] = useState<ImportState>("loading");
 	const [deck, setDeck] = useState<CustomDeck | null>(null);
+	const [exists, setExists] = useState(false);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -36,7 +41,8 @@ const ImportPage = () => {
 				return;
 			}
 			setDeck(parsed);
-			setState(saveCustomDeck(parsed) ?? "ok");
+			setExists(findCustomDeck(customCategoryId(parsed.id)) !== undefined);
+			setState("confirm");
 		};
 
 		run();
@@ -45,9 +51,17 @@ const ImportPage = () => {
 		};
 	}, [d]);
 
+	const add = () => {
+		if (!deck) {
+			return;
+		}
+		setState(saveCustomDeck(deck) ?? "ok");
+	};
+
 	const ok = state === "ok";
 	const titles: Record<ImportState, string> = {
 		loading: "",
+		confirm: m.decks.importConfirmTitle,
 		ok: m.decks.importedTitle,
 		invalid: m.decks.importFailedTitle,
 		limit: m.decks.importSaveTitle,
@@ -55,13 +69,74 @@ const ImportPage = () => {
 	};
 
 	return (
-		<AppShell>
-			<div className="flex flex-1 flex-col justify-center gap-4 pb-16">
+		<AppShell
+			footer={
+				state === "confirm" ? (
+					<div className="flex flex-col gap-2">
+						<Button onClick={add} size="lg" variant="sticker">
+							{m.decks.importAdd}
+						</Button>
+						<Button asChild size="lg" variant="outline">
+							<Link params={{ lang }} to="/$lang">
+								{m.decks.importCancel}
+							</Link>
+						</Button>
+					</div>
+				) : undefined
+			}
+		>
+			<div
+				className={cn(
+					"flex flex-1 flex-col gap-4",
+					state === "confirm" ? "pt-6" : "justify-center pb-16",
+				)}
+			>
 				<p className="w-fit -rotate-2 rounded-full border-2 border-foreground bg-accent-lime px-3 py-1 font-bold text-accent-ink text-xs uppercase tracking-widest shadow-sticker-sm">
 					{app.name}
 				</p>
 
 				<h1 className="font-display text-4xl uppercase">{titles[state]}</h1>
+
+				{state === "confirm" && deck ? (
+					<>
+						<div className="flex items-center justify-between gap-3 rounded-xl border-2 border-foreground bg-card p-4 shadow-sticker-sm">
+							<div className="min-w-0">
+								<p className="break-words font-bold">{deck.name}</p>
+								<p className="text-muted-foreground text-xs">
+									{plural(lang, deck.words.length, m.decks.wordCount)}
+								</p>
+							</div>
+							<SparklesIcon
+								aria-hidden="true"
+								className="size-5 shrink-0 text-accent-lime"
+							/>
+						</div>
+
+						<p className="text-muted-foreground">{m.decks.importConfirmBody}</p>
+
+						<div className="flex flex-col gap-2">
+							<p className="font-bold text-sm">{m.decks.wordsLabel}</p>
+							<div className="max-h-56 overflow-y-auto overscroll-contain rounded-lg border-2 border-border bg-card p-3">
+								<div className="flex flex-wrap gap-1.5">
+									{[...new Set(deck.words)].map((word) => (
+										<span
+											className="rounded-full border-2 border-border bg-background px-2 py-0.5 text-xs"
+											key={word}
+										>
+											{word}
+										</span>
+									))}
+								</div>
+							</div>
+						</div>
+
+						{exists ? (
+							<p className="rounded-lg border-2 border-border bg-card p-3 text-muted-foreground text-sm">
+								{m.decks.importExists}
+							</p>
+						) : null}
+					</>
+				) : null}
 
 				{ok && deck ? (
 					<p className="text-muted-foreground">
@@ -86,7 +161,7 @@ const ImportPage = () => {
 					<p className="text-muted-foreground">{m.decks.saveError}</p>
 				) : null}
 
-				{state === "loading" ? null : (
+				{state === "loading" || state === "confirm" ? null : (
 					<div className="mt-2 flex flex-col gap-2">
 						{ok ? (
 							<Button asChild variant="sticker">

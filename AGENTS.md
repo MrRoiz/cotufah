@@ -146,10 +146,10 @@ mismatch on hydration.
 Custom decks are the one exception to the server path: they live in
 `localStorage` under `app.decks`, are picked on the phone by `useRoundWords`, and are shared
 as a whole deck inside a URL (`/decks/import?d=<deflate-raw + base64url>`) that the receiving phone
-decodes, validates with zod and stores. The JSON is deflated before base64url so even a full
-60-word deck fits a QR (~330 chars); links without the `2.` prefix are the old plain-base64
-format and still import. Nothing about them reaches the server or the client bundle; the QR is
-generated from that same link.
+decodes, validates with zod and only stores after the player confirms. The JSON is deflated
+before base64url so even a full 60-word deck fits a QR (~330 chars); links without the `2.`
+prefix are the old plain-base64 format and still import. Nothing about them reaches the server
+or the client bundle; the QR is generated from that same link.
 
 The role card looks the same for spy and word (same surface, same border): only the ink
 changes, so the phone's glow cannot give the spy away in a dark room. Every role is preceded

@@ -91,6 +91,11 @@ export const en = {
 		saveError:
 			"This browser wouldn't save the deck. Check private mode or free space.",
 		removeError: "This browser wouldn't delete the deck. Try again.",
+		importConfirmTitle: "Add this deck?",
+		importConfirmBody: "It came from another phone. Add it to this one?",
+		importAdd: "Add deck",
+		importCancel: "Cancel",
+		importExists: "You already have this deck. Adding it replaces that copy.",
 		importedTitle: "Deck added",
 		importedBody: "“{name}” is now on this phone, with {count} words.",
 		importFailedTitle: "That link is broken",

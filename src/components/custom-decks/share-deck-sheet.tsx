@@ -16,7 +16,7 @@ import { type CustomDeck, encodeDeck, MAX_SHARE_URL } from "@/lib/custom-decks";
 
 /**
  * The deck travels inside the URL, so the other phone needs no account: scan,
- * it lands on /decks/import, the words are stored locally and the QR is never needed
+ * it lands on /decks/import, the player confirms, the words are stored locally and the QR is never needed
  * again.
  */
 export const ShareDeckSheet = ({

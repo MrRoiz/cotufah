@@ -5,13 +5,14 @@ import type { Messages } from "@/i18n/en";
 
 export type CharadesAnswer = { word: string; correct: boolean };
 
-/** Score plus the words that were guessed and skipped. */
+/** Score, the words that were guessed or skipped, and the one left on screen. */
 export const CharadesResults = ({
 	m,
 	answers,
 	correctCount,
 	finished,
 	isFetching,
+	pendingWord,
 	onAgain,
 	onChangeSettings,
 }: {
@@ -20,6 +21,7 @@ export const CharadesResults = ({
 	correctCount: number;
 	finished: boolean;
 	isFetching: boolean;
+	pendingWord: string | null;
 	onAgain: () => void;
 	onChangeSettings: () => void;
 }) => {
@@ -31,6 +33,17 @@ export const CharadesResults = ({
 				</h1>
 				<span className="font-display text-6xl">{correctCount}</span>
 			</div>
+
+			{pendingWord ? (
+				<div className="flex flex-col items-center gap-1 rounded-xl border-2 border-dashed border-foreground bg-card px-4 py-3 text-center shadow-sticker-sm">
+					<h2 className="font-bold text-muted-foreground text-xs uppercase tracking-widest">
+						{m.charades.resultsFinal}
+					</h2>
+					<span className="font-display text-2xl uppercase leading-none">
+						{pendingWord}
+					</span>
+				</div>
+			) : null}
 
 			<div className="flex flex-col gap-2">
 				<h2 className="font-bold text-muted-foreground text-xs uppercase tracking-widest">

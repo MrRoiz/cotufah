@@ -181,7 +181,8 @@ reload starts a fresh round — that is the intended behaviour, not a bug. Play 
 Deck data has two shapes (`data/schema.ts`): each game owns a classic list
 (`data/<game>/<locale>.ts`, `{ id, game, locale, label, items[] }`), and the themed packs
 are shared by both games per locale (`data/packs/<locale>.ts`, `movies`, `disney`,
-`actors`, `objects`, `kitchen`, `gaming`, `animals`, `music`, `sports`, `food`, `places`).
+`actors`, `objects`, `kitchen`, `gaming`, `animals`, `music`, `sports`, `food`, `places`,
+`brands`).
 Word banks are TS modules that `satisfies DeckInput` / `satisfies PackInput`, so a typo or a
 missing pack fails `typecheck`; zod still parses them at server boot as a last guard. They
 live only in `server/decks.server.ts`; the client asks for a round by `game` + `locale` +

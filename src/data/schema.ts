@@ -20,6 +20,7 @@ export const themedCategories = [
 	"sports",
 	"food",
 	"places",
+	"brands",
 ] as const;
 
 export type ThemedCategory = (typeof themedCategories)[number];
@@ -71,6 +72,7 @@ export const packSchema = z.object({
 		sports: words,
 		food: words,
 		places: words,
+		brands: words,
 	}),
 });
 

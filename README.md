@@ -14,9 +14,9 @@ only the words for the current round ever reach the browser.
 On top of the server decks you can write your own **custom decks** (stored only on the
 phone) and hand them to another phone with a QR code that carries the whole deck in the link.
 
-Each game ships a **classic deck** plus eleven **themed packs** (movies, Disney, actors,
-objects, kitchen, gaming, animals, music, sports, food, places) and a **mixed** draw that
-pulls from all of them.
+Each game ships a **classic deck** plus twelve **themed packs** (movies, Disney, actors,
+objects, kitchen, gaming, animals, music, sports, food, places, brands) and a **mixed** draw
+that pulls from all of them.
 
 ## Stack
 

@@ -10,6 +10,7 @@ import {
 	PizzaIcon,
 	SparklesIcon,
 	StarIcon,
+	TagIcon,
 	TrophyIcon,
 	UtensilsIcon,
 } from "lucide-react";
@@ -30,4 +31,5 @@ export const packIcons: Record<(typeof packChoices)[number], LucideIcon> = {
 	sports: TrophyIcon,
 	food: PizzaIcon,
 	places: MapPinIcon,
+	brands: TagIcon,
 };

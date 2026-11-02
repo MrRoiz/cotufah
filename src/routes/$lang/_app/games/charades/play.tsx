@@ -68,6 +68,7 @@ const CharadesPlay = () => {
 					onChangeSettings={() =>
 						navigate({ to: "/$lang/games/charades/setup", params: { lang } })
 					}
+					pendingWord={round.pendingWord}
 				/>
 			) : null}
 		</AppShell>

@@ -92,6 +92,35 @@ export const useCharadesRound = ({
 		return () => clearTimeout(go);
 	}, [phase, countdown, recalibrate]);
 
+	// Same tick as the round's last seconds, so the 3-2-1 reads as a clock.
+	const lastCountTick = useRef<number | null>(null);
+	useEffect(() => {
+		if (phase !== "countdown" || countdown <= 0) {
+			lastCountTick.current = null;
+			return;
+		}
+		if (lastCountTick.current === countdown) {
+			return;
+		}
+		lastCountTick.current = countdown;
+		playSound("tick");
+	}, [phase, countdown]);
+
+	// The countdown hitting zero is the start gun; a ref keeps it to one shot
+	// even if the effect runs again while the word is coming up.
+	const startCuePlayed = useRef(false);
+	useEffect(() => {
+		if (phase !== "countdown") {
+			startCuePlayed.current = false;
+			return;
+		}
+		if (countdown !== 0 || startCuePlayed.current) {
+			return;
+		}
+		startCuePlayed.current = true;
+		playSound("start");
+	}, [phase, countdown]);
+
 	useEffect(() => {
 		if (phase === "playing" && remainingMs <= 0) {
 			playSound("end");
@@ -182,6 +211,12 @@ export const useCharadesRound = ({
 		isFetching,
 		correctCount: answers.filter((entry) => entry.correct).length,
 		finished: answers.length >= words.length,
+		// The word still on screen when time runs out was never answered, so it
+		// is not in `answers`; the results show it instead of losing it.
+		pendingWord:
+			phase === "results" && answers.length < words.length
+				? (words[index] ?? null)
+				: null,
 		startRound,
 		answer,
 		restart,

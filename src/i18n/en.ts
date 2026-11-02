@@ -48,10 +48,17 @@ export const en = {
 			kitchen: { name: "Kitchen", body: "Pots, pans and cooking." },
 			gaming: { name: "Gaming", body: "Games, consoles and screens." },
 			animals: { name: "Animals", body: "Bugs, beasts and pets." },
-			music: { name: "Music", body: "Instruments, rhythms and stage." },
+			music: { name: "Music", body: "Instruments, rhythms and songs." },
 			sports: { name: "Sports", body: "Fields, feats and medals." },
-			food: { name: "Food", body: "Dishes and cravings." },
-			places: { name: "Places", body: "Spots you end up in." },
+			food: {
+				name: "Food",
+				body: "Dishes and cravings from around the world.",
+			},
+			places: {
+				name: "Places",
+				body: "Countries, corners and historic sites.",
+			},
+			brands: { name: "Brands", body: "Brands everyone recognizes." },
 		},
 	},
 	decks: {
@@ -234,6 +241,7 @@ export const en = {
 		resultsTitle: "Time is up",
 		resultsCorrect: "Correct",
 		resultsPassed: "Passed",
+		resultsFinal: "Final word",
 		again: "Another round",
 		changeSettings: "Change settings",
 		wordsLeft: "Out of words",

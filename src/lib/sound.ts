@@ -9,7 +9,7 @@ const MASTER_VOLUME = 0.24;
 /** How many seconds of the timer get a tick. */
 export const TICK_LAST_SECONDS = 10;
 
-export type Cue = "tick" | "end" | "correct" | "pass";
+export type Cue = "tick" | "start" | "end" | "correct" | "pass";
 
 declare global {
 	interface Window {
@@ -223,6 +223,12 @@ const glide = (
 
 const cues: Record<Cue, (ctx: AudioContext) => void> = {
 	tick,
+	// Two rising notes for the countdown hitting zero: a short "go!" that does
+	// not repeat the end-of-round beeps.
+	start: (ctx) => {
+		marimba(ctx, 659.25, 0, 0.18, 0.24);
+		marimba(ctx, 987.77, 0.12, 0.45, 0.26);
+	},
 	// Three urgent beeps (the part everyone recognizes as "time") and then a
 	// descending marimba tail, so it still ends on the app's tone.
 	end: (ctx) => {

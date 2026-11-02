@@ -160,30 +160,43 @@ const LandingPage = () => {
 							})}
 						</p>
 					</div>
-					<ul className="flex flex-wrap gap-2">
-						{packChoices.map((pack, index) => {
-							const Icon = packIcons[pack];
-							return (
-								<li
-									className="flex items-center gap-1.5 rounded-full border-2 border-border bg-background py-1 pr-2.5 pl-1 font-bold text-xs"
-									key={pack}
+					<div className="pack-marquee -mx-4">
+						<div className="pack-marquee-track flex w-max">
+							{[0, 1].map((copy) => (
+								<ul
+									aria-hidden={copy === 1 ? true : undefined}
+									className={cn(
+										"flex shrink-0 gap-2 pr-2",
+										copy === 1 && "motion-reduce:hidden",
+									)}
+									key={copy}
 								>
-									<span
-										className={cn(
-											"flex size-6 items-center justify-center rounded-full",
-											PACK_ACCENTS[index % PACK_ACCENTS.length],
-										)}
-									>
-										<Icon
-											aria-hidden="true"
-											className="size-3.5 text-accent-ink"
-										/>
-									</span>
-									{m.category.packs[pack].name}
-								</li>
-							);
-						})}
-					</ul>
+									{packChoices.map((pack, index) => {
+										const Icon = packIcons[pack];
+										return (
+											<li
+												className="flex shrink-0 items-center gap-1.5 rounded-full border-2 border-border bg-background py-1 pr-2.5 pl-1 font-bold text-xs"
+												key={pack}
+											>
+												<span
+													className={cn(
+														"flex size-6 items-center justify-center rounded-full",
+														PACK_ACCENTS[index % PACK_ACCENTS.length],
+													)}
+												>
+													<Icon
+														aria-hidden="true"
+														className="size-3.5 text-accent-ink"
+													/>
+												</span>
+												{m.category.packs[pack].name}
+											</li>
+										);
+									})}
+								</ul>
+							))}
+						</div>
+					</div>
 				</div>
 			</section>
 

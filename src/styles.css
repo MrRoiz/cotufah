@@ -258,3 +258,44 @@
 		}
 	}
 }
+
+/* The landing pack strip: two identical rows make the loop seamless, and the
+   track shifts exactly one row per cycle. Hover holds it so a name can be read. */
+@keyframes pack-marquee {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@layer components {
+	.pack-marquee {
+		overflow: hidden;
+		mask-image: linear-gradient(
+			to right,
+			transparent,
+			black 6%,
+			black 94%,
+			transparent
+		);
+	}
+
+	.pack-marquee-track {
+		animation: pack-marquee 36s linear infinite;
+	}
+
+	.pack-marquee:hover .pack-marquee-track,
+	.pack-marquee:focus-within .pack-marquee-track {
+		animation-play-state: paused;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.pack-marquee {
+			overflow-x: auto;
+			mask-image: none;
+		}
+
+		.pack-marquee-track {
+			animation: none;
+		}
+	}
+}

@@ -1,11 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { detectLocale } from "@/fns/locale.functions";
+import { DEFAULT_LOCALE } from "@/i18n";
 
 export const Route = createFileRoute("/")({
-	// Cookie first, then Accept-Language, then Spanish: resolved on the server.
-	beforeLoad: async () => {
-		const lang = await detectLocale();
-		throw redirect({ to: "/$lang", params: { lang } });
+	// Deterministic entry point: the bare domain always lands on Spanish, so a
+	// shared link and its preview never depend on the crawler's language.
+	beforeLoad: () => {
+		throw redirect({ to: "/$lang", params: { lang: DEFAULT_LOCALE } });
 	},
 });

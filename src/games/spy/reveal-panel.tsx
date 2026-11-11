@@ -1,9 +1,12 @@
 import { RotateCcwIcon, UsersIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { Locale } from "@/config/app";
+import { plural } from "@/i18n";
 import type { Messages } from "@/i18n/en";
 
 export const RevealPanel = ({
+	lang,
 	m,
 	caught,
 	spyList,
@@ -13,6 +16,7 @@ export const RevealPanel = ({
 	onAgain,
 	onChangePlayers,
 }: {
+	lang: Locale;
 	m: Messages;
 	caught: boolean;
 	spyList: string;
@@ -25,13 +29,13 @@ export const RevealPanel = ({
 	return (
 		<section className="flex flex-1 flex-col justify-center gap-5">
 			<h1 className="text-center font-display text-4xl uppercase leading-tight">
-				{caught ? m.spy.caught : m.spy.escaped}
+				{plural(lang, spyCount, caught ? m.spy.caught : m.spy.escaped)}
 			</h1>
 
 			<div className="flex flex-col gap-3">
 				<div className="rounded-xl border-2 border-foreground bg-accent-fuchsia px-4 py-3 text-accent-ink">
 					<span className="font-bold text-xs uppercase tracking-widest opacity-75">
-						{spyCount === 1 ? m.spy.spyLabelOne : m.spy.spyLabelMany}
+						{plural(lang, spyCount, m.spy.spyLabel)}
 					</span>
 					<p className="font-display text-3xl uppercase leading-tight">
 						{spyList}

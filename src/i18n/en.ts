@@ -207,11 +207,14 @@ export const en = {
 		voteTitle: "Who do you accuse?",
 		voteBody: "Pick one and reveal.",
 		reveal: "Reveal",
-		spyLabelOne: "The spy was",
-		spyLabelMany: "The spies were",
+		spyLabel: {
+			one: "The spy was",
+			other: "The spies were",
+		},
 		theWordWas: "The word was",
-		caught: "You caught them!",
-		escaped: "They got away",
+		// English does not inflect here, but the shape is shared with Spanish.
+		caught: { one: "You caught them!", other: "You caught them!" },
+		escaped: { one: "They got away", other: "They got away" },
 		again: "Another round",
 		changePlayers: "Change players",
 	},

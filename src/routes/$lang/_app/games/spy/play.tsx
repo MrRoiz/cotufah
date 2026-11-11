@@ -84,6 +84,7 @@ const SpyPlay = () => {
 				<RevealPanel
 					caught={round.caught}
 					isFetching={round.isFetching}
+					lang={lang}
 					m={m}
 					onAgain={round.again}
 					onChangePlayers={changePlayers}

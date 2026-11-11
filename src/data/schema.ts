@@ -3,50 +3,12 @@ import { z } from "zod";
 import { locales } from "@/config/app";
 
 /**
+ * Deck contract, validated at server boot. The client-safe taxonomy lives in
+ * `data/categories.ts`; only the server and local-deck storage import this file.
+ *
  * Decks come in two shapes: each game owns its classic list (`data/<game>/`),
  * and the themed packs are shared by both games per locale (`data/packs/`).
- * "mixed" is a selection, not a file: it draws from the classic list and every
- * themed pack.
  */
-export const themedCategories = [
-	"movies",
-	"disney",
-	"actors",
-	"objects",
-	"kitchen",
-	"gaming",
-	"animals",
-	"music",
-	"sports",
-	"food",
-	"places",
-	"brands",
-] as const;
-
-export type ThemedCategory = (typeof themedCategories)[number];
-
-export const packChoices = ["clasico", ...themedCategories] as const;
-
-export const categoryChoices = ["mixed", ...packChoices] as const;
-
-export const CUSTOM_PREFIX = "custom:";
-
-/** A deck the player wrote on their own phone, addressed as `custom:<id>`. */
-export type CustomCategory = `${typeof CUSTOM_PREFIX}${string}`;
-
-export type CategoryChoice = (typeof categoryChoices)[number] | CustomCategory;
-
-/** What the server can resolve: custom decks never leave the phone. */
-export type ServerCategory = (typeof categoryChoices)[number];
-
-export const isCustomCategory = (value: string): value is CustomCategory =>
-	value.startsWith(CUSTOM_PREFIX);
-
-export const isCategoryChoice = (value: unknown): value is CategoryChoice =>
-	typeof value === "string" &&
-	((categoryChoices as readonly string[]).includes(value) ||
-		isCustomCategory(value));
-
 const words = z.array(z.string().trim().min(1)).min(8);
 
 export const deckSchema = z.object({

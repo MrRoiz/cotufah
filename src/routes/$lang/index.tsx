@@ -8,23 +8,18 @@ import {
 
 import { ExternalLink } from "@/components/external-link";
 import { GameCard } from "@/components/game-card";
+import { LocaleSwitch } from "@/components/locale-switch";
 import { ModeToggle } from "@/components/mode-toggle";
-import { QrCode, useAbsoluteUrl } from "@/components/qr-code";
+import { QrCode } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
 import { app } from "@/config/app";
 import { absoluteUrl } from "@/config/site";
 import { appVersion } from "@/config/version";
-import { packChoices } from "@/data/schema";
+import { packChoices } from "@/data/categories";
 import { packIcons } from "@/games/pack-icons";
 import { games } from "@/games/registry";
-import {
-	getMessages,
-	interpolate,
-	localeLabel,
-	localizedPath,
-	otherLocale,
-	writeLocaleCookie,
-} from "@/i18n";
+import { useAbsoluteUrl } from "@/hooks/use-absolute-url";
+import { getMessages, interpolate, localizedPath, otherLocale } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 const PACK_ACCENTS = [
@@ -42,7 +37,6 @@ const STEP_BADGES = [
 const LandingPage = () => {
 	const { lang } = Route.useParams();
 	const m = getMessages(lang);
-	const other = otherLocale(lang);
 	const appPath = localizedPath(lang, "games");
 	const appUrl = useAbsoluteUrl(appPath);
 
@@ -57,14 +51,11 @@ const LandingPage = () => {
 					{app.name}
 				</Link>
 				<div className="flex items-center gap-2">
-					<Link
+					<LocaleSwitch
 						className="rounded-full px-2 py-1 font-bold text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
-						onClick={() => writeLocaleCookie(other)}
-						params={{ lang: other }}
+						lang={lang}
 						to="/$lang"
-					>
-						{localeLabel(other)}
-					</Link>
+					/>
 					<ModeToggle className="rounded-full border-2" locale={lang} />
 				</div>
 			</header>
@@ -95,7 +86,7 @@ const LandingPage = () => {
 							</Link>
 						</Button>
 						<Button asChild size="lg" variant="outline">
-							<a href="#como-se-juega">
+							<a href="#how-it-works">
 								<ArrowDownIcon aria-hidden="true" />
 								{m.home.howTitle}
 							</a>
@@ -107,7 +98,7 @@ const LandingPage = () => {
 					<h2 className="font-display text-xl uppercase">
 						{m.home.ctaDesktop}
 					</h2>
-					<div className="rounded-xl border-2 border-accent-ink bg-white p-3">
+					<div className="rounded-xl border-2 border-accent-ink bg-qr-paper p-3">
 						<QrCode
 							alt={interpolate(m.gate.qrAlt, { app: app.name })}
 							className="size-40"
@@ -122,7 +113,7 @@ const LandingPage = () => {
 				</aside>
 			</section>
 
-			<section className="flex flex-col gap-5 py-10" id="juegos">
+			<section className="flex flex-col gap-5 py-10">
 				<div className="flex flex-col gap-1">
 					<h2 className="font-display text-3xl uppercase">
 						{m.home.gamesTitle}
@@ -214,7 +205,7 @@ const LandingPage = () => {
 				</div>
 			</section>
 
-			<section className="flex flex-col gap-5 py-10" id="como-se-juega">
+			<section className="flex flex-col gap-5 py-10" id="how-it-works">
 				<h2 className="font-display text-3xl uppercase">{m.home.howTitle}</h2>
 				<ol className="grid gap-x-4 gap-y-6 md:grid-cols-3">
 					{[
@@ -290,14 +281,11 @@ const LandingPage = () => {
 					</span>
 				</p>
 				<div className="flex items-center gap-4">
-					<Link
+					<LocaleSwitch
 						className="font-bold underline-offset-4 hover:text-foreground hover:underline"
-						onClick={() => writeLocaleCookie(other)}
-						params={{ lang: other }}
+						lang={lang}
 						to="/$lang"
-					>
-						{localeLabel(other)}
-					</Link>
+					/>
 					<Link
 						className="font-bold underline-offset-4 hover:text-foreground hover:underline"
 						params={{ lang }}

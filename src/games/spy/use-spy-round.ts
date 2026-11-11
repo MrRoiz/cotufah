@@ -1,23 +1,32 @@
-import { useEffect, useRef, useState } from "react";
-import type { CategoryChoice } from "@/data/schema";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+import type { Locale } from "@/config/app";
+import type { CategoryChoice } from "@/data/categories";
 import { assignSpies } from "@/games/spy/assign";
+import {
+	DISCUSS_SECONDS,
+	HANDOFF_SECONDS,
+	type SpyPhase,
+} from "@/games/spy/rules";
 import { useRoundWords } from "@/games/use-round-words";
-import { useCountdown } from "@/hooks/use-countdown";
+import { FINAL_SECONDS, useCountdown } from "@/hooks/use-countdown";
 import { useWakeLock } from "@/hooks/use-wake-lock";
 import { haptic } from "@/lib/haptics";
-import { playSound, TICK_LAST_SECONDS } from "@/lib/sound";
+import { playSound } from "@/lib/sound";
 
-export const DISCUSS_SECONDS = 120;
-export const HANDOFF_SECONDS = 5;
-export const MIN_PLAYERS = 3;
+const listFormatters = new Map<Locale, Intl.ListFormat>();
 
-export type SpyPhase = "deal" | "handoff" | "discuss" | "vote" | "reveal";
-
-export const parsePlayers = (value: string): string[] => {
-	return value
-		.split("|")
-		.map((name) => decodeURIComponent(name))
-		.filter(Boolean);
+const listFormatter = (locale: Locale): Intl.ListFormat => {
+	const cached = listFormatters.get(locale);
+	if (cached) {
+		return cached;
+	}
+	const formatter = new Intl.ListFormat(locale, {
+		style: "long",
+		type: "conjunction",
+	});
+	listFormatters.set(locale, formatter);
+	return formatter;
 };
 
 /** Round state for Spy: one word, one assignment, one phase at a time. */
@@ -27,7 +36,7 @@ export const useSpyRound = ({
 	spyCount,
 	category,
 }: {
-	lang: "es" | "en";
+	lang: Locale;
 	players: string[];
 	spyCount: number;
 	category: CategoryChoice;
@@ -65,11 +74,7 @@ export const useSpyRound = ({
 			return;
 		}
 		const second = Math.ceil(discussTimer.remainingMs / 1000);
-		if (
-			second > 0 &&
-			second <= TICK_LAST_SECONDS &&
-			lastTick.current !== second
-		) {
+		if (second > 0 && second <= FINAL_SECONDS && lastTick.current !== second) {
 			lastTick.current = second;
 			playSound("tick");
 		}
@@ -87,6 +92,15 @@ export const useSpyRound = ({
 		count: 1,
 	});
 	const word = words[0];
+
+	const spyNames = useMemo(
+		() => assignment.map((spyIndex) => players[spyIndex] ?? "").filter(Boolean),
+		[assignment, players],
+	);
+	const spyList = useMemo(
+		() => listFormatter(lang).format(spyNames),
+		[lang, spyNames],
+	);
 
 	useEffect(() => {
 		if (phase !== "handoff" || handoffTimer.remainingMs > 0) {
@@ -123,10 +137,6 @@ export const useSpyRound = ({
 		refetch();
 	};
 
-	const spyNames = assignment
-		.map((spyIndex) => players[spyIndex] ?? "")
-		.filter(Boolean);
-
 	return {
 		phase,
 		handoffMs: handoffTimer.remainingMs,
@@ -142,12 +152,8 @@ export const useSpyRound = ({
 		isFetching,
 		currentPlayer: players[index] ?? "",
 		nextPlayerName: players[index + 1] ?? "",
-		isLastPlayer: index + 1 >= players.length,
 		isSpy: assignment.includes(index),
-		spyList: new Intl.ListFormat(lang, {
-			style: "long",
-			type: "conjunction",
-		}).format(spyNames),
+		spyList,
 		caught: accused !== null && assignment.includes(accused),
 		setPhase,
 		setRevealed,

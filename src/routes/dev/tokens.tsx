@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { ModeToggle } from "@/components/mode-toggle";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/providers/theme-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

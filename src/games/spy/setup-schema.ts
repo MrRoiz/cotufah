@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { MIN_PLAYERS } from "@/games/spy/use-spy-round";
+import { MIN_PLAYERS } from "@/games/spy/rules";
 import { interpolate } from "@/i18n";
 import type { Messages } from "@/i18n/en";
 
-export const MIN_NAME_LENGTH = 3;
+const MIN_NAME_LENGTH = 3;
 
 /** Names are trimmed, at least three letters and unique for the round. */
 export const createPlayersSchema = (m: Messages) =>

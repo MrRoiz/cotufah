@@ -1,5 +1,6 @@
 import { TimerBar } from "@/components/timer-bar";
-import { HANDOFF_SECONDS } from "@/games/spy/use-spy-round";
+import { HANDOFF_SECONDS } from "@/games/spy/rules";
+import { secondsLeft } from "@/hooks/use-countdown";
 import type { Messages } from "@/i18n/en";
 
 /** Five seconds between players, so the passer cannot see the next role. */
@@ -12,7 +13,7 @@ export const HandoffPanel = ({
 	name: string;
 	remainingMs: number;
 }) => {
-	const seconds = Math.ceil(remainingMs / 1000);
+	const seconds = secondsLeft(remainingMs);
 
 	return (
 		<section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">

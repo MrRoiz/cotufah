@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { type CategoryChoice, isCustomCategory } from "@/data/schema";
+import type { Locale } from "@/config/app";
+import { type CategoryChoice, isCustomCategory } from "@/data/categories";
 import { getRoundFn } from "@/fns/decks.functions";
 import { pick } from "@/games/pick";
+import type { GameSlug } from "@/games/registry";
 import { findCustomDeck } from "@/lib/custom-decks";
 
 /**
@@ -16,8 +18,8 @@ export const useRoundWords = ({
 	category,
 	count,
 }: {
-	game: "spy" | "charades";
-	lang: "es" | "en";
+	game: GameSlug;
+	lang: Locale;
 	category: CategoryChoice;
 	count: number;
 }) => {

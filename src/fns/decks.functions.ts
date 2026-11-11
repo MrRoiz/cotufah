@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { locales } from "@/config/app";
-import { categoryChoices } from "@/data/schema";
+import { categoryChoices, MAX_ROUND_WORDS } from "@/data/categories";
 import { getRoundWords } from "@/server/decks.server";
 
 /**
@@ -14,8 +14,8 @@ export const getRoundFn = createServerFn({ method: "GET" })
 		z.object({
 			game: z.enum(["spy", "charades"]),
 			locale: z.enum(locales),
-			count: z.number().int().min(1).max(40).default(12),
-			category: z.enum(categoryChoices).default("clasico"),
+			count: z.number().int().min(1).max(MAX_ROUND_WORDS),
+			category: z.enum(categoryChoices),
 		}),
 	)
 	.handler(({ data }) =>

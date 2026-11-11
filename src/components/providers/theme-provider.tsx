@@ -15,14 +15,10 @@ import {
  * Colors are never duplicated here: the browser-chrome color is read from the
  * `--background` token on <html>, so src/styles.css stays the only palette.
  */
-export type Theme = "light" | "dark" | "system";
-export type ResolvedTheme = "light" | "dark";
+export const themes = ["light", "dark", "system"] as const;
 
-type ThemeProviderProps = {
-	children: ReactNode;
-	defaultTheme?: Theme;
-	storageKey?: string;
-};
+export type Theme = (typeof themes)[number];
+type ResolvedTheme = "light" | "dark";
 
 type ThemeProviderState = {
 	theme: Theme;
@@ -31,7 +27,8 @@ type ThemeProviderState = {
 };
 
 /** Brand-free on purpose: a rename must not reset anyone's theme. */
-const DEFAULT_STORAGE_KEY = "app.theme";
+const STORAGE_KEY = "app.theme";
+const DEFAULT_THEME: Theme = "system";
 
 const getThemeScript = (storageKey: string, defaultTheme: Theme) => {
 	const key = JSON.stringify(storageKey);
@@ -72,31 +69,27 @@ const applyTheme = (theme: Theme): ResolvedTheme => {
 	return resolved;
 };
 
-export const ThemeProvider = ({
-	children,
-	defaultTheme = "system",
-	storageKey = DEFAULT_STORAGE_KEY,
-}: ThemeProviderProps) => {
-	const [theme, setThemeState] = useState<Theme>(defaultTheme);
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+	const [theme, setThemeState] = useState<Theme>(DEFAULT_THEME);
 	const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(
-		defaultTheme === "system" ? "light" : defaultTheme,
+		DEFAULT_THEME === "system" ? "light" : DEFAULT_THEME,
 	);
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
 		let stored: string | null = null;
 		try {
-			stored = localStorage.getItem(storageKey);
+			stored = localStorage.getItem(STORAGE_KEY);
 		} catch {
 			stored = null;
 		}
 		setThemeState(
 			stored === "light" || stored === "dark" || stored === "system"
 				? stored
-				: defaultTheme,
+				: DEFAULT_THEME,
 		);
 		setMounted(true);
-	}, [defaultTheme, storageKey]);
+	}, []);
 
 	useEffect(() => {
 		if (!mounted) {
@@ -118,7 +111,7 @@ export const ThemeProvider = ({
 
 	const setTheme = (next: Theme) => {
 		try {
-			localStorage.setItem(storageKey, next);
+			localStorage.setItem(STORAGE_KEY, next);
 		} catch {
 			// Private mode: switches this session, forgets on reload.
 		}
@@ -127,7 +120,7 @@ export const ThemeProvider = ({
 
 	return (
 		<ThemeProviderContext value={{ theme, resolvedTheme, setTheme }}>
-			<ScriptOnce>{getThemeScript(storageKey, defaultTheme)}</ScriptOnce>
+			<ScriptOnce>{getThemeScript(STORAGE_KEY, DEFAULT_THEME)}</ScriptOnce>
 			{children}
 		</ThemeProviderContext>
 	);

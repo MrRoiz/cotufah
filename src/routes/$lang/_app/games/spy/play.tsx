@@ -1,17 +1,15 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useMemo } from "react";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { app } from "@/config/app";
-import { isCategoryChoice } from "@/data/schema";
+import { pageMeta } from "@/config/seo";
+import { isCategoryChoice } from "@/data/categories";
 import { DealPanel } from "@/games/spy/deal-panel";
 import { DiscussPanel } from "@/games/spy/discuss-panel";
 import { HandoffPanel } from "@/games/spy/handoff-panel";
 import { RevealPanel } from "@/games/spy/reveal-panel";
-import {
-	MIN_PLAYERS,
-	parsePlayers,
-	useSpyRound,
-} from "@/games/spy/use-spy-round";
+import { MIN_PLAYERS, parsePlayers, parseSpyCount } from "@/games/spy/rules";
+import { useSpyRound } from "@/games/spy/use-spy-round";
 import { VotePanel } from "@/games/spy/vote-panel";
 import { getMessages } from "@/i18n";
 
@@ -25,7 +23,8 @@ const SpyPlay = () => {
 	const m = getMessages(lang);
 	const navigate = useNavigate();
 
-	const players = parsePlayers(playersParam);
+	// Stable identity: the round memoizes the spy list from these names.
+	const players = useMemo(() => parsePlayers(playersParam), [playersParam]);
 	const round = useSpyRound({ lang, players, spyCount, category });
 
 	const changePlayers = () =>
@@ -90,7 +89,7 @@ const SpyPlay = () => {
 					onChangePlayers={changePlayers}
 					spyCount={round.assignment.length}
 					spyList={round.spyList}
-					word={round.word ?? "—"}
+					word={round.word ?? ""}
 				/>
 			) : null}
 		</AppShell>
@@ -100,11 +99,14 @@ export const Route = createFileRoute("/$lang/_app/games/spy/play")({
 	// Roles are dealt in the browser; rendering them on the server would hand
 	// everyone the same notification and a hydration mismatch for the spy.
 	ssr: false,
-	validateSearch: (search: Record<string, unknown>) => ({
-		category: isCategoryChoice(search.category) ? search.category : "clasico",
-		players: typeof search.players === "string" ? search.players : "",
-		spies: Number(search.spies ?? 1),
-	}),
+	validateSearch: (search: Record<string, unknown>) => {
+		const players = typeof search.players === "string" ? search.players : "";
+		return {
+			category: isCategoryChoice(search.category) ? search.category : "clasico",
+			players,
+			spies: parseSpyCount(search.spies, parsePlayers(players).length),
+		};
+	},
 	beforeLoad: ({ params, search }) => {
 		if (parsePlayers(search.players).length < MIN_PLAYERS) {
 			throw redirect({ to: "/$lang/games/spy/setup", params });
@@ -112,12 +114,11 @@ export const Route = createFileRoute("/$lang/_app/games/spy/play")({
 	},
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.games.spy.name} — ${app.name}` },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.games.spy.name,
+			noindex: true,
+		});
 	},
 	component: SpyPlay,
 });

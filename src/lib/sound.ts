@@ -6,10 +6,8 @@
  */
 const STORAGE_KEY = "app.sound";
 const MASTER_VOLUME = 0.24;
-/** How many seconds of the timer get a tick. */
-export const TICK_LAST_SECONDS = 10;
 
-export type Cue = "tick" | "start" | "end" | "correct" | "pass";
+type Cue = "tick" | "start" | "end" | "correct" | "pass";
 
 declare global {
 	interface Window {
@@ -71,7 +69,7 @@ const audioContext = (): AudioContext | null => {
 };
 
 /** Call from a tap: browsers keep the context suspended until a gesture. */
-export const unlockSound = () => {
+const unlockSound = () => {
 	const ctx = audioContext();
 	if (ctx && ctx.state === "suspended") {
 		void ctx.resume();

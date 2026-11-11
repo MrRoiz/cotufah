@@ -7,23 +7,18 @@ import {
 	Volume2Icon,
 } from "lucide-react";
 
-import { BackLink } from "@/components/back-link";
+import { AppPageHeader } from "@/components/app-page-header";
+import { ChoiceButton } from "@/components/choice-button";
 import { AppShell } from "@/components/layout/app-shell";
-import { type Theme, useTheme } from "@/components/theme-provider";
-import { Button } from "@/components/ui/button";
+import { themes, useTheme } from "@/components/providers/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { app, type Locale, locales } from "@/config/app";
+import { pageMeta } from "@/config/seo";
 import { appVersion } from "@/config/version";
 import { useSoundMuted } from "@/hooks/use-sound";
-import {
-	getMessages,
-	interpolate,
-	localeLabel,
-	writeLocaleCookie,
-} from "@/i18n";
+import { getMessages, interpolate, localeLabel } from "@/i18n";
 import { playSound, setSoundMuted } from "@/lib/sound";
-import { cn } from "@/lib/utils";
 
 const SettingsPage = () => {
 	const { lang } = Route.useParams();
@@ -32,27 +27,21 @@ const SettingsPage = () => {
 	const { theme, setTheme } = useTheme();
 	const muted = useSoundMuted();
 
-	const themeLabels: Record<Theme, string> = {
-		light: m.common.light,
-		dark: m.common.dark,
-		system: m.common.system,
-	};
-
 	const switchLocale = (next: Locale) => {
 		if (next === lang) {
 			return;
 		}
-		writeLocaleCookie(next);
 		navigate({ to: "/$lang/settings", params: { lang: next } });
 	};
 
 	return (
 		<AppShell>
-			<header className="flex flex-col gap-3 pt-6 pb-6">
-				<BackLink label={m.common.home} lang={lang} />
-				<h1 className="font-display text-4xl uppercase">{m.settings.title}</h1>
-				<p className="text-muted-foreground">{m.settings.subtitle}</p>
-			</header>
+			<AppPageHeader
+				backLabel={m.common.home}
+				lang={lang}
+				subtitle={m.settings.subtitle}
+				title={m.settings.title}
+			/>
 
 			<div className="flex flex-col gap-4">
 				<Card>
@@ -68,17 +57,14 @@ const SettingsPage = () => {
 					<CardContent>
 						<div className="flex gap-2">
 							{locales.map((locale) => (
-								<Button
-									className={cn(
-										"flex-1 border-2",
-										locale === lang && "border-foreground",
-									)}
+								<ChoiceButton
+									className="flex-1"
 									key={locale}
 									onClick={() => switchLocale(locale)}
-									variant={locale === lang ? "default" : "outline"}
+									selected={locale === lang}
 								>
 									{localeLabel(locale)}
-								</Button>
+								</ChoiceButton>
 							))}
 						</div>
 					</CardContent>
@@ -96,19 +82,16 @@ const SettingsPage = () => {
 					</CardHeader>
 					<CardContent>
 						<div className="flex gap-2">
-							{(["light", "dark", "system"] as const).map((option) => (
-								<Button
-									className={cn(
-										"flex-1 border-2",
-										theme === option && "border-foreground",
-									)}
+							{themes.map((option) => (
+								<ChoiceButton
+									className="flex-1"
 									key={option}
 									onClick={() => setTheme(option)}
+									selected={theme === option}
 									size="sm"
-									variant={theme === option ? "default" : "outline"}
 								>
-									{themeLabels[option]}
-								</Button>
+									{m.common[option]}
+								</ChoiceButton>
 							))}
 						</div>
 					</CardContent>
@@ -202,13 +185,12 @@ const SettingsPage = () => {
 export const Route = createFileRoute("/$lang/_app/settings")({
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.settings.title} — ${app.name}` },
-				{ name: "description", content: m.settings.subtitle },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.settings.title,
+			description: m.settings.subtitle,
+			noindex: true,
+		});
 	},
 	component: SettingsPage,
 });

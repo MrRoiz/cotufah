@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type TiltDirection = "down" | "up";
+type TiltDirection = "down" | "up";
 
 /** |g| ≈ 9.8 on a real accelerometer; browsers with no sensor emit zeros. */
 const hasGravity = (event: DeviceMotionEvent): boolean => {
@@ -12,14 +12,15 @@ const hasGravity = (event: DeviceMotionEvent): boolean => {
 	return magnitude > 3;
 };
 
+/** m/s² away from the calibrated pose before it counts as a tilt. */
+const TILT_THRESHOLD = 5.5;
+/** Ignore repeat tilts within this window (ms). */
+const TILT_COOLDOWN_MS = 1100;
+/** The tilt has to stay past the threshold this long to count (ms). */
+const TILT_HOLD_MS = 120;
+
 type TiltOptions = {
 	enabled: boolean;
-	/** m/s² away from the calibrated pose before it counts as a tilt. */
-	threshold?: number;
-	/** Ignore repeat tilts within this window (ms). */
-	cooldownMs?: number;
-	/** The tilt has to stay past the threshold this long to count (ms). */
-	holdMs?: number;
 	onTilt: (direction: TiltDirection) => void;
 };
 
@@ -41,13 +42,7 @@ type TiltOptions = {
  * (hysteresis at 40% of the threshold) before the next gesture, and two answers
  * are at least 1.1s apart.
  */
-export const useTilt = ({
-	enabled,
-	threshold = 5.5,
-	cooldownMs = 1100,
-	holdMs = 120,
-	onTilt,
-}: TiltOptions) => {
+export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 	const baseline = useRef<number | null>(null);
 	/** `null` until the filter has seen a real sample, so the baseline is not
 	 * captured from a value still sliding away from zero. */
@@ -94,14 +89,14 @@ export const useTilt = ({
 
 			// Hysteresis: re-arm only once the phone is close to neutral again, so
 			// jitter around the threshold cannot fire twice.
-			if (Math.abs(difference) < threshold * 0.4) {
+			if (Math.abs(difference) < TILT_THRESHOLD * 0.4) {
 				armed.current = true;
 				pastSince.current = null;
 				pastDirection.current = null;
 				return;
 			}
 
-			if (Math.abs(difference) < threshold) {
+			if (Math.abs(difference) < TILT_THRESHOLD) {
 				pastSince.current = null;
 				pastDirection.current = null;
 				return;
@@ -116,11 +111,11 @@ export const useTilt = ({
 				pastDirection.current = direction;
 				return;
 			}
-			if (now - pastSince.current < holdMs) {
+			if (now - pastSince.current < TILT_HOLD_MS) {
 				return;
 			}
 
-			if (!armed.current || now - lastFire.current < cooldownMs) {
+			if (!armed.current || now - lastFire.current < TILT_COOLDOWN_MS) {
 				return;
 			}
 
@@ -133,7 +128,7 @@ export const useTilt = ({
 
 		window.addEventListener("devicemotion", handle);
 		return () => window.removeEventListener("devicemotion", handle);
-	}, [enabled, threshold, cooldownMs, holdMs]);
+	}, [enabled]);
 
 	const recalibrate = useCallback(() => {
 		baseline.current = null;
@@ -152,23 +147,23 @@ type PermissionRequester = {
 
 /**
  * iOS 13+ gates motion sensors behind a user gesture. Must be called from a
- * tap; returns true when we may listen (or when no gate exists).
-
+ * tap; whether it is granted only changes which controls the round offers, and
+ * the round detects that from the events themselves.
  */
-export const requestMotionPermission = async (): Promise<boolean> => {
+export const requestMotionPermission = async (): Promise<void> => {
 	if (typeof DeviceMotionEvent === "undefined") {
-		return false;
+		return;
 	}
 
 	const requester = DeviceMotionEvent as unknown as PermissionRequester;
 	if (typeof requester.requestPermission !== "function") {
-		return true;
+		return;
 	}
 
 	try {
-		return (await requester.requestPermission()) === "granted";
+		await requester.requestPermission();
 	} catch {
-		return false;
+		// Denied: the round falls back to the tap zones.
 	}
 };
 

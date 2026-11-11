@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "@/components/external-link";
 import { PageHeader } from "@/components/page-header";
 import { app } from "@/config/app";
-import { absoluteUrl } from "@/config/site";
+import { pageMeta } from "@/config/seo";
 import { getMessages, interpolate } from "@/i18n";
 
 const AboutPage = () => {
@@ -51,19 +51,13 @@ const AboutPage = () => {
 export const Route = createFileRoute("/$lang/about")({
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		const canonical = absoluteUrl(`/${params.lang}/about`);
-		const title = `${m.about.title} — ${app.name}`;
 
-		return {
-			meta: [
-				{ title },
-				{ name: "description", content: m.about.intro },
-				{ property: "og:title", content: title },
-				{ property: "og:description", content: m.about.intro },
-				...(canonical ? [{ property: "og:url", content: canonical }] : []),
-			],
-			links: canonical ? [{ rel: "canonical", href: canonical }] : [],
-		};
+		return pageMeta({
+			lang: params.lang,
+			path: "/about",
+			title: m.about.title,
+			description: m.about.intro,
+		});
 	},
 	component: AboutPage,
 });

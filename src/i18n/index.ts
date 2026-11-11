@@ -4,10 +4,6 @@ import { es } from "@/i18n/es";
 
 const messages: Record<Locale, Messages> = { en, es };
 
-/** Brand-free on purpose: a rename must not reset anyone's language. */
-export const LOCALE_COOKIE = "app.locale";
-export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-
 export const DEFAULT_LOCALE: Locale = app.defaultLocale;
 
 export const isLocale = (value: unknown): value is Locale => {
@@ -17,7 +13,7 @@ export const isLocale = (value: unknown): value is Locale => {
 };
 
 export const getMessages = (locale: Locale): Messages => {
-	return messages[locale] ?? messages[DEFAULT_LOCALE];
+	return messages[locale];
 };
 
 export const otherLocale = (locale: Locale): Locale => {
@@ -35,22 +31,14 @@ export const localeFromPath = (pathname: string): Locale => {
 	return isLocale(first) ? first : DEFAULT_LOCALE;
 };
 
-export const localizedPath = (locale: Locale, path = ""): string => {
+export const localizedPath = (locale: Locale, path: string): string => {
 	const clean = path.replace(/^\/+/, "");
 	return clean ? `/${locale}/${clean}` : `/${locale}`;
 };
 
-export const writeLocaleCookie = (locale: Locale): void => {
-	if (typeof document === "undefined") {
-		return;
-	}
-	// biome-ignore lint/suspicious/noDocumentCookie: the Cookie Store API is not available on iOS Safari, our primary target.
-	document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
-};
-
 export const interpolate = (
 	template: string,
-	vars: Record<string, string | number> = {},
+	vars: Record<string, string | number>,
 ): string => {
 	return template.replace(/\{(\w+)\}/g, (match, key: string) => {
 		const value = vars[key];
@@ -62,11 +50,23 @@ export const interpolate = (
  * Spanish plurals are not English plurals ("1 jugador" / "2 jugadores"), so
  * counts go through Intl rather than string concatenation.
  */
+const pluralRules = new Map<Locale, Intl.PluralRules>();
+
+const pluralRuleFor = (locale: Locale): Intl.PluralRules => {
+	const cached = pluralRules.get(locale);
+	if (cached) {
+		return cached;
+	}
+	const rules = new Intl.PluralRules(locale);
+	pluralRules.set(locale, rules);
+	return rules;
+};
+
 export const plural = (
 	locale: Locale,
 	count: number,
 	forms: { one: string; other: string },
 ): string => {
-	const rule = new Intl.PluralRules(locale).select(count);
+	const rule = pluralRuleFor(locale).select(count);
 	return interpolate(rule === "one" ? forms.one : forms.other, { count });
 };

@@ -1,11 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { app } from "@/config/app";
-import { isCategoryChoice } from "@/data/schema";
+import { pageMeta } from "@/config/seo";
+import { isCategoryChoice } from "@/data/categories";
+import { CharadesCountdown } from "@/games/charades/countdown-screen";
 import { CharadesIntro } from "@/games/charades/intro-screen";
 import { CharadesPlayStage } from "@/games/charades/play-stage";
 import { CharadesResults } from "@/games/charades/results-screen";
+import { parseDuration } from "@/games/charades/rules";
 import { useCharadesRound } from "@/games/charades/use-charades-round";
 import { getMessages } from "@/i18n";
 
@@ -17,16 +19,7 @@ const CharadesPlay = () => {
 	const round = useCharadesRound({ lang, duration, category });
 
 	if (round.phase === "countdown") {
-		return (
-			<div className="stage-landscape items-center justify-center">
-				<span
-					className="animate-in zoom-in-50 font-display text-8xl tabular-nums duration-150"
-					key={round.countdown}
-				>
-					{round.countdown > 0 ? round.countdown : "¡Ya!"}
-				</span>
-			</div>
-		);
+		return <CharadesCountdown countdown={round.countdown} go={m.charades.go} />;
 	}
 
 	if (round.phase === "playing") {
@@ -78,16 +71,15 @@ export const Route = createFileRoute("/$lang/_app/games/charades/play")({
 	ssr: false,
 	validateSearch: (search: Record<string, unknown>) => ({
 		category: isCategoryChoice(search.category) ? search.category : "clasico",
-		duration: Number(search.duration ?? 90),
+		duration: parseDuration(search.duration),
 	}),
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.games.charades.name} — ${app.name}` },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.games.charades.name,
+			noindex: true,
+		});
 	},
 	component: CharadesPlay,
 });

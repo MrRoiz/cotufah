@@ -1,6 +1,10 @@
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
-import { useTheme } from "@/components/theme-provider";
+import {
+	type Theme,
+	themes,
+	useTheme,
+} from "@/components/providers/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -10,6 +14,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Locale } from "@/config/app";
 import { getMessages } from "@/i18n";
+
+const icons: Record<Theme, typeof SunIcon> = {
+	light: SunIcon,
+	dark: MoonIcon,
+	system: MonitorIcon,
+};
 
 export const ModeToggle = ({
 	locale,
@@ -36,18 +46,15 @@ export const ModeToggle = ({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				<DropdownMenuItem onClick={() => setTheme("light")}>
-					<SunIcon aria-hidden="true" />
-					{m.common.light}
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("dark")}>
-					<MoonIcon aria-hidden="true" />
-					{m.common.dark}
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("system")}>
-					<MonitorIcon aria-hidden="true" />
-					{m.common.system}
-				</DropdownMenuItem>
+				{themes.map((option) => {
+					const Icon = icons[option];
+					return (
+						<DropdownMenuItem key={option} onClick={() => setTheme(option)}>
+							<Icon aria-hidden="true" />
+							{m.common[option]}
+						</DropdownMenuItem>
+					);
+				})}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

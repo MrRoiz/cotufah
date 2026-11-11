@@ -11,11 +11,8 @@ import { useEffect } from "react";
  *
  * Unsupported browsers (older iOS) simply keep their normal sleep behaviour.
  */
-export const useWakeLock = (active = true) => {
+export const useWakeLock = () => {
 	useEffect(() => {
-		if (!active) {
-			return;
-		}
 		if (typeof navigator === "undefined" || !("wakeLock" in navigator)) {
 			return;
 		}
@@ -54,5 +51,5 @@ export const useWakeLock = (active = true) => {
 			void sentinel?.release().catch(() => {});
 			sentinel = null;
 		};
-	}, [active]);
+	}, []);
 };

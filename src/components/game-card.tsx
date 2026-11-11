@@ -4,7 +4,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/config/app";
-import { type GameEntry, gameCopy } from "@/games/registry";
+import type { GameEntry } from "@/games/registry";
 import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +18,6 @@ export const GameCard = ({
 	game,
 	lang,
 	variant = "app",
-	className,
 }: {
 	game: GameEntry;
 	lang: Locale;
@@ -28,19 +27,13 @@ export const GameCard = ({
 	 * the hero as a filled call to action.
 	 */
 	variant?: "app" | "landing";
-	className?: string;
 }) => {
 	const m = getMessages(lang);
-	const copy = gameCopy(m, game.slug);
+	const copy = m.games[game.slug];
 	const Heading = variant === "app" ? "h2" : "h3";
 
 	return (
-		<article
-			className={cn(
-				"flex flex-col overflow-hidden rounded-xl border-2 border-foreground bg-card",
-				className,
-			)}
-		>
+		<article className="flex flex-col overflow-hidden rounded-xl border-2 border-foreground bg-card">
 			<div
 				className={cn("flex flex-col gap-1 bg-linear-to-br p-5", game.gradient)}
 			>

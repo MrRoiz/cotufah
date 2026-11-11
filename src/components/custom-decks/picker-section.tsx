@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { SparklesIcon } from "lucide-react";
 
 import type { Locale } from "@/config/app";
-import type { CustomCategory } from "@/data/schema";
+import type { CategoryChoice, CustomCategory } from "@/data/categories";
 import { getMessages, plural } from "@/i18n";
 import { type CustomDeck, customCategoryId } from "@/lib/custom-decks";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ export const CustomDeckPicker = ({
 }: {
 	decks: CustomDeck[];
 	locale: Locale;
-	selected: string;
+	selected: CategoryChoice;
 	onChoose: (value: CustomCategory) => void;
 }) => {
 	const m = getMessages(locale);

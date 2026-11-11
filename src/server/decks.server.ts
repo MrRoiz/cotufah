@@ -1,15 +1,9 @@
+import { type ServerCategory, themedCategories } from "@/data/categories";
 import { charadesEn } from "@/data/charades/en";
 import { charadesEs } from "@/data/charades/es";
 import { packsEn } from "@/data/packs/en";
 import { packsEs } from "@/data/packs/es";
-import {
-	type Deck,
-	deckSchema,
-	type Pack,
-	packSchema,
-	type ServerCategory,
-	themedCategories,
-} from "@/data/schema";
+import { type Deck, deckSchema, type Pack, packSchema } from "@/data/schema";
 import { spyEn } from "@/data/spy/en";
 import { spyEs } from "@/data/spy/es";
 import { pick } from "@/games/pick";
@@ -43,22 +37,35 @@ const findPack = (locale: Deck["locale"]): Pack => {
 	return pack;
 };
 
+/** The mixed list is static module data, so build it once per locale. */
+const mixedWords = new Map<Deck["locale"], string[]>();
+
+const mixedFor = (deck: Deck): string[] => {
+	const cached = mixedWords.get(deck.locale);
+	if (cached) {
+		return cached;
+	}
+	const pack = findPack(deck.locale);
+	// Classic words can repeat inside a pack (playa, parque, cine); a Set keeps
+	// a round from dealing the same word twice.
+	const words = [
+		...new Set([
+			...deck.items,
+			...themedCategories.flatMap((key) => pack.categories[key]),
+		]),
+	];
+	mixedWords.set(deck.locale, words);
+	return words;
+};
+
 const itemsFor = (deck: Deck, category: ServerCategory): string[] => {
 	if (category === "clasico") {
 		return deck.items;
 	}
-	const pack = findPack(deck.locale);
 	if (category === "mixed") {
-		// Classic words can repeat inside a pack (playa, parque, cine); a Set
-		// keeps a round from dealing the same word twice.
-		return [
-			...new Set([
-				...deck.items,
-				...themedCategories.flatMap((key) => pack.categories[key]),
-			]),
-		];
+		return mixedFor(deck);
 	}
-	return pack.categories[category];
+	return findPack(deck.locale).categories[category];
 };
 
 /** Words for one round. Fetched once, when the round starts. */
@@ -66,7 +73,7 @@ export const getRoundWords = (
 	game: Deck["game"],
 	locale: Deck["locale"],
 	count: number,
-	category: ServerCategory = "clasico",
+	category: ServerCategory,
 ): string[] => {
 	return pick(itemsFor(findDeck(game, locale), category), count);
 };

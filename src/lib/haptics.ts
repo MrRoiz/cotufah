@@ -2,7 +2,7 @@
  * Haptics for gesture feedback. Android honours this; iOS Safari has no
  * vibration API, so on iPhone the visual flash is the only confirmation.
  */
-export type HapticKind = "correct" | "pass" | "end";
+type HapticKind = "correct" | "pass" | "end";
 
 const patterns: Record<HapticKind, number | number[]> = {
 	correct: 60,

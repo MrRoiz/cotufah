@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-import type { CategoryChoice } from "@/data/schema";
-import type { CharadesAnswer } from "@/games/charades/results-screen";
+import type { Locale } from "@/config/app";
+import { type CategoryChoice, MAX_ROUND_WORDS } from "@/data/categories";
+import type {
+	CharadesAnswer,
+	CharadesPhase,
+	Duration,
+} from "@/games/charades/rules";
 import { useRoundWords } from "@/games/use-round-words";
-import { useCountdown } from "@/hooks/use-countdown";
+import { FINAL_SECONDS, useCountdown } from "@/hooks/use-countdown";
 import {
 	motionProbeReliable,
 	requestMotionPermission,
@@ -12,7 +17,7 @@ import {
 } from "@/hooks/use-tilt";
 import { useWakeLock } from "@/hooks/use-wake-lock";
 import { haptic } from "@/lib/haptics";
-import { playSound, TICK_LAST_SECONDS } from "@/lib/sound";
+import { playSound } from "@/lib/sound";
 
 const COUNTDOWN_FROM = 3;
 /** Ignore answers that land within this window: taps are easy to double. */
@@ -20,16 +25,14 @@ const ANSWER_COOLDOWN_MS = 700;
 /** Give a working sensor a moment before replacing it with tap zones. */
 const ZONES_GRACE_MS = 900;
 
-export type CharadesPhase = "intro" | "countdown" | "playing" | "results";
-
 /** All round state in one place, so the route only wires props to panels. */
 export const useCharadesRound = ({
 	lang,
 	duration,
 	category,
 }: {
-	lang: "es" | "en";
-	duration: number;
+	lang: Locale;
+	duration: Duration;
 	category: CategoryChoice;
 }) => {
 	useWakeLock();
@@ -38,7 +41,7 @@ export const useCharadesRound = ({
 		game: "charades",
 		lang,
 		category,
-		count: 40,
+		count: MAX_ROUND_WORDS,
 	});
 
 	const [phase, setPhase] = useState<CharadesPhase>("intro");
@@ -52,6 +55,16 @@ export const useCharadesRound = ({
 	const [flash, setFlash] = useState<"correct" | "pass" | null>(null);
 	const [zonesVisible, setZonesVisible] = useState(false);
 	const lastAnswerAt = useRef(0);
+	const flashTimer = useRef<number | null>(null);
+
+	useEffect(
+		() => () => {
+			if (flashTimer.current !== null) {
+				window.clearTimeout(flashTimer.current);
+			}
+		},
+		[],
+	);
 
 	const probeReliable = motionProbeReliable();
 	const probe = useMotionProbe(probeReliable && phase === "intro");
@@ -137,11 +150,7 @@ export const useCharadesRound = ({
 			return;
 		}
 		const second = Math.ceil(remainingMs / 1000);
-		if (
-			second > 0 &&
-			second <= TICK_LAST_SECONDS &&
-			lastTick.current !== second
-		) {
+		if (second > 0 && second <= FINAL_SECONDS && lastTick.current !== second) {
 			lastTick.current = second;
 			playSound("tick");
 		}
@@ -164,7 +173,7 @@ export const useCharadesRound = ({
 		}
 
 		setFlash(correct ? "correct" : "pass");
-		window.setTimeout(() => setFlash(null), 320);
+		flashTimer.current = window.setTimeout(() => setFlash(null), 320);
 		haptic(correct ? "correct" : "pass");
 		playSound(correct ? "correct" : "pass");
 		setAnswers((current) => [...current, { word: words[index], correct }]);
@@ -204,7 +213,6 @@ export const useCharadesRound = ({
 		answers,
 		flash,
 		zonesVisible,
-		supported,
 		probe,
 		probing,
 		isPending,

@@ -1,7 +1,7 @@
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { QrCode, useAbsoluteUrl } from "@/components/qr-code";
+import { QrCode } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
 import {
 	Sheet,
@@ -11,7 +11,8 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import type { Locale } from "@/config/app";
-import { getMessages, interpolate } from "@/i18n";
+import { useAbsoluteUrl } from "@/hooks/use-absolute-url";
+import { getMessages, interpolate, localizedPath } from "@/i18n";
 import { type CustomDeck, encodeDeck, MAX_SHARE_URL } from "@/lib/custom-decks";
 
 /**
@@ -34,18 +35,28 @@ export const ShareDeckSheet = ({
 	// Encoding is async (deflate stream), so the link lands in an effect.
 	const [path, setPath] = useState("");
 	const [copied, setCopied] = useState(false);
+	const copyTimer = useRef<number | null>(null);
 
 	useEffect(() => {
 		let cancelled = false;
 		encodeDeck(deck).then((payload) => {
 			if (!cancelled) {
-				setPath(`/${locale}/decks/import?d=${payload}`);
+				setPath(localizedPath(locale, `decks/import?d=${payload}`));
 			}
 		});
 		return () => {
 			cancelled = true;
 		};
 	}, [deck, locale]);
+
+	useEffect(
+		() => () => {
+			if (copyTimer.current !== null) {
+				window.clearTimeout(copyTimer.current);
+			}
+		},
+		[],
+	);
 
 	// Measured after mount: the origin is not known during SSR.
 	const url = useAbsoluteUrl(path);
@@ -85,9 +96,8 @@ export const ShareDeckSheet = ({
 					) : (
 						<QrCode
 							alt={interpolate(m.decks.shareTitle, { name: deck.name })}
-							className="rounded-xl"
+							className="size-60 rounded-xl"
 							path={path}
-							size={240}
 						/>
 					)}
 					<Button

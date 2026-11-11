@@ -16,25 +16,30 @@
 
 	--radius: 1.5rem;
 
-	--background: oklch(0.9794 0.0169 76.12);
-	--foreground: oklch(0.1921 0.0176 312.7);
+	/* The two fixed ends of the palette: dead ink and warm paper. Every token
+	   below points at one of them or at an accent, so each literal exists once. */
+	--ink: oklch(0.1921 0.0176 312.7);
+	--paper: oklch(0.9794 0.0169 76.12);
+
+	--background: var(--paper);
+	--foreground: var(--ink);
 	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.1921 0.0176 312.7);
+	--card-foreground: var(--ink);
 	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.1921 0.0176 312.7);
-	--primary: oklch(0.1921 0.0176 312.7);
-	--primary-foreground: oklch(0.9794 0.0169 76.12);
+	--popover-foreground: var(--ink);
+	--primary: var(--ink);
+	--primary-foreground: var(--paper);
 	--secondary: oklch(0.9329 0.0261 76.79);
-	--secondary-foreground: oklch(0.1921 0.0176 312.7);
+	--secondary-foreground: var(--ink);
 	--muted: oklch(0.9329 0.0261 76.79);
 	--muted-foreground: oklch(0.4568 0.0347 309.73);
 	--accent: oklch(0.9132 0.0325 76.44);
-	--accent-foreground: oklch(0.1921 0.0176 312.7);
+	--accent-foreground: var(--ink);
 	--destructive: oklch(0.494 0.1887 14.27);
-	--destructive-foreground: oklch(0.9794 0.0169 76.12);
+	--destructive-foreground: var(--paper);
 	--border: oklch(0.8851 0.027 74.74);
 	--input: oklch(0.8434 0.0337 74.75);
-	--ring: oklch(0.1921 0.0176 312.7);
+	--ring: var(--ink);
 
 	--accent-lime: oklch(0.8946 0.2052 124.5);
 	--accent-fuchsia: oklch(0.6725 0.2332 1.92);
@@ -43,17 +48,20 @@
 
 	/* Text that sits on an accent fill. Fixed ink in both modes: cream on lime
 	   fails contrast, so accent surfaces never use `foreground`. */
-	--accent-ink: oklch(0.1921 0.0176 312.7);
+	--accent-ink: var(--ink);
 
-	--sticker-color: oklch(0.1921 0.0176 312.7);
+	--sticker-color: var(--ink);
 
-	--game-spy-from: oklch(0.3261 0.0997 321.97);
-	--game-spy-to: oklch(0.1921 0.0176 312.7);
-	--game-spy-foreground: oklch(0.9794 0.0169 76.12);
+	/* The QR needs a white quiet zone in both modes to stay scannable. */
+	--qr-paper: oklch(1 0 0);
 
-	--game-charades-from: oklch(0.8946 0.2052 124.5);
-	--game-charades-to: oklch(0.6725 0.2332 1.92);
-	--game-charades-foreground: oklch(0.1921 0.0176 312.7);
+	--game-spy-from: var(--accent-plum);
+	--game-spy-to: var(--ink);
+	--game-spy-foreground: var(--paper);
+
+	--game-charades-from: var(--accent-lime);
+	--game-charades-to: var(--accent-fuchsia);
+	--game-charades-foreground: var(--accent-ink);
 }
 
 .dark {
@@ -62,32 +70,28 @@
 	--background: oklch(0.1755 0.015 304.39);
 	--foreground: oklch(0.9766 0.0197 77.32);
 	--card: oklch(0.235 0.024 305.5);
-	--card-foreground: oklch(0.9766 0.0197 77.32);
+	--card-foreground: var(--foreground);
 	--popover: oklch(0.235 0.024 305.5);
-	--popover-foreground: oklch(0.9766 0.0197 77.32);
-	--primary: oklch(0.8946 0.2052 124.5);
-	--primary-foreground: oklch(0.1921 0.0176 312.7);
+	--popover-foreground: var(--foreground);
+	--primary: var(--accent-lime);
+	--primary-foreground: var(--accent-ink);
 	--secondary: oklch(0.2678 0.0295 308.69);
-	--secondary-foreground: oklch(0.9766 0.0197 77.32);
+	--secondary-foreground: var(--foreground);
 	--muted: oklch(0.2678 0.0295 308.69);
 	--muted-foreground: oklch(0.7547 0.0324 310.9);
 	--accent: oklch(0.2949 0.0316 312.6);
-	--accent-foreground: oklch(0.9766 0.0197 77.32);
+	--accent-foreground: var(--foreground);
 	--destructive: oklch(0.7171 0.1808 12.12);
-	--destructive-foreground: oklch(0.1921 0.0176 312.7);
+	--destructive-foreground: var(--accent-ink);
 	--border: oklch(0.42 0.036 311.08);
 	--input: oklch(0.5 0.04 310.69);
-	--ring: oklch(0.8946 0.2052 124.5);
+	--ring: var(--accent-lime);
 
 	--sticker-color: oklch(0.34 0.035 306);
 
-	--game-spy-from: oklch(0.3261 0.0997 321.97);
+	--game-spy-from: var(--accent-plum);
 	--game-spy-to: oklch(0.1201 0.0153 305.14);
-	--game-spy-foreground: oklch(0.9766 0.0197 77.32);
-
-	--game-charades-from: oklch(0.8946 0.2052 124.5);
-	--game-charades-to: oklch(0.6725 0.2332 1.92);
-	--game-charades-foreground: oklch(0.1921 0.0176 312.7);
+	--game-spy-foreground: var(--foreground);
 }
 
 @theme inline {
@@ -119,6 +123,7 @@
 	--color-accent-cyan: var(--accent-cyan);
 	--color-accent-plum: var(--accent-plum);
 	--color-accent-ink: var(--accent-ink);
+	--color-qr-paper: var(--qr-paper);
 
 	--color-game-spy-from: var(--game-spy-from);
 	--color-game-spy-to: var(--game-spy-to);
@@ -145,10 +150,6 @@
 
 @utility shadow-sticker-sm {
 	box-shadow: 2px 2px 0 0 var(--sticker-color);
-}
-
-@utility shadow-sticker-lg {
-	box-shadow: 6px 6px 0 0 var(--sticker-color);
 }
 
 /* Press feedback for sticker surfaces: the shadow collapses as the button sinks. */

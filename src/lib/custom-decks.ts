@@ -4,7 +4,7 @@ import {
 	CUSTOM_PREFIX,
 	type CustomCategory,
 	isCustomCategory,
-} from "@/data/schema";
+} from "@/data/categories";
 import { deflateText, inflateText } from "@/lib/deflate";
 
 /** Brand-free key: a rename must not lose anyone's decks. */
@@ -81,7 +81,7 @@ export const getCustomDecksServerSnapshot = (): CustomDeck[] => EMPTY;
  * Anything malformed in storage is skipped entry by entry: one bad deck must
  * not hide the rest, and a write after a partial loss would make it permanent.
  */
-export const readCustomDecks = (): CustomDeck[] => {
+const readCustomDecks = (): CustomDeck[] => {
 	const store = storage();
 	if (!store) {
 		return [];

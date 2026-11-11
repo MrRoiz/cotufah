@@ -2,20 +2,24 @@ import { useForm } from "@tanstack/react-form";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
-import { BackLink } from "@/components/back-link";
+import { AppPageHeader } from "@/components/app-page-header";
 import { CategoryField } from "@/components/category-field";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { app } from "@/config/app";
-import { type CategoryChoice, isCategoryChoice } from "@/data/schema";
+import { pageMeta } from "@/config/seo";
+import type { CategoryChoice } from "@/data/categories";
+import { isCategoryChoice } from "@/data/categories";
+import {
+	MAX_PLAYERS,
+	MIN_PLAYERS,
+	maxSpies,
+	serializePlayers,
+} from "@/games/spy/rules";
 import { createPlayersSchema } from "@/games/spy/setup-schema";
-import { MIN_PLAYERS } from "@/games/spy/use-spy-round";
 import { getMessages, interpolate } from "@/i18n";
-
-const MAX_PLAYERS = 12;
 
 const SpySetup = () => {
 	const { lang } = Route.useParams();
@@ -41,8 +45,8 @@ const SpySetup = () => {
 				params: { lang },
 				search: {
 					category,
-					players: names.map(encodeURIComponent).join("|"),
-					spies: Math.min(spies, Math.max(1, names.length - 1)),
+					players: serializePlayers(names),
+					spies: Math.min(spies, maxSpies(names.length)),
 				},
 			});
 		},
@@ -76,13 +80,11 @@ const SpySetup = () => {
 					form.handleSubmit();
 				}}
 			>
-				<header className="flex flex-col gap-3 pt-6 pb-6">
-					<BackLink label={m.common.back} lang={lang} />
-					<h1 className="font-display text-4xl uppercase">
-						{m.games.spy.name}
-					</h1>
-					<p className="text-muted-foreground">{m.spy.setupIntro}</p>
-				</header>
+				<AppPageHeader
+					lang={lang}
+					subtitle={m.spy.setupIntro}
+					title={m.games.spy.name}
+				/>
 
 				<section className="flex flex-col gap-3">
 					<h2 className="font-bold text-lg">{m.spy.playersTitle}</h2>
@@ -179,7 +181,7 @@ const SpySetup = () => {
 					<p className="text-muted-foreground text-sm">{m.spy.spiesHint}</p>
 					<form.Subscribe selector={(state) => state.values.players.length}>
 						{(count) => {
-							const maxSpies = Math.max(1, count - 1);
+							const max = maxSpies(count);
 							return (
 								<div className="flex items-center gap-4 rounded-xl border-2 border-border p-3">
 									<Button
@@ -193,13 +195,13 @@ const SpySetup = () => {
 										<MinusIcon aria-hidden="true" />
 									</Button>
 									<span className="flex-1 text-center font-display text-3xl">
-										{Math.min(spies, maxSpies)}
+										{Math.min(spies, max)}
 									</span>
 									<Button
 										aria-label={m.spy.addPlayer}
-										disabled={spies >= maxSpies}
+										disabled={spies >= max}
 										onClick={() =>
-											setSpies((value) => Math.min(maxSpies, value + 1))
+											setSpies((value) => Math.min(max, value + 1))
 										}
 										size="icon"
 										type="button"
@@ -239,13 +241,12 @@ export const Route = createFileRoute("/$lang/_app/games/spy/setup")({
 	}),
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.games.spy.name} — ${app.name}` },
-				{ name: "description", content: m.spy.setupIntro },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.games.spy.name,
+			description: m.spy.setupIntro,
+			noindex: true,
+		});
 	},
 	component: SpySetup,
 });

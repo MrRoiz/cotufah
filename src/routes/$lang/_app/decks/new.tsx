@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { BackLink } from "@/components/back-link";
+import { AppPageHeader } from "@/components/app-page-header";
 import { DeckForm } from "@/components/custom-decks/deck-form";
 import { AppShell } from "@/components/layout/app-shell";
-import { app } from "@/config/app";
+import { pageMeta } from "@/config/seo";
 import { useCustomDecks } from "@/hooks/use-custom-decks";
 import { getMessages } from "@/i18n";
 
@@ -15,12 +15,7 @@ const NewDeckPage = () => {
 
 	return (
 		<AppShell>
-			<header className="flex flex-col gap-3 pt-6 pb-6">
-				<BackLink label={m.common.back} lang={lang} />
-				<h1 className="font-display text-4xl uppercase">
-					{m.decks.createTitle}
-				</h1>
-			</header>
+			<AppPageHeader lang={lang} title={m.decks.createTitle} />
 
 			<DeckForm
 				locale={lang}
@@ -38,13 +33,13 @@ const NewDeckPage = () => {
 
 export const Route = createFileRoute("/$lang/_app/decks/new")({
 	ssr: false,
-	head: ({ params }) => ({
-		meta: [
-			{ name: "robots", content: "noindex" },
-			{
-				title: `${getMessages(params.lang).decks.createTitle} — ${app.name}`,
-			},
-		],
-	}),
+	head: ({ params }) => {
+		const m = getMessages(params.lang);
+		return pageMeta({
+			lang: params.lang,
+			title: m.decks.createTitle,
+			noindex: true,
+		});
+	},
 	component: NewDeckPage,
 });

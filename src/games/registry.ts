@@ -1,5 +1,3 @@
-import type { Messages } from "@/i18n/en";
-
 export type GameSlug = "spy" | "charades";
 
 export type GameEntry = {
@@ -23,7 +21,3 @@ export const games: GameEntry[] = [
 			"from-game-charades-from to-game-charades-to text-game-charades-foreground",
 	},
 ];
-
-export const gameCopy = (messages: Messages, slug: GameSlug) => {
-	return messages.games[slug];
-};

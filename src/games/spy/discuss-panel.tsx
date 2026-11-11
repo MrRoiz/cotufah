@@ -1,6 +1,7 @@
 import { TimerBar } from "@/components/timer-bar";
 import { Button } from "@/components/ui/button";
-import { DISCUSS_SECONDS } from "@/games/spy/use-spy-round";
+import { DISCUSS_SECONDS } from "@/games/spy/rules";
+import { FINAL_SECONDS, formatClock, secondsLeft } from "@/hooks/use-countdown";
 import type { Messages } from "@/i18n/en";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +18,7 @@ export const DiscussPanel = ({
 	onTogglePause: () => void;
 	onVote: () => void;
 }) => {
-	const remaining = Math.ceil(remainingMs / 1000);
+	const remaining = secondsLeft(remainingMs);
 
 	return (
 		<section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
@@ -29,17 +30,16 @@ export const DiscussPanel = ({
 					<span
 						className={cn(
 							"font-display text-7xl tabular-nums leading-none",
-							remaining <= 10 && "text-destructive",
+							remaining <= FINAL_SECONDS && "text-destructive",
 						)}
 					>
-						{Math.floor(remaining / 60)}:
-						{String(remaining % 60).padStart(2, "0")}
+						{formatClock(remaining)}
 					</span>
 					<TimerBar
 						className="h-2.5 w-56"
 						remainingMs={remainingMs}
 						totalMs={DISCUSS_SECONDS * 1000}
-						urgent={remaining <= 10}
+						urgent={remaining <= FINAL_SECONDS}
 					/>
 				</div>
 				{remaining <= 0 ? (

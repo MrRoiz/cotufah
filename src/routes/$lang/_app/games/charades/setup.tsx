@@ -1,24 +1,28 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { BackLink } from "@/components/back-link";
+import { AppPageHeader } from "@/components/app-page-header";
 import { CategoryField } from "@/components/category-field";
+import { ChoiceButton } from "@/components/choice-button";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
-import { app } from "@/config/app";
-import { type CategoryChoice, isCategoryChoice } from "@/data/schema";
+import { pageMeta } from "@/config/seo";
+import type { CategoryChoice } from "@/data/categories";
+import { isCategoryChoice } from "@/data/categories";
+import {
+	DEFAULT_DURATION,
+	DURATIONS,
+	type Duration,
+} from "@/games/charades/rules";
 import { getMessages } from "@/i18n";
-import { cn } from "@/lib/utils";
-
-const DURATIONS = [60, 90, 120] as const;
 
 const CharadesSetup = () => {
 	const { lang } = Route.useParams();
 	const { category = "clasico" } = Route.useSearch();
 	const m = getMessages(lang);
 	const navigate = useNavigate();
-	const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(90);
+	const [duration, setDuration] = useState<Duration>(DEFAULT_DURATION);
 
-	const labels: Record<(typeof DURATIONS)[number], string> = {
+	const labels: Record<Duration, string> = {
 		60: m.charades.duration60,
 		90: m.charades.duration90,
 		120: m.charades.duration120,
@@ -43,30 +47,25 @@ const CharadesSetup = () => {
 				</Button>
 			}
 		>
-			<header className="flex flex-col gap-3 pt-6 pb-6">
-				<BackLink label={m.common.back} lang={lang} />
-				<h1 className="font-display text-4xl uppercase">
-					{m.games.charades.name}
-				</h1>
-				<p className="text-muted-foreground">{m.charades.setupIntro}</p>
-			</header>
+			<AppPageHeader
+				lang={lang}
+				subtitle={m.charades.setupIntro}
+				title={m.games.charades.name}
+			/>
 
 			<section className="flex flex-col gap-3">
 				<h2 className="font-bold text-lg">{m.charades.durationTitle}</h2>
 				<div className="flex flex-col gap-2">
 					{DURATIONS.map((seconds) => (
-						<Button
-							className={cn(
-								"w-full justify-start border-2",
-								duration === seconds && "border-foreground",
-							)}
+						<ChoiceButton
+							className="w-full justify-start"
 							key={seconds}
 							onClick={() => setDuration(seconds)}
+							selected={duration === seconds}
 							size="lg"
-							variant={duration === seconds ? "default" : "outline"}
 						>
 							{labels[seconds]}
-						</Button>
+						</ChoiceButton>
 					))}
 				</div>
 			</section>
@@ -95,13 +94,12 @@ export const Route = createFileRoute("/$lang/_app/games/charades/setup")({
 	}),
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.games.charades.name} — ${app.name}` },
-				{ name: "description", content: m.charades.setupIntro },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.games.charades.name,
+			description: m.charades.setupIntro,
+			noindex: true,
+		});
 	},
 	component: CharadesSetup,
 });

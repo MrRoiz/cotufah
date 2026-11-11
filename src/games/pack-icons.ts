@@ -15,7 +15,7 @@ import {
 	UtensilsIcon,
 } from "lucide-react";
 
-import type { packChoices } from "@/data/schema";
+import type { packChoices } from "@/data/categories";
 
 /** One icon per deck, shared by the setup picker and the landing. */
 export const packIcons: Record<(typeof packChoices)[number], LucideIcon> = {

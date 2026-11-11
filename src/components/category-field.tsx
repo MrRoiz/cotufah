@@ -14,7 +14,7 @@ import {
 	type CategoryChoice,
 	isCustomCategory,
 	packChoices,
-} from "@/data/schema";
+} from "@/data/categories";
 import { packIcons } from "@/games/pack-icons";
 import { useCustomDecks } from "@/hooks/use-custom-decks";
 import { getMessages, plural } from "@/i18n";

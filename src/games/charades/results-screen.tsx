@@ -1,9 +1,8 @@
 import { RotateCcwIcon, SettingsIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { CharadesAnswer } from "@/games/charades/rules";
 import type { Messages } from "@/i18n/en";
-
-export type CharadesAnswer = { word: string; correct: boolean };
 
 /** Score, the words that were guessed or skipped, and the one left on screen. */
 export const CharadesResults = ({

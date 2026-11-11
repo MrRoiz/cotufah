@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 
-import { BackLink } from "@/components/back-link";
+import { AppPageHeader } from "@/components/app-page-header";
 import { DeckList } from "@/components/custom-decks/deck-list";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
-import { app } from "@/config/app";
+import { pageMeta } from "@/config/seo";
 import { useCustomDecks } from "@/hooks/use-custom-decks";
 import { getMessages } from "@/i18n";
 
@@ -26,11 +26,11 @@ const DecksPage = () => {
 				</Button>
 			}
 		>
-			<header className="flex flex-col gap-3 pt-6 pb-6">
-				<BackLink label={m.common.back} lang={lang} />
-				<h1 className="font-display text-4xl uppercase">{m.decks.title}</h1>
-				<p className="text-muted-foreground">{m.decks.subtitle}</p>
-			</header>
+			<AppPageHeader
+				lang={lang}
+				subtitle={m.decks.subtitle}
+				title={m.decks.title}
+			/>
 
 			{decks.length > 0 ? (
 				<DeckList
@@ -56,13 +56,12 @@ export const Route = createFileRoute("/$lang/_app/decks/")({
 	ssr: false,
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.decks.title} — ${app.name}` },
-				{ name: "description", content: m.decks.subtitle },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.decks.title,
+			description: m.decks.subtitle,
+			noindex: true,
+		});
 	},
 	component: DecksPage,
 });

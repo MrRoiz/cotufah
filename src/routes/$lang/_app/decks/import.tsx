@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { app } from "@/config/app";
+import { pageMeta } from "@/config/seo";
 import { getMessages, interpolate, plural } from "@/i18n";
 import {
 	type CustomDeck,
@@ -187,14 +188,14 @@ export const Route = createFileRoute("/$lang/_app/decks/import")({
 	validateSearch: (search: Record<string, unknown>) => ({
 		d: typeof search.d === "string" ? search.d : "",
 	}),
-	head: ({ params }) => ({
-		meta: [
-			{ name: "robots", content: "noindex" },
-			// The outcome is only known client-side, so the static title is generic.
-			{
-				title: `${getMessages(params.lang).decks.title} — ${app.name}`,
-			},
-		],
-	}),
+	head: ({ params }) => {
+		// The outcome is only known client-side, so the static title is generic.
+		const m = getMessages(params.lang);
+		return pageMeta({
+			lang: params.lang,
+			title: m.decks.title,
+			noindex: true,
+		});
+	},
 	component: ImportPage,
 });

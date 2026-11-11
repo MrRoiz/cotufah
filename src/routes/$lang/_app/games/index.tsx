@@ -1,28 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 
-import { BackLink } from "@/components/back-link";
+import { AppPageHeader } from "@/components/app-page-header";
 import { GameCard } from "@/components/game-card";
 import { AppShell } from "@/components/layout/app-shell";
 import { ModeToggle } from "@/components/mode-toggle";
-import { app } from "@/config/app";
+import { pageMeta } from "@/config/seo";
 import { games } from "@/games/registry";
 import { getMessages } from "@/i18n";
 
+/**
+ * Static screen: no network. Decks are only fetched once a round starts.
+ */
 const GamesPage = () => {
 	const { lang } = Route.useParams();
 	const m = getMessages(lang);
 
 	return (
 		<AppShell>
-			<header className="flex flex-col gap-3 pt-6 pb-6">
-				<div className="flex items-start justify-between gap-4">
-					<BackLink label={m.common.home} lang={lang} />
+			<AppPageHeader
+				backLabel={m.common.home}
+				lang={lang}
+				subtitle={m.games.subtitle}
+				title={m.games.title}
+				trailing={
 					<ModeToggle className="rounded-full border-2" locale={lang} />
-				</div>
-				<h1 className="font-display text-4xl uppercase">{m.games.title}</h1>
-				<p className="text-muted-foreground">{m.games.subtitle}</p>
-			</header>
+				}
+			/>
 
 			<div className="flex flex-col gap-5">
 				{games.map((game) => (
@@ -44,17 +48,12 @@ const GamesPage = () => {
 export const Route = createFileRoute("/$lang/_app/games/")({
 	head: ({ params }) => {
 		const m = getMessages(params.lang);
-		return {
-			meta: [
-				{ name: "robots", content: "noindex" },
-				{ title: `${m.games.title} — ${app.name}` },
-				{ name: "description", content: m.games.subtitle },
-			],
-		};
+		return pageMeta({
+			lang: params.lang,
+			title: m.games.title,
+			description: m.games.subtitle,
+			noindex: true,
+		});
 	},
 	component: GamesPage,
 });
-
-/**
- * Static screen: no network. Decks are only fetched once a round starts.
- */

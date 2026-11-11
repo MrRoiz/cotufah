@@ -1,6 +1,7 @@
 import { CheckIcon, XIcon } from "lucide-react";
 
 import { TimerBar } from "@/components/timer-bar";
+import { FINAL_SECONDS, formatClock, secondsLeft } from "@/hooks/use-countdown";
 import type { Messages } from "@/i18n/en";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ export const CharadesPlayStage = ({
 	zonesVisible: boolean;
 	onAnswer: (correct: boolean) => void;
 }) => {
-	const remaining = Math.ceil(remainingMs / 1000);
+	const remaining = secondsLeft(remainingMs);
 
 	return (
 		<div className="stage-landscape items-center justify-center gap-6">
@@ -53,10 +54,10 @@ export const CharadesPlayStage = ({
 				<span
 					className={cn(
 						"font-display text-3xl tabular-nums",
-						remaining <= 10 && "text-destructive",
+						remaining <= FINAL_SECONDS && "text-destructive",
 					)}
 				>
-					{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}
+					{formatClock(remaining)}
 				</span>
 				<span className="rounded-full border-2 border-foreground px-3 py-1 font-bold">
 					{score}
@@ -77,7 +78,7 @@ export const CharadesPlayStage = ({
 					className="h-2 w-full"
 					remainingMs={remainingMs}
 					totalMs={totalMs}
-					urgent={remaining <= 10}
+					urgent={remaining <= FINAL_SECONDS}
 				/>
 			</div>
 

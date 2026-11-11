@@ -229,10 +229,9 @@ export const es: Messages = {
 		checkingSensor: "Revisando el sensor…",
 		tapLeft: "Toca la mitad izquierda",
 		tapRight: "Toca la mitad derecha",
-		needsHttps:
-			"Los sensores solo funcionan por HTTPS. Abre la app con https:// o usa los botones.",
 		noMotion: "No pudimos usar el sensor. Usa los botones.",
 		startRound: "Empezar ronda",
+		go: "¡Ya!",
 		correct: "Correcto",
 		pass: "Pasar",
 		resultsTitle: "Se acabó el tiempo",

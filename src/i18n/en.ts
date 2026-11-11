@@ -232,10 +232,9 @@ export const en = {
 		checkingSensor: "Checking the sensor…",
 		tapLeft: "Tap the left half",
 		tapRight: "Tap the right half",
-		needsHttps:
-			"Sensors only work over HTTPS. Open the app with https://, or use the buttons.",
 		noMotion: "We could not use the sensor here. Use the buttons.",
 		startRound: "Start round",
+		go: "Go!",
 		correct: "Correct",
 		pass: "Pass",
 		resultsTitle: "Time is up",

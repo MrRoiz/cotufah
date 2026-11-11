@@ -63,3 +63,5 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Build-time only: vite bakes canonical/OG URLs into the client.
+          VITE_APP_ORIGIN: https://cotufah.com

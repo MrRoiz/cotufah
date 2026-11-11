@@ -9,9 +9,6 @@ import { localeFromPath } from "@/i18n";
 
 import appCss from "@/styles.css?url";
 
-// Open Graph requires absolute URLs; the card itself is language-neutral.
-const ogImage = "https://cotufah.com/og.png";
-
 const RootDocument = ({ children }: { children: React.ReactNode }) => {
 	const { locale } = Route.useRouteContext();
 
@@ -37,6 +34,9 @@ export const Route = createRootRoute({
 	// Locale comes from the first path segment, so `<html lang>` and `/$lang`
 	// can never disagree — no client-only detection, no hydration mismatch.
 	beforeLoad: ({ location }) => ({ locale: localeFromPath(location.pathname) }),
+	// Static, site-wide metadata: only og:type, og:site_name and twitter:card.
+	// Everything per-route or per-language (title, description, the OG card)
+	// lives in `config/seo.ts` and must not be repeated here.
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
@@ -49,12 +49,7 @@ export const Route = createRootRoute({
 			{ name: "theme-color" },
 			{ property: "og:type", content: "website" },
 			{ property: "og:site_name", content: app.name },
-			{ property: "og:image", content: ogImage },
-			{ property: "og:image:width", content: "1200" },
-			{ property: "og:image:height", content: "630" },
-			{ property: "og:image:alt", content: app.name },
 			{ name: "twitter:card", content: "summary_large_image" },
-			{ name: "twitter:image", content: ogImage },
 			{ name: "apple-mobile-web-app-capable", content: "yes" },
 			{ name: "apple-mobile-web-app-status-bar-style", content: "default" },
 		],

@@ -13,6 +13,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { QrCode } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
 import { app } from "@/config/app";
+import { ogImageMeta } from "@/config/seo";
 import { absoluteUrl } from "@/config/site";
 import { appVersion } from "@/config/version";
 import { packChoices } from "@/data/categories";
@@ -328,6 +329,7 @@ export const Route = createFileRoute("/$lang/")({
 				{ property: "og:title", content: title },
 				{ property: "og:description", content: app.description[lang] },
 				{ property: "og:locale", content: lang === "es" ? "es_CO" : "en_US" },
+				...ogImageMeta(lang),
 				...(canonical ? [{ property: "og:url", content: canonical }] : []),
 			],
 			links: [

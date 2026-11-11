@@ -17,9 +17,10 @@ ahead — see [Roadmap](#roadmap).
 |---|---|
 | `src/config/app.ts` | Brand identity. The only place the app name appears. |
 | `src/styles.css` | The entire palette, in oklch. The only file allowed to contain colors. |
-| `src/components/theme-provider.tsx` | Light/dark/system, `ScriptOnce` pre-paint script. |
+| `src/components/providers/theme-provider.tsx` | Light/dark/system, `ScriptOnce` pre-paint script. |
 | `components.json` | shadcn config (radix base, `nova` style, `@/` alias). |
 | `src/config/site.ts` | Public origin for canonical/OG URLs (`VITE_APP_ORIGIN`). |
+| `src/config/seo.ts` | Per-route title/description/OG, including the per-language card. Static tags (`og:type`, `og:site_name`, `twitter:card`) live in `__root.tsx`. |
 | `src/games/<game>/` | Panels and the round hook for each game. |
 | `vite.config.ts` | Cloudflare Workers + the manifest plugin that keeps the PWA rename-safe. |
 
@@ -82,7 +83,7 @@ src/
 ├─ config/app.ts          # identity: name, tagline, description, default locale
 ├─ i18n/{en,es,index}.ts  # copy + interpolation + locale detection
 ├─ fns/*.functions.ts     # createServerFn wrappers (client-safe imports)
-├─ data/{schema.ts,spy,charades}  # deck contract + ES/EN word banks
+├─ data/{categories,schema}.ts  # deck taxonomy (zod-free) + validated contract
 ├─ server/decks.server.ts # server-only deck registry (zod-validated)
 ├─ fns/decks.functions.ts # listDecks / getRound server functions
 ├─ games/registry.ts      # game slugs, gradients, setup routes
@@ -91,11 +92,13 @@ src/
 ├─ games/spy/*-panel.tsx  # deal / handoff / discuss / vote / reveal
 ├─ games/charades/*-screen.tsx  # intro / stage / results
 ├─ games/*/use-*-round.ts # round state, timers and handlers per game
+├─ config/seo.ts          # per-route title/description/OG card (static tags in __root)
 ├─ config/site.ts         # VITE_APP_ORIGIN -> absolute URLs (canonical/OG)
 ├─ lib/custom-decks.ts    # local decks: storage, limits, share payload
 ├─ lib/deflate.ts         # browser deflate/inflate for share links
 ├─ hooks/use-wake-lock.ts # screen stays awake during a round
 ├─ hooks/use-tilt.ts      # devicemotion tilt + sensor probe + iOS permission
+├─ hooks/use-absolute-url.ts  # origin-qualified URL for QR and share links
 ├─ lib/sound.ts           # Web Audio cues + mute store (app.sound)
 ├─ lib/utils.ts           # cn()
 ├─ styles.css             # tokens (@theme inline) + utilities + base layer
@@ -103,9 +106,10 @@ src/
 │  ├─ ui/*                # shadcn primitives (generated, editable)
 │  ├─ layout/app-shell.tsx
 │  ├─ phone-gate.tsx      # desktop QR gate, CSS media query
-│  ├─ qr-code.tsx         # lazy uqr wrapper + useAbsoluteUrl
-│  ├─ query-provider.tsx  # TanStack Query client (staleTime 5 min, no refocus)
-│  ├─ theme-provider.tsx  # context + ScriptOnce + meta theme-color sync
+│  ├─ qr-code.tsx         # lazy uqr wrapper
+│  ├─ providers/
+│  │  ├─ query-provider.tsx  # TanStack Query client (staleTime 5 min, no refocus)
+│  │  └─ theme-provider.tsx  # context + ScriptOnce + meta theme-color sync
 │  └─ mode-toggle.tsx
 ├─ routes/
 │  ├─ __root.tsx          # document shell, <html lang>, theme provider, toaster
@@ -241,8 +245,8 @@ placeholders, dead copy, superseded helpers) in the same change.
 - Values use `{placeholders}` and `interpolate(m.some.key, { app: app.name })`.
 - Counts go through `plural(locale, count, { one, other })` — `Intl.PluralRules`,
   never string concatenation.
-- Switching language writes the `app.locale` cookie and navigates to the same path with
-  the other locale; the cookie is what `/` uses on the next visit.
+- Switching language navigates to the same path in the other locale. Losing the
+  cookie is deliberate: the bare domain always enters at Spanish.
 - `/$lang` parses with `z`-style validation: anything that is not `es`/`en` throws
   `notFound()` (a real 404, not a redirect).
 
@@ -269,8 +273,8 @@ Then `pnpm check --write && pnpm typecheck`.
 3. Smoke the built Worker: `pnpm build && pnpm preview`.
 4. Check SSR HTML: real content (not an empty shell), `<html lang>` matches the URL,
    title/description localized, `theme-color` resolves from the token.
-5. Check the locale entry: `/` 307s to `/es` by default, to `/en` with
-   `Accept-Language: en`, and honours an existing `app.locale` cookie.
+5. Check the locale entry: `/` always 307s to `/es`, whatever the headers or
+   cookies; `/en` still renders the English landing.
 
 Known noise: Rolldown prints `MODULE_LEVEL_DIRECTIVE` warnings for `"use client"` in
 `lucide-react`. Pre-existing and harmless.

@@ -1,13 +1,12 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { QueryProvider } from "@/components/providers/query-provider";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 import { app } from "@/config/app";
 import { localeFromPath } from "@/i18n";
-
+import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import appCss from "@/styles.css?url";
+import { Toaster } from "@/ui/sonner";
 
 const RootDocument = ({ children }: { children: React.ReactNode }) => {
 	const { locale } = Route.useRouteContext();

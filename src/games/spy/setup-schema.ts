@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 import { MIN_PLAYERS } from "@/games/spy/rules";
+import type { Messages } from "@/i18n";
 import { interpolate } from "@/i18n";
-import type { Messages } from "@/i18n/en";
 
 const MIN_NAME_LENGTH = 3;
 

@@ -1,15 +1,15 @@
-import { type ServerCategory, themedCategories } from "@/data/categories";
 import { charadesEn } from "@/data/charades/en";
 import { charadesEs } from "@/data/charades/es";
 import { packsEn } from "@/data/packs/en";
 import { packsEs } from "@/data/packs/es";
-import { type Deck, deckSchema, type Pack, packSchema } from "@/data/schema";
 import { spyEn } from "@/data/spy/en";
 import { spyEs } from "@/data/spy/es";
-import { pick } from "@/games/pick";
+import { type ServerCategory, themedCategories } from "@/decks/categories";
+import { type Deck, deckSchema, type Pack, packSchema } from "@/decks/contract";
+import { pick } from "@/decks/pick";
 
 /**
- * Server-only deck registry. Imported exclusively from `fns/*.functions.ts`,
+ * Server-only deck registry. Imported exclusively from `decks/functions.ts`,
  * which is what keeps word lists out of the client bundle. Zod validation runs
  * at module load: a malformed deck fails the boot, not a round.
  */

@@ -1,5 +1,6 @@
 import { app, type Locale } from "@/config/app";
 import { absoluteUrl } from "@/config/site";
+import { getMessages, otherLocale } from "@/i18n";
 
 /** The card changes with the language, so it belongs to the dynamic metadata. */
 export const ogImageMeta = (lang: Locale) => {
@@ -61,5 +62,52 @@ export const pageMeta = ({
 			...(canonical ? [{ property: "og:url", content: canonical }] : []),
 		],
 		links: canonical ? [{ rel: "canonical", href: canonical }] : [],
+	};
+};
+
+/**
+ * The landing is the one indexable page: brand-first title, hreflang
+ * alternates and the JSON-LD block live with the rest of the metadata.
+ */
+export const landingMeta = (lang: Locale) => {
+	const m = getMessages(lang);
+	const canonical = absoluteUrl(`/${lang}`);
+	const alternate = absoluteUrl(`/${otherLocale(lang)}`);
+	const title = `${app.name} — ${m.common.appTagline}`;
+
+	return {
+		meta: [
+			{ title },
+			{ name: "description", content: app.description[lang] },
+			{ property: "og:title", content: title },
+			{ property: "og:description", content: app.description[lang] },
+			{ property: "og:locale", content: lang === "es" ? "es_CO" : "en_US" },
+			...ogImageMeta(lang),
+			...(canonical ? [{ property: "og:url", content: canonical }] : []),
+		],
+		links: [
+			...(canonical ? [{ rel: "canonical", href: canonical }] : []),
+			...(alternate
+				? [{ rel: "alternate", hrefLang: otherLocale(lang), href: alternate }]
+				: []),
+			...(canonical
+				? [{ rel: "alternate", hrefLang: lang, href: canonical }]
+				: []),
+		],
+		scripts: [
+			{
+				type: "application/ld+json",
+				children: JSON.stringify({
+					"@context": "https://schema.org",
+					"@type": "SoftwareApplication",
+					name: app.name,
+					description: app.description[lang],
+					applicationCategory: "GameApplication",
+					operatingSystem: "iOS, Android",
+					inLanguage: lang,
+					offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+				}),
+			},
+		],
 	};
 };

@@ -1,4 +1,4 @@
-import type { DeckInput } from "@/data/schema";
+import type { DeckInput } from "@/decks/contract";
 
 export const spyEs = {
 	id: "spy-es-family",

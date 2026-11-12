@@ -1,51 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ExternalLink } from "@/components/external-link";
-import { PageHeader } from "@/components/page-header";
-import { app } from "@/config/app";
 import { pageMeta } from "@/config/seo";
-import { getMessages, interpolate } from "@/i18n";
+import { AboutPage } from "@/documents/about-page";
+import { getMessages } from "@/i18n";
 
-const AboutPage = () => {
+const AboutRoute = () => {
 	const { lang } = Route.useParams();
-	const m = getMessages(lang);
 
-	return (
-		<div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 md:px-8">
-			<PageHeader lang={lang} to="/$lang/about" />
-
-			<article className="flex flex-1 flex-col gap-8 pb-10">
-				<header className="flex flex-col gap-3">
-					<span className="w-fit -rotate-2 rounded-full border-2 border-foreground bg-accent-fuchsia px-3 py-1 font-bold text-accent-ink text-xs uppercase tracking-widest shadow-sticker-sm">
-						{m.about.kicker}
-					</span>
-					<h1 className="font-display text-5xl uppercase leading-[0.9]">
-						{m.about.title}
-					</h1>
-					<p>{m.about.intro}</p>
-				</header>
-
-				{m.about.sections.map((section, index) => (
-					<section className="flex flex-col gap-3" key={section.title}>
-						<h2 className="font-display text-2xl uppercase">
-							{interpolate(section.title, { app: app.name })}
-						</h2>
-						<p>{interpolate(section.body, { app: app.name })}</p>
-						{/* The last section is "how do I reach you": the repo link belongs there. */}
-						{index === m.about.sections.length - 1 ? (
-							<ExternalLink className="w-fit" href={app.repo}>
-								GitHub
-							</ExternalLink>
-						) : null}
-					</section>
-				))}
-
-				<footer className="mt-auto border-t-2 border-border pt-4 text-muted-foreground">
-					{m.about.footer}
-				</footer>
-			</article>
-		</div>
-	);
+	return <AboutPage lang={lang} />;
 };
 
 export const Route = createFileRoute("/$lang/about")({
@@ -59,5 +21,5 @@ export const Route = createFileRoute("/$lang/about")({
 			description: m.about.intro,
 		});
 	},
-	component: AboutPage,
+	component: AboutRoute,
 });

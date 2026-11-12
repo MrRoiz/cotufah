@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react";
+
 /**
  * Cues are synthesized, never bundled. Melodic cues are sine, alerts triangle
  * and the timer tick filtered noise, so each one is recognizable by timbre
@@ -31,16 +33,16 @@ let master: GainNode | null = null;
 let muted = readMuted();
 const listeners = new Set<() => void>();
 
-export const subscribeSound = (listener: () => void): (() => void) => {
+const subscribeSound = (listener: () => void): (() => void) => {
 	listeners.add(listener);
 	return () => {
 		listeners.delete(listener);
 	};
 };
 
-export const getSoundMuted = (): boolean => muted;
+const getSoundMuted = (): boolean => muted;
 
-export const getSoundMutedServer = (): boolean => false;
+const getSoundMutedServer = (): boolean => false;
 
 export const setSoundMuted = (value: boolean) => {
 	muted = value;
@@ -272,3 +274,7 @@ export const playSound = (cue: Cue) => {
 	}
 	cues[cue](ctx);
 };
+
+/** Mute state for the settings toggle; every consumer updates together. */
+export const useSoundMuted = () =>
+	useSyncExternalStore(subscribeSound, getSoundMuted, getSoundMutedServer);

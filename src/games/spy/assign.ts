@@ -1,4 +1,4 @@
-import { pick } from "@/games/pick";
+import { pick } from "@/decks/pick";
 import { maxSpies } from "@/games/spy/rules";
 
 /** Random spy indices for one round. At least one player always keeps the word. */

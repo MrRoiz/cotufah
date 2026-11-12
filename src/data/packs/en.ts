@@ -1,4 +1,4 @@
-import type { PackInput } from "@/data/schema";
+import type { PackInput } from "@/decks/contract";
 
 export const packsEn = {
 	locale: "en",

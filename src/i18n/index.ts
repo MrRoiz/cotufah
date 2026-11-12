@@ -4,6 +4,8 @@ import { es } from "@/i18n/es";
 
 const messages: Record<Locale, Messages> = { en, es };
 
+export type { Messages } from "@/i18n/en";
+
 export const DEFAULT_LOCALE: Locale = app.defaultLocale;
 
 export const isLocale = (value: unknown): value is Locale => {

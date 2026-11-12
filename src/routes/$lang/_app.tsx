@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { PhoneGate } from "@/components/phone-gate";
+import { PhoneGate } from "@/layout/phone-gate";
 
 /**
  * Pathless layout for everything that is the *app* (games, play, settings).

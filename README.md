@@ -87,26 +87,23 @@ variables cannot supply it, and leaving it empty omits those tags.
 
 ## Project layout
 
-```
-src/
-├─ config/            # app identity, public origin, version
-├─ i18n/              # en (source of truth), es, interpolation
-├─ fns/               # createServerFn wrappers (client-safe)
-├─ server/            # server-only deck registry, zod-validated
-├─ data/              # classic decks per game and shared themed packs
-├─ games/             # spy and charades state, panels, picker icons
-├─ components/        # shadcn primitives and shared UI
-└─ routes/            # landing, legal, about, app screens
-```
+The app is organized by domain: `src/games/<game>/` holds one game end to end,
+`src/decks/` the shared word source (server packs, custom decks, picker),
+`src/landing/`, `src/settings/` and `src/documents/` are product areas,
+`src/ui/`, `src/providers/` and `src/layout/` are app-wide, and `src/config/`,
+`src/i18n/` plus the server-only `src/data/` + `src/server/` boundary are
+infrastructure. `src/routes/` is a thin URL-adapter layer.
+
+See `AGENTS.md` for the full tree and a task → file map.
 
 ## How the decks work
 
 ```
-JSON deck -> server/decks.server.ts -> getRound(game, locale, count, category) -> useQuery
+TS deck -> server/decks.server.ts -> getRoundWords(game, locale, count, category) -> useQuery
 ```
 
-- `src/data/<game>/<locale>.json` holds each game's classic list.
-- `src/data/packs/<locale>.json` holds the themed packs shared by both games.
+- `src/data/<game>/<locale>.ts` holds each game's classic list.
+- `src/data/packs/<locale>.ts` holds the themed packs shared by both games.
 - Both are parsed with zod at server boot and imported only from server code, so word lists
   never enter the client bundle.
 - A round asks for a game, a locale, a count and a category (`mixed` draws from the classic

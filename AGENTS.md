@@ -8,8 +8,8 @@ Instructions for AI agents working in this repo. Read this before touching code.
 support. No accounts, no database: word decks are TS modules served through typed server
 functions. Built on TanStack Start, React 19, Tailwind 4 and shadcn/ui.
 
-Status: design foundation (M1) complete. Games, i18n and the landing page are still
-ahead — see [Roadmap](#roadmap).
+Status: M0–M5 committed; M6 (Charadas) and M7 (sound + haptics) are awaiting a
+device test — see [Roadmap](#roadmap).
 
 ## Read these first
 
@@ -17,11 +17,11 @@ ahead — see [Roadmap](#roadmap).
 |---|---|
 | `src/config/app.ts` | Brand identity. The only place the app name appears. |
 | `src/styles.css` | The entire palette, in oklch. The only file allowed to contain colors. |
-| `src/components/providers/theme-provider.tsx` | Light/dark/system, `ScriptOnce` pre-paint script. |
+| `src/providers/theme-provider.tsx` | Light/dark/system, `ScriptOnce` pre-paint script. |
 | `components.json` | shadcn config (radix base, `nova` style, `@/` alias). |
 | `src/config/site.ts` | Public origin for canonical/OG URLs (`VITE_APP_ORIGIN`). |
 | `src/config/seo.ts` | Per-route title/description/OG, including the per-language card. Static tags (`og:type`, `og:site_name`, `twitter:card`) live in `__root.tsx`. |
-| `src/games/<game>/` | Panels and the round hook for each game. |
+| `src/games/<game>/` | One game: rules, round hook, panels and screens. |
 | `vite.config.ts` | Cloudflare Workers + the manifest plugin that keeps the PWA rename-safe. |
 
 ## Commands
@@ -42,7 +42,7 @@ below are conventions, reviewed by hand.
 
 1. **Colors live in `src/styles.css` only.** No hex, no `bg-red-500`, no inline styles
    for color. Use tokens (`bg-background`, `text-muted-foreground`, `bg-accent-lime`).
-   The one sanctioned exception is `src/routes/dev/**`, where showing values is the
+   The one sanctioned exception is `src/dev/**`, where showing values is the
    point.
 2. **Text on an accent fill uses `text-accent-ink`**, never `text-foreground` — cream
    on lime is 1.2:1 in dark mode. Every accent pair is contrast-tested.
@@ -51,7 +51,7 @@ below are conventions, reviewed by hand.
    name, docs).
 4. **Code is English; product copy is Spanish.** Identifiers, files, routes
    (`/games/spy/setup`), params, comments, commits: English. Product text lives in
-   `src/i18n/{en,es}.ts`; only `es.ts`, `src/data/**` and `src/routes/dev/**` may
+   `src/i18n/{en,es}.ts`; only `es.ts`, `src/data/**` and `src/dev/**` may
    contain Spanish.
 5. **Phone-only, mobile-first.** App surfaces are `max-w-[430px]`, `min-h-dvh`, with
    safe-area padding (`pb-safe`, `pt-safe`, `px-safe`). 48px minimum targets, 16px
@@ -80,70 +80,107 @@ below are conventions, reviewed by hand.
 
 ```
 src/
-├─ config/app.ts          # identity: name, tagline, description, default locale
-├─ i18n/{en,es,index}.ts  # copy + interpolation + locale detection
-├─ fns/*.functions.ts     # createServerFn wrappers (client-safe imports)
-├─ data/{categories,schema}.ts  # deck taxonomy (zod-free) + validated contract
-├─ server/decks.server.ts # server-only deck registry (zod-validated)
-├─ fns/decks.functions.ts # listDecks / getRound server functions
-├─ games/registry.ts      # game slugs, gradients, setup routes
-├─ games/pick.ts          # random index + remove from pool (no repeats)
-├─ games/spy/assign.ts    # assignSpies(playerCount, spyCount)
-├─ games/spy/*-panel.tsx  # deal / handoff / discuss / vote / reveal
-├─ games/charades/*-screen.tsx  # intro / stage / results
-├─ games/*/use-*-round.ts # round state, timers and handlers per game
-├─ config/seo.ts          # per-route title/description/OG card (static tags in __root)
-├─ config/site.ts         # VITE_APP_ORIGIN -> absolute URLs (canonical/OG)
-├─ lib/custom-decks.ts    # local decks: storage, limits, share payload
-├─ lib/deflate.ts         # browser deflate/inflate for share links
-├─ hooks/use-wake-lock.ts # screen stays awake during a round
-├─ hooks/use-tilt.ts      # devicemotion tilt + sensor probe + iOS permission
-├─ hooks/use-absolute-url.ts  # origin-qualified URL for QR and share links
-├─ lib/sound.ts           # Web Audio cues + mute store (app.sound)
-├─ lib/utils.ts           # cn()
+├─ games/                 # one folder per game, plus the shared round plumbing
+│  ├─ registry.ts         # catalog: slugs, gradients, setup routes
+│  ├─ game-card.tsx       # card shared by the landing and the app list
+│  ├─ games-screen.tsx    # /games list
+│  ├─ timer-bar.tsx       # round bar shared by both games
+│  ├─ use-countdown.ts    # ms countdown + clock helpers
+│  ├─ use-wake-lock.ts    # screen stays awake during a round
+│  ├─ haptics.ts          # navigator.vibrate patterns
+│  ├─ spy/
+│  │  ├─ setup.tsx        # names + spy count form
+│  │  ├─ play-screen.tsx  # handoff → deal → discuss → vote → reveal
+│  │  ├─ rules.ts         # limits, phases, player encoding
+│  │  ├─ use-round.ts     # round state, cues and handlers
+│  │  ├─ assign.ts        # assignSpies
+│  │  ├─ setup-schema.ts  # player validation
+│  │  └─ panels/{deal,handoff,discuss,vote,reveal}-panel.tsx
+│  └─ charades/
+│     ├─ setup.tsx        # duration + deck
+│     ├─ play-screen.tsx  # intro → countdown → stage → results
+│     ├─ rules.ts         # durations, phases, answer type
+│     ├─ use-round.ts     # round state, cues and handlers
+│     ├─ use-tilt.ts      # tilt gesture + sensor probe + permission
+│     └─ screens/{intro,countdown,results}-screen.tsx + play-stage.tsx
+├─ decks/                 # where round words come from: server packs,
+│                         # the shared picker, and the player's own decks (at /decks)
+│  ├─ categories.ts       # zod-free taxonomy (client-safe)
+│  ├─ contract.ts         # zod schemas for the word banks
+│  ├─ custom-decks.ts     # localStorage store + share payload
+│  ├─ deflate.ts          # deflate/inflate for share links
+│  ├─ functions.ts        # getRoundFn server function (client-safe)
+│  ├─ pick.ts             # random index + remove from pool
+│  ├─ use-custom-decks.ts
+│  ├─ use-round-words.ts  # server or local words for one round
+│  ├─ pack-icons.ts
+│  ├─ decks-screen.tsx    # list, share, delete
+│  ├─ deck-editor-screen.tsx  # create + edit
+│  ├─ import-screen.tsx   # shared link -> localStorage
+│  └─ components/{category-field,deck-form,deck-list,picker-section,share-deck-sheet}.tsx
+├─ landing/{landing-page,sections/*}.tsx
+├─ settings/settings-screen.tsx
+├─ documents/{about-page.tsx,legal-page.tsx}
+├─ ui/                    # shadcn primitives + app-wide visuals and small UI hooks
+├─ providers/{query,theme}-provider.tsx
+├─ layout/{app-shell,phone-gate}.tsx
+├─ config/{app,seo,site,version}.ts
+├─ i18n/{en,es,index}.ts
+├─ data/{spy,charades,packs}/  # server-only word banks — the client-bundle
+│                         # boundary; imported only by server/decks.server.ts
+├─ server/decks.server.ts      # server-only deck registry (zod-validated)
+├─ lib/{sound,utils}.ts
+├─ dev/tokens-page.tsx    # dev-only styleguide body
 ├─ styles.css             # tokens (@theme inline) + utilities + base layer
-├─ components/
-│  ├─ ui/*                # shadcn primitives (generated, editable)
-│  ├─ layout/app-shell.tsx
-│  ├─ phone-gate.tsx      # desktop QR gate, CSS media query
-│  ├─ qr-code.tsx         # lazy uqr wrapper
-│  ├─ providers/
-│  │  ├─ query-provider.tsx  # TanStack Query client (staleTime 5 min, no refocus)
-│  │  └─ theme-provider.tsx  # context + ScriptOnce + meta theme-color sync
-│  └─ mode-toggle.tsx
-├─ routes/
-│  ├─ __root.tsx          # document shell, <html lang>, theme provider, toaster
-│  ├─ index.tsx           # locale detection -> 302 /$lang
+├─ routes/                # thin adapters only: config, search, head, screen
+│  ├─ __root.tsx          # document shell, <html lang>, providers, toaster
+│  ├─ index.tsx           # / -> /es
 │  ├─ $lang.tsx           # validates lang, renders Outlet
 │  ├─ $lang/index.tsx     # landing (all devices, indexable)
+│  ├─ $lang/about.tsx
+│  ├─ $lang/legal.tsx
 │  ├─ $lang/_app.tsx      # pathless layout: phone gate for app routes only
-│  ├─ $lang/_app/games/index.tsx          # static list, no network
-│  ├─ $lang/_app/decks/index.tsx          # custom decks: list, share, delete
-│  ├─ $lang/_app/decks/new.tsx            # custom decks: create
-│  ├─ $lang/_app/decks/$deckId.tsx        # custom decks: edit
-│  ├─ $lang/_app/decks/import.tsx         # shared deck link -> localStorage
-│  ├─ $lang/_app/games/spy/setup.tsx      # names + spy count
-│  ├─ $lang/_app/games/spy/play.tsx       # ssr:false, handoff → deal → discuss → vote → reveal
+│  ├─ $lang/_app/games/…  # list + <game>/{setup,play}
+│  ├─ $lang/_app/decks/…  # list, new, edit, import
 │  ├─ $lang/_app/settings.tsx
-│  └─ dev/tokens.tsx      # dev-only styleguide; 404 in production
+│  └─ dev/tokens.tsx      # adapter for /dev/tokens; 404 in production
 └─ router.tsx
 ```
 
-Also: `public/icons/**`, `public/robots.txt`, `public/sitemap.xml` and `public/og.png`
+Also: `public/icons/**`, `public/robots.txt`, `public/sitemap.xml` and `public/og-{es,en}.png`
 (static assets); the PWA manifest is
 generated from `app.name` by a Vite plugin — never commit a manifest with the name in it.
 
-Planned (M7+): sound and haptics.
+The rule the tree expresses: **domain folders hold the product; `routes/` is
+the URL map; `data/` + `server/` are the server-only boundary.**
+
+### Where to look
+
+| I want to… | go to |
+|---|---|
+| change a spy screen | `games/spy/panels/*` (`play-screen.tsx` for phase flow) |
+| change a charades screen | `games/charades/screens/*` |
+| tweak a round's timing or limits | `games/<game>/rules.ts` |
+| change round state or cues | `games/<game>/use-round.ts` |
+| add words to a themed pack | `data/packs/{es,en}.ts` |
+| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` + `decks/contract.ts` (schema keys) + `i18n/{en,es}.ts` + `decks/pack-icons.ts` |
+| fix the deck share QR | `decks/components/share-deck-sheet.tsx` |
+| fix custom deck storage | `decks/custom-decks.ts` |
+| change what a URL renders | `routes/**` (each adapter imports its screen) |
+| add game three | `games/<slug>/` + `data/<slug>/{es,en}.ts` + `config/games.ts` (the slug tuple) + `games/registry.ts` (entry + gradient) + `styles.css` (three `--game-<slug>-*` tokens) + `server/decks.server.ts` + i18n `games.<slug>` + two route files. The zod game enums in `decks/contract.ts` and `decks/functions.ts` derive from the tuple. |
+| edit the marketing page | `landing/sections/*` |
+| tweak a shared visual | `ui/*` |
+| change OG or canonical tags | `config/seo.ts` (static tags in `routes/__root.tsx`) |
 
 **Sound (M7):** Web Audio only, no audio assets — noise ticks in the last 10 seconds, three
 beeps plus a descending tail for the end cue, a deflating glide for "pass" and a rising
 arpeggio for "correct", all through one compressor so they carry in a loud room, plus
-`navigator.vibrate` on Android. The AudioContext must be unlocked from the existing "start" tap. A mute toggle
+`navigator.vibrate` on Android. The AudioContext is installed once by the app shell on the first interaction. A mute toggle
 persists in `localStorage` under the brand-free key `app.sound`. iOS honours the hardware
 silent switch, so sound is reinforcement, never the only cue — the visual countdown stays.
 
-Spy round state lives entirely in the play component: assignment (`assignSpies`) and the
-word (`getRound`, count 1) are created once when the round starts. `ssr: false` on the play
+Spy round state lives in `games/spy/use-round.ts`: assignment (`assignSpies`) and the
+word (`getRoundFn`, count 1) are created once when the round starts. `ssr: false` on the play
 route is deliberate — dealing roles on the server would leak the spy through the payload and
 mismatch on hydration.
 
@@ -169,7 +206,7 @@ with a latch that requires returning near the baseline before the next gesture.
 Data flow — no DB:
 
 ```
-TS deck -> server/decks.server.ts -> getRound(game, locale, count, category) -> useQuery
+TS deck -> server/decks.server.ts -> getRoundWords(game, locale, count, category) -> useQuery
 ```
 
 Screens are static until a round starts. The games list does **no** network work; the
@@ -182,7 +219,7 @@ Game state lives in **validated search params** (`category`, `players`, `spies`,
 reload starts a fresh round — that is the intended behaviour, not a bug. Play routes are
 `ssr: false` because they need sensors, timers and wake lock.
 
-Deck data has two shapes (`data/schema.ts`): each game owns a classic list
+Deck data has two shapes (`decks/contract.ts`): each game owns a classic list
 (`data/<game>/<locale>.ts`, `{ id, game, locale, label, items[] }`), and the themed packs
 are shared by both games per locale (`data/packs/<locale>.ts`, `movies`, `disney`,
 `actors`, `objects`, `kitchen`, `gaming`, `animals`, `music`, `sports`, `food`, `places`,
@@ -205,7 +242,7 @@ API until something asks for it).
 
 **Small units.** A component should read in one screen: aim for **~120 lines max**, and split
 by responsibility, not by line count alone. Route files stay thin — route config, state and
-effects — with the panels they render living next to them (e.g. `src/games/charades/*`).
+effects — with the screen they render living in its domain (e.g. `src/games/charades/*`).
 Extract a hook when state logic outgrows the JSX, and a subcomponent when a block has its own
 props or its own conditional. One job per file, named for the job.
 
@@ -259,6 +296,7 @@ pnpm dlx shadcn@latest add <component> -y < /dev/null
 The CLI's `init` needs a TTY and will hang; it is already configured, so only `add`
 is used. After adding, always check the new file:
 
+- the CLI writes to `src/ui` (aliases in `components.json`);
 - imports must be `@/lib/utils`, not `cn` (the registry leaks a `cn` package that
   must not stay in `package.json`);
 - strip `"use client"` directives (not a Next app);
@@ -310,7 +348,7 @@ Known noise: Rolldown prints `MODULE_LEVEL_DIRECTIVE` warnings for `"use client"
 | M1 | Tokens, light/dark, shadcn foundation, styleguide | committed |
 | M2 | i18n (`/$lang`), home, games list, settings, phone QR gate | committed |
 | M3 | Landing at `/$lang`, gate moved to `_app`, SEO, manifest, icons, robots | committed |
-| M4 | Deck contract, ES/EN banks, shuffling, `getRound` | committed |
+| M4 | Deck contract, ES/EN banks, shuffling, `getRoundWords` | committed |
 | M5 | Spy end-to-end: setup, hold-to-reveal deal, timer, vote, reveal, another round | committed |
 | M6 | Charadas: setup, countdown, tilt correct/pass, tap fallback, results | awaiting test |
 | M7 | Timer sound + haptics (Web Audio, mute toggle) | awaiting test |

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
 import { categorySearch, DEFAULT_CATEGORY } from "@/decks/categories";
-import { SpySetup } from "@/games/spy/setup";
+import { SpySetup } from "@/games/spy/screens/spy-setup";
 import { getMessages } from "@/i18n";
 
 const SpySetupRoute = () => {

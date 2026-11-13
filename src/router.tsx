@@ -1,7 +1,7 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 
-import { ErrorPage } from "@/documents/error-page";
-import { NotFoundPage } from "@/documents/not-found-page";
+import { ErrorPage } from "@/documents/screens/error-page";
+import { NotFoundPage } from "@/documents/screens/not-found-page";
 import { routeTree } from "@/routeTree.gen";
 
 export const getRouter = () => {

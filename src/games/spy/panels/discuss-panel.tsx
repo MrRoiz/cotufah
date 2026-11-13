@@ -1,6 +1,10 @@
+import { TimerBar } from "@/games/components/timer-bar";
+import {
+	FINAL_SECONDS,
+	formatClock,
+	secondsLeft,
+} from "@/games/hooks/use-countdown";
 import { DISCUSS_MS } from "@/games/spy/rules";
-import { TimerBar } from "@/games/timer-bar";
-import { FINAL_SECONDS, formatClock, secondsLeft } from "@/games/use-countdown";
 import type { Messages } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";

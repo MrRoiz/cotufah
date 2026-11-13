@@ -2,8 +2,8 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
 import { DEFAULT_CATEGORY, toCategoryChoice } from "@/decks/categories";
-import { SpyPlayScreen } from "@/games/spy/play-screen";
 import { MIN_PLAYERS, parsePlayers, parseSpyCount } from "@/games/spy/rules";
+import { SpyPlayScreen } from "@/games/spy/screens/spy-play-screen";
 import { getMessages } from "@/i18n";
 
 const SpyPlayRoute = () => {

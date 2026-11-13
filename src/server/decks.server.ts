@@ -6,10 +6,10 @@ import { spyEn } from "@/data/spy/en";
 import { spyEs } from "@/data/spy/es";
 import { type ServerCategory, themedCategories } from "@/decks/categories";
 import { type Deck, deckSchema, type Pack, packSchema } from "@/decks/contract";
-import { pick } from "@/decks/pick";
+import { pick } from "@/lib/pick";
 
 /**
- * Server-only deck registry. Imported exclusively from `decks/functions.ts`,
+ * Server-only deck registry. Imported exclusively from `decks/get-round-fn.ts`,
  * which is what keeps word lists out of the client bundle. Zod validation runs
  * at module load: a malformed deck fails the boot, not a round.
  */

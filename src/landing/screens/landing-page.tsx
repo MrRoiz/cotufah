@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
 
 import { app, type Locale } from "@/config/app";
-import { CustomDecks } from "@/landing/sections/custom-decks";
-import { Footer } from "@/landing/sections/footer";
-import { Games } from "@/landing/sections/games";
-import { Hero } from "@/landing/sections/hero";
-import { HowItWorks } from "@/landing/sections/how-it-works";
-import { PacksMarquee } from "@/landing/sections/packs-marquee";
-import { Quotes } from "@/landing/sections/quotes";
-import { Why } from "@/landing/sections/why";
+import { CustomDecks } from "@/landing/components/custom-decks";
+import { Footer } from "@/landing/components/footer";
+import { Games } from "@/landing/components/games";
+import { Hero } from "@/landing/components/hero";
+import { HowItWorks } from "@/landing/components/how-it-works";
+import { PacksMarquee } from "@/landing/components/packs-marquee";
+import { Quotes } from "@/landing/components/quotes";
+import { Why } from "@/landing/components/why";
 import { LocaleSwitch } from "@/ui/locale-switch";
 import { ModeToggle } from "@/ui/mode-toggle";
 

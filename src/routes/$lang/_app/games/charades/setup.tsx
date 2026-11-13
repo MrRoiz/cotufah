@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
 import { categorySearch, DEFAULT_CATEGORY } from "@/decks/categories";
-import { CharadesSetup } from "@/games/charades/setup";
+import { CharadesSetup } from "@/games/charades/screens/charades-setup";
 import { getMessages } from "@/i18n";
 
 const CharadesSetupRoute = () => {

@@ -6,10 +6,10 @@ import {
 	isCustomCategory,
 	packChoices,
 } from "@/decks/categories";
-import { CustomDeckPicker } from "@/decks/components/picker-section";
+import { CustomDeckPicker } from "@/decks/components/custom-deck-picker";
 import { customCategoryId } from "@/decks/custom-decks";
+import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { packIcons } from "@/decks/pack-icons";
-import { useCustomDecks } from "@/decks/use-custom-decks";
 import { getMessages, plural } from "@/i18n";
 import { cn } from "@/lib/utils";
 import {

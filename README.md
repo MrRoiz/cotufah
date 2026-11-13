@@ -94,6 +94,16 @@ The app is organized by domain: `src/games/<game>/` holds one game end to end,
 `src/i18n/` plus the server-only `src/data/` + `src/server/` boundary are
 infrastructure. `src/routes/` is a thin URL-adapter layer.
 
+Every domain folder (`games/`, `games/<game>/`, `decks/`, `landing/`, `settings/`,
+`documents/`) uses the same four subfolders: `screens/`, `panels/`, `components/` and
+`hooks/`. Each domain's own modules (`games.ts`, `rules.ts`, `contract.ts`, `categories.ts`)
+stay at its root, low-level helpers shared by several domains live in `src/lib/`, and a file
+is named for the component, hook or function it exports.
+
+Code both games use lives in `games/`, not in one game's folder and not in a `shared/` folder:
+a unit is only promoted there when a second real consumer exists, and a game folder never
+imports from another game folder.
+
 See `AGENTS.md` for the full tree and a task → file map.
 
 ## How the decks work

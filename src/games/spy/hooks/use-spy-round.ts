@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
-import { useRoundWords } from "@/decks/use-round-words";
-import { assignSpies } from "@/games/spy/assign";
+import { useRoundWords } from "@/decks/hooks/use-round-words";
+import { useCountdown } from "@/games/hooks/use-countdown";
+import { useRoundCues } from "@/games/hooks/use-round-cues";
+import { useWakeLock } from "@/games/hooks/use-wake-lock";
+import { assignSpies } from "@/games/spy/assign-spies";
 import { DISCUSS_MS, HANDOFF_MS, type SpyPhase } from "@/games/spy/rules";
-import { useCountdown } from "@/games/use-countdown";
-import { useRoundCues } from "@/games/use-round-cues";
-import { useWakeLock } from "@/games/use-wake-lock";
 import { formatList } from "@/i18n";
 
 /** Round state for Spy: one word, one assignment, one phase at a time. */

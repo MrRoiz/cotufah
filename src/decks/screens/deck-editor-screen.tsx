@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import type { Locale } from "@/config/app";
 import { DeckForm } from "@/decks/components/deck-form";
-import { useCustomDecks } from "@/decks/use-custom-decks";
+import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";

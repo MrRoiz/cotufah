@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
-import { DeckImportScreen } from "@/decks/import-screen";
+import { DeckImportScreen } from "@/decks/screens/deck-import-screen";
 import { getMessages } from "@/i18n";
 
 const ImportRoute = () => {

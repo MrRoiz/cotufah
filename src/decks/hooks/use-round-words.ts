@@ -9,8 +9,8 @@ import {
 	isCustomCategory,
 } from "@/decks/categories";
 import { findCustomDeck } from "@/decks/custom-decks";
-import { getRoundFn } from "@/decks/functions";
-import { pick } from "@/decks/pick";
+import { getRoundFn } from "@/decks/get-round-fn";
+import { pick } from "@/lib/pick";
 
 /**
  * Words for a round, wherever they live: the server decks or a custom deck in

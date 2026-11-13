@@ -6,13 +6,13 @@ import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
 import { CategoryField } from "@/decks/components/category-field";
 import { SpyCountField } from "@/games/spy/components/spy-count-field";
+import { createPlayersSchema } from "@/games/spy/create-players-schema";
 import {
 	clampSpyCount,
 	MAX_PLAYERS,
 	MIN_PLAYERS,
 	serializePlayers,
 } from "@/games/spy/rules";
-import { createPlayersSchema } from "@/games/spy/setup-schema";
 import { getMessages, interpolate } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";

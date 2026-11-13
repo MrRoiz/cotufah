@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { textLinkClass } from "@/ui/text-link";
+import { textLinkClass } from "@/ui/text-link-class";
 
 type ExternalLinkProps = {
 	href: string;

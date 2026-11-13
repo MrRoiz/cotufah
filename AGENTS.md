@@ -80,33 +80,24 @@ below are conventions, reviewed by hand.
 
 ```
 src/
-├─ games/                 # one folder per game, plus the shared round plumbing
-│  ├─ registry.ts         # catalog: slugs, gradients, setup routes
-│  ├─ game-card.tsx       # card shared by the landing and the app list
-│  ├─ games-screen.tsx    # /games list
-│  ├─ timer-bar.tsx       # round bar shared by both games
-│  ├─ use-countdown.ts    # ms countdown + clock helpers
-│  ├─ use-round-cues.ts   # last-seconds ticks + end cue, shared by both games
-│  ├─ use-wake-lock.ts    # screen stays awake during a round
-│  ├─ haptics.ts          # navigator.vibrate patterns
+├─ games/                 # the catalog, plus what both games share
+│  ├─ games.ts            # catalog: slugs, gradients, setup routes
+│  ├─ components/{game-card,coming-soon-card,timer-bar}.tsx
+│  ├─ hooks/{use-countdown,use-round-cues,use-wake-lock}.ts
+│  ├─ screens/games-screen.tsx   # /games list
 │  ├─ spy/
-│  │  ├─ setup.tsx        # names + spy count form
-│  │  ├─ play-screen.tsx  # handoff → deal → discuss → vote → reveal
 │  │  ├─ rules.ts         # limits, phases, player encoding
-│  │  ├─ use-round.ts     # round state, cues and handlers
-│  │  ├─ assign.ts        # assignSpies
-│  │  ├─ setup-schema.ts  # player validation
+│  │  ├─ assign-spies.ts  # assignSpies
+│  │  ├─ create-players-schema.ts  # player validation
+│  │  ├─ screens/{spy-setup,spy-play-screen}.tsx
+│  │  ├─ panels/{deal,handoff,discuss,vote,reveal}-panel.tsx
 │  │  ├─ components/spy-count-field.tsx
-│  │  └─ panels/{deal,handoff,discuss,vote,reveal}-panel.tsx
+│  │  └─ hooks/use-spy-round.ts
 │  └─ charades/
-│     ├─ setup.tsx        # duration + deck
-│     ├─ play-screen.tsx  # intro → countdown → stage → results
 │     ├─ rules.ts         # durations, phases, answer type
-│     ├─ use-round.ts     # round state, cues and handlers
-│     ├─ motion-sensor.ts # gravity check, permission, iOS detection
-│     ├─ use-motion-probe.ts  # can this device give us tilts?
-│     ├─ use-tilt.ts      # tilt gesture
-│     └─ screens/{intro,countdown,results}-screen.tsx + play-stage.tsx
+│     ├─ screens/{charades-setup,charades-play-screen,charades-play-stage}.tsx
+│     ├─ screens/{charades-countdown,charades-intro,charades-results}.tsx
+│     └─ hooks/{use-charades-round,use-tilt,use-motion-probe}.ts
 ├─ decks/                 # where round words come from: server packs,
 │                         # the shared picker, and the player's own decks (at /decks)
 │  ├─ categories.ts       # zod-free taxonomy + search-param validator (client-safe)
@@ -114,18 +105,18 @@ src/
 │  ├─ custom-decks.ts     # localStorage store
 │  ├─ share-deck.ts       # deflate + base64url share payload
 │  ├─ deflate.ts          # deflate/inflate helpers
-│  ├─ functions.ts        # getRoundFn server function (client-safe)
-│  ├─ pick.ts             # random index + remove from pool
-│  ├─ use-custom-decks.ts
-│  ├─ use-round-words.ts  # server or local words for one round
+│  ├─ get-round-fn.ts     # getRoundFn server function (client-safe)
 │  ├─ pack-icons.ts
-│  ├─ decks-screen.tsx    # list, share, delete
-│  ├─ deck-editor-screen.tsx  # create + edit
-│  ├─ import-screen.tsx   # shared link -> localStorage
-│  └─ components/{category-field,deck-form,deck-list,picker-section,share-deck-sheet}.tsx
-├─ landing/{landing-page,sections/*}.tsx
-├─ settings/settings-screen.tsx
-├─ documents/{about-page,error-page,legal-page,not-found-page,document-page,document-section}.tsx
+│  ├─ components/{category-field,custom-deck-picker,deck-form,deck-list,share-deck-sheet}.tsx
+│  ├─ hooks/{use-custom-decks,use-round-words}.ts
+│  └─ screens/{decks-screen,deck-editor-screen,deck-import-screen}.tsx
+├─ landing/
+│  ├─ screens/landing-page.tsx
+│  └─ components/{hero,games,packs-marquee,how-it-works,quotes,why,custom-decks,footer}.tsx
+├─ settings/screens/settings-screen.tsx
+├─ documents/
+│  ├─ screens/{about,legal,error,not-found}-page.tsx
+│  └─ components/{document-page,document-section,document-list}.tsx
 ├─ ui/                    # shadcn primitives + app-wide visuals and small UI hooks
 ├─ providers/{query,theme}-provider.tsx
 ├─ layout/{app-shell,phone-gate}.tsx
@@ -134,7 +125,7 @@ src/
 ├─ data/{spy,charades,packs}/  # server-only word banks — the client-bundle
 │                         # boundary; imported only by server/decks.server.ts
 ├─ server/decks.server.ts      # server-only deck registry (zod-validated)
-├─ lib/{sound,utils}.ts
+├─ lib/{sound,utils,haptic,motion-sensor,pick}.ts
 ├─ dev/tokens-page.tsx    # dev-only styleguide body
 ├─ styles.css             # tokens (@theme inline) + utilities + base layer
 ├─ routes/                # thin adapters only: config, search, head, screen
@@ -159,22 +150,76 @@ generated from `app.name` by a Vite plugin — never commit a manifest with the 
 The rule the tree expresses: **domain folders hold the product; `routes/` is
 the URL map; `data/` + `server/` are the server-only boundary.**
 
+### Domain folders
+
+Every domain folder — `games/`, `games/<game>/`, `decks/`, `landing/`, `settings/`,
+`documents/` — groups its files by job, and every one of them uses the same four folder
+names. Pick the folder by what the file *is*; a reader who learned one domain can find their
+way around the others.
+
+| Folder | Holds |
+|---|---|
+| `screens/` | the page-level components `routes/` wires; one file per screen |
+| `panels/` | the blocks a multi-step screen is made of (spy's deal, vote, reveal) |
+| `components/` | everything smaller that a screen, a panel or another domain renders |
+| `hooks/` | `use-*.ts` state and effects — no JSX |
+
+The domain's own modules stay at its root, because they are what the folder is about:
+`games.ts` (the game catalog), `rules.ts` (fixed values, phases, validation),
+`contract.ts` + `categories.ts` (the data shape and its taxonomy), `assign-spies.ts`,
+`create-players-schema.ts`, and the deck modules (`custom-decks.ts`, `share-deck.ts`,
+`deflate.ts`, `pack-icons.ts`, `get-round-fn.ts`). Low-level helpers shared by several domains
+live below their consumers in `lib/` (`sound`, `haptic`, `motion-sensor`, `pick`, `utils`).
+`ui/` is a flat primitive library and stays flat on purpose.
+
+**A file is named for what it exports.** One unit per file, kebab-cased from the export:
+`charades-setup.tsx` holds `CharadesSetup`, `use-spy-round.ts` holds `useSpyRound`,
+`assign-spies.ts` holds `assignSpies`, `haptic.ts` holds `haptic`. A module that holds a family
+of related declarations is named for the concept instead (`rules.ts`, `categories.ts`,
+`contract.ts`, `custom-decks.ts`), never `utils`/`helpers`/`misc`. Conventions that are not
+ours to rename: a `routes/**` file is named for its URL, a `data/**` bank for its
+`<game>/<locale>`, a `ui/**` file for the shadcn primitive it vendors, `i18n/index.ts` is the
+barrel, `*.server.ts` marks the server boundary, and `lib/utils.ts` is the `cn` shim the
+shadcn registry expects.
+
+A domain folder never keeps a loose screen, panel or hook at its root: if it renders a screen
+it goes in `screens/`, if it is a hook it goes in `hooks/`. A new area starts with the same
+folders, and an empty one is deleted rather than kept around.
+
+### Where shared code goes
+
+A unit moves up one level when a second real consumer appears, never in advance. Promotion is
+part of the change that adds that consumer: move the file and its imports, never copy it.
+
+| Used by | Home |
+|---|---|
+| one game | that game's folder (`games/charades/hooks/use-tilt.ts`, `games/spy/panels/*`) |
+| both games | `games/hooks/`, `games/components/`, `games/screens/` — `games/` is the domain that owns round plumbing |
+| any domain, below them | `lib/` (`sound`, `haptic`, `motion-sensor`, `pick`, and the shadcn `cn` shim) |
+| any screen | `ui/` |
+
+There is no `shared/`, `common/` or `utils/` domain: a folder named for sharing has no owner, so
+it silently becomes the junk drawer where half-related files go to be forgotten. A game folder
+never imports from another game folder — if spy needs it, it goes to `games/`, not to
+`games/charades/`. The same holds across domains: a helper two domains use lives in `lib/`.
+
 ### Where to look
 
 | I want to… | go to |
 |---|---|
-| change a spy screen | `games/spy/panels/*` (`play-screen.tsx` for phase flow) |
+| change a spy screen | `games/spy/panels/*` (`games/spy/screens/spy-play-screen.tsx` for phase flow) |
 | change a charades screen | `games/charades/screens/*` |
 | tweak a round's timing or limits | `games/<game>/rules.ts` |
-| change round state or cues | `games/<game>/use-round.ts` |
+| change round state or cues | `games/<game>/hooks/use-<game>-round.ts`, `games/hooks/use-round-cues.ts` |
 | add words to a themed pack | `data/packs/{es,en}.ts` |
 | add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` (the only pack list) + `i18n/{en,es}.ts` + `decks/pack-icons.ts`. The zod pack schema derives its keys from the taxonomy. |
 | fix the deck share QR | `decks/components/share-deck-sheet.tsx` |
 | fix custom deck storage | `decks/custom-decks.ts` |
 | change what a URL renders | `routes/**` (each adapter imports its screen) |
-| add game three | `games/<slug>/` + `data/<slug>/{es,en}.ts` + `config/games.ts` (the slug tuple) + `games/registry.ts` (entry + gradient) + `styles.css` (three `--game-<slug>-*` tokens) + `server/decks.server.ts` + i18n `games.<slug>` + two route files. The zod game enums in `decks/contract.ts` and `decks/functions.ts` derive from the tuple. |
-| edit the marketing page | `landing/sections/*` |
+| add game three | `games/<slug>/` with the four folders + `data/<slug>/{es,en}.ts` + `config/games.ts` (the slug tuple) + `games/games.ts` (entry + gradient) + `styles.css` (three `--game-<slug>-*` tokens) + `server/decks.server.ts` + i18n `games.<slug>` + two route files. The zod game enums in `decks/contract.ts` and `decks/get-round-fn.ts` derive from the tuple. |
+| edit the marketing page | `landing/components/*` |
 | tweak a shared visual | `ui/*` |
+| change a sound or a buzz | `lib/sound.ts`, `lib/haptic.ts` |
 | change OG or canonical tags | `config/seo.ts` (static tags in `routes/__root.tsx`) |
 
 **Sound (M7):** Web Audio only, no audio assets — noise ticks in the last 10 seconds, three
@@ -184,7 +229,7 @@ arpeggio for "correct", all through one compressor so they carry in a loud room,
 persists in `localStorage` under the brand-free key `app.sound`. iOS honours the hardware
 silent switch, so sound is reinforcement, never the only cue — the visual countdown stays.
 
-Spy round state lives in `games/spy/use-round.ts`: assignment (`assignSpies`) and the
+Spy round state lives in `games/spy/hooks/use-spy-round.ts`: assignment (`assignSpies`) and the
 word (`getRoundFn`, count 1) are created once when the round starts. `ssr: false` on the play
 route is deliberate — dealing roles on the server would leak the spy through the payload and
 mismatch on hydration.

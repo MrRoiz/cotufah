@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
-import { GamesScreen } from "@/games/games-screen";
+import { GamesScreen } from "@/games/screens/games-screen";
 import { getMessages } from "@/i18n";
 
 const GamesRoute = () => {

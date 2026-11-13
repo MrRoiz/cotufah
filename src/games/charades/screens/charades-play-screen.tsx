@@ -1,12 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
+import { useCharadesRound } from "@/games/charades/hooks/use-charades-round";
 import type { Duration } from "@/games/charades/rules";
-import { CharadesCountdown } from "@/games/charades/screens/countdown-screen";
-import { CharadesIntro } from "@/games/charades/screens/intro-screen";
-import { CharadesPlayStage } from "@/games/charades/screens/play-stage";
-import { CharadesResults } from "@/games/charades/screens/results-screen";
-import { useCharadesRound } from "@/games/charades/use-round";
+import { CharadesCountdown } from "@/games/charades/screens/charades-countdown";
+import { CharadesIntro } from "@/games/charades/screens/charades-intro";
+import { CharadesPlayStage } from "@/games/charades/screens/charades-play-stage";
+import { CharadesResults } from "@/games/charades/screens/charades-results";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 

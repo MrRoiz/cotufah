@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
 import { getMessages } from "@/i18n";
-import { SettingsScreen } from "@/settings/settings-screen";
+import { SettingsScreen } from "@/settings/screens/settings-screen";
 
 const SettingsRoute = () => {
 	const { lang } = Route.useParams();

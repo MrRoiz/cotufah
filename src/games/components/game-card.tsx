@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon } from "lucide-react";
 import type { Locale } from "@/config/app";
-import type { GameEntry } from "@/games/registry";
+import type { GameEntry } from "@/games/games";
 import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/badge";
@@ -9,7 +9,7 @@ import { Button } from "@/ui/button";
 
 /**
  * One game, one card: the landing and the app list render the same block, so
- * a new game only has to land in the registry to appear on both. The variant
+ * a new game only has to land in the catalog to appear on both. The variant
  * only changes the action — the header, copy and badge stay identical, or this
  * becomes two cards wearing one name.
  */

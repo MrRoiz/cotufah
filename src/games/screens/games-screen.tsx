@@ -1,7 +1,7 @@
 import type { Locale } from "@/config/app";
-import { ComingSoonCard } from "@/games/coming-soon-card";
-import { GameCard } from "@/games/game-card";
-import { games } from "@/games/registry";
+import { ComingSoonCard } from "@/games/components/coming-soon-card";
+import { GameCard } from "@/games/components/game-card";
+import { games } from "@/games/games";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";

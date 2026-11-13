@@ -2,22 +2,22 @@ import { useEffect, useRef, useState } from "react";
 
 import type { Locale } from "@/config/app";
 import { type CategoryChoice, MAX_ROUND_WORDS } from "@/decks/categories";
-import { useRoundWords } from "@/decks/use-round-words";
-import { requestMotionPermission } from "@/games/charades/motion-sensor";
+import { useRoundWords } from "@/decks/hooks/use-round-words";
+import {
+	motionProbeReliable,
+	useMotionProbe,
+} from "@/games/charades/hooks/use-motion-probe";
+import { useTilt } from "@/games/charades/hooks/use-tilt";
 import type {
 	CharadesAnswer,
 	CharadesPhase,
 	Duration,
 } from "@/games/charades/rules";
-import {
-	motionProbeReliable,
-	useMotionProbe,
-} from "@/games/charades/use-motion-probe";
-import { useTilt } from "@/games/charades/use-tilt";
-import { haptic } from "@/games/haptics";
-import { useCountdown } from "@/games/use-countdown";
-import { useRoundCues } from "@/games/use-round-cues";
-import { useWakeLock } from "@/games/use-wake-lock";
+import { useCountdown } from "@/games/hooks/use-countdown";
+import { useRoundCues } from "@/games/hooks/use-round-cues";
+import { useWakeLock } from "@/games/hooks/use-wake-lock";
+import { haptic } from "@/lib/haptic";
+import { requestMotionPermission } from "@/lib/motion-sensor";
 import { playSound } from "@/lib/sound";
 
 const COUNTDOWN_FROM = 3;

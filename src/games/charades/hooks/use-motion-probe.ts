@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { hasGravity, isIosDevice } from "@/games/charades/motion-sensor";
+import { hasGravity, isIosDevice } from "@/lib/motion-sensor";
 
 export type MotionProbe = "unknown" | "yes" | "no";
 

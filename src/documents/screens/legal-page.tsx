@@ -1,6 +1,7 @@
 import { app, type Locale } from "@/config/app";
-import { DocumentPage } from "@/documents/document-page";
-import { DocumentList, DocumentSection } from "@/documents/document-section";
+import { DocumentList } from "@/documents/components/document-list";
+import { DocumentPage } from "@/documents/components/document-page";
+import { DocumentSection } from "@/documents/components/document-section";
 import { getMessages } from "@/i18n";
 import { ExternalLink } from "@/ui/external-link";
 

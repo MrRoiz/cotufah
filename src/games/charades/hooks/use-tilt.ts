@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { hasGravity } from "@/games/charades/motion-sensor";
+import { hasGravity } from "@/lib/motion-sensor";
 
 type TiltDirection = "down" | "up";
 

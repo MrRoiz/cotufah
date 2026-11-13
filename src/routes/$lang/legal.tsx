@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
-import { LegalPage } from "@/documents/legal-page";
+import { LegalPage } from "@/documents/screens/legal-page";
 import { getMessages } from "@/i18n";
 
 const LegalRoute = () => {

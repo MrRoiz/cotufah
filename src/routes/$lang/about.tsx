@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
-import { AboutPage } from "@/documents/about-page";
+import { AboutPage } from "@/documents/screens/about-page";
 import { getMessages } from "@/i18n";
 
 const AboutRoute = () => {

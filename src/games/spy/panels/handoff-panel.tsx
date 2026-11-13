@@ -1,6 +1,6 @@
+import { TimerBar } from "@/games/components/timer-bar";
+import { secondsLeft } from "@/games/hooks/use-countdown";
 import { HANDOFF_MS } from "@/games/spy/rules";
-import { TimerBar } from "@/games/timer-bar";
-import { secondsLeft } from "@/games/use-countdown";
 import type { Messages } from "@/i18n";
 
 /** Five seconds between players, so the passer cannot see the next role. */

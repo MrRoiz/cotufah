@@ -2,13 +2,13 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
+import { useSpyRound } from "@/games/spy/hooks/use-spy-round";
 import { DealPanel } from "@/games/spy/panels/deal-panel";
 import { DiscussPanel } from "@/games/spy/panels/discuss-panel";
 import { HandoffPanel } from "@/games/spy/panels/handoff-panel";
 import { RevealPanel } from "@/games/spy/panels/reveal-panel";
 import { VotePanel } from "@/games/spy/panels/vote-panel";
 import { parsePlayers } from "@/games/spy/rules";
-import { useSpyRound } from "@/games/spy/use-round";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 

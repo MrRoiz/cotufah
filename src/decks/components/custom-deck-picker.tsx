@@ -6,7 +6,7 @@ import type { CategoryChoice, CustomCategory } from "@/decks/categories";
 import { type CustomDeck, customCategoryId } from "@/decks/custom-decks";
 import { getMessages, plural } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { textLinkClass } from "@/ui/text-link";
+import { textLinkClass } from "@/ui/text-link-class";
 
 /** Decks written on this phone, listed under the themed packs. */
 export const CustomDeckPicker = ({

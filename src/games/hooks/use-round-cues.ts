@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-
-import { haptic } from "@/games/haptics";
-import { FINAL_SECONDS, secondsLeft } from "@/games/use-countdown";
+import { FINAL_SECONDS, secondsLeft } from "@/games/hooks/use-countdown";
+import { haptic } from "@/lib/haptic";
 import { playSound } from "@/lib/sound";
 
 /**

@@ -1,5 +1,5 @@
 import { Loader2Icon } from "lucide-react";
-import type { MotionProbe } from "@/games/charades/use-motion-probe";
+import type { MotionProbe } from "@/games/charades/hooks/use-motion-probe";
 import type { Messages } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";

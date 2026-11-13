@@ -19,7 +19,7 @@ import { AppPageHeader } from "@/ui/app-page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { ChoiceButton } from "@/ui/choice-button";
 import { Switch } from "@/ui/switch";
-import { textLinkClass } from "@/ui/text-link";
+import { textLinkClass } from "@/ui/text-link-class";
 
 /** One settings block: icon, title, optional body and a control on the right. */
 const SettingsCard = ({

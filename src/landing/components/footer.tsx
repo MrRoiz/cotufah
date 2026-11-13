@@ -5,7 +5,7 @@ import { appVersion } from "@/config/version";
 import { getMessages } from "@/i18n";
 import { ExternalLink } from "@/ui/external-link";
 import { LocaleSwitch } from "@/ui/locale-switch";
-import { textLinkClass } from "@/ui/text-link";
+import { textLinkClass } from "@/ui/text-link-class";
 
 export const Footer = ({ lang }: { lang: Locale }) => {
 	const m = getMessages(lang);

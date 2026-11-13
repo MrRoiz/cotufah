@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import type { Locale } from "@/config/app";
 import { DeckList } from "@/decks/components/deck-list";
-import { useCustomDecks } from "@/decks/use-custom-decks";
+import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";

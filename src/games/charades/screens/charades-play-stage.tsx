@@ -1,7 +1,11 @@
 import { CheckIcon, XIcon } from "lucide-react";
 
-import { TimerBar } from "@/games/timer-bar";
-import { FINAL_SECONDS, formatClock, secondsLeft } from "@/games/use-countdown";
+import { TimerBar } from "@/games/components/timer-bar";
+import {
+	FINAL_SECONDS,
+	formatClock,
+	secondsLeft,
+} from "@/games/hooks/use-countdown";
 import type { Messages } from "@/i18n";
 import { cn } from "@/lib/utils";
 

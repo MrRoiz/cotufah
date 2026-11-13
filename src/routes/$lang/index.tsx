@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { landingMeta } from "@/config/seo";
-import { LandingPage } from "@/landing/landing-page";
+import { LandingPage } from "@/landing/screens/landing-page";
 
 const LandingRoute = () => {
 	const { lang } = Route.useParams();

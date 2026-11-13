@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { pageMeta } from "@/config/seo";
 import { DEFAULT_CATEGORY, toCategoryChoice } from "@/decks/categories";
-import { CharadesPlayScreen } from "@/games/charades/play-screen";
 import { parseDuration } from "@/games/charades/rules";
+import { CharadesPlayScreen } from "@/games/charades/screens/charades-play-screen";
 import { getMessages } from "@/i18n";
 
 const CharadesPlayRoute = () => {

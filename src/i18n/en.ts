@@ -29,6 +29,17 @@ export const en = {
 		qrAlt: "QR code to open {app} on your phone",
 		hint: "Nothing to install. Nothing is saved.",
 	},
+	notFound: {
+		title: "This screen went missing",
+		body: "That link doesn't lead anywhere. Head back home and keep playing.",
+		home: "Back home",
+	},
+	error: {
+		title: "Something broke",
+		body: "Not your fault (almost never). Try again; if it keeps happening, go home and keep playing.",
+		retry: "Try again",
+		home: "Back home",
+	},
 	category: {
 		title: "Deck",
 		body: "Pick what the round is about. Mixed pulls from all of them.",

@@ -28,6 +28,17 @@ export const es: Messages = {
 		qrAlt: "Código QR para abrir {app} en tu celular",
 		hint: "No hay nada que instalar. No se guarda nada.",
 	},
+	notFound: {
+		title: "Se nos perdió esa pantalla",
+		body: "Ese link no lleva a ninguna parte. Vuelve al inicio y sigue el parche.",
+		home: "Volver al inicio",
+	},
+	error: {
+		title: "Algo se rompió",
+		body: "No fue culpa tuya (casi nunca). Reintenta; si sigue pasando, vuelve al inicio y sigue jugando.",
+		retry: "Reintentar",
+		home: "Volver al inicio",
+	},
 	category: {
 		title: "Baraja",
 		body: "Escoge de qué va la ronda. La mezcla agarra de todas.",

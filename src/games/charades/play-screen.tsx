@@ -36,7 +36,7 @@ export const CharadesPlayScreen = ({
 				remainingMs={round.remainingMs}
 				score={round.correctCount}
 				totalMs={round.totalMs}
-				word={round.words[round.index] ?? ""}
+				word={round.word}
 				zonesVisible={round.zonesVisible}
 			/>
 		);
@@ -46,7 +46,7 @@ export const CharadesPlayScreen = ({
 		<AppShell>
 			{round.phase === "intro" ? (
 				<CharadesIntro
-					canStart={!round.isPending && round.words.length > 0}
+					canStart={!round.isPending && round.hasWords}
 					isPending={round.isPending}
 					m={m}
 					onStart={round.startRound}
@@ -57,8 +57,8 @@ export const CharadesPlayScreen = ({
 
 			{round.phase === "results" ? (
 				<CharadesResults
-					answers={round.answers}
 					correctCount={round.correctCount}
+					correctWords={round.correctWords}
 					finished={round.finished}
 					isFetching={round.isFetching}
 					m={m}
@@ -66,6 +66,7 @@ export const CharadesPlayScreen = ({
 					onChangeSettings={() =>
 						navigate({ to: "/$lang/games/charades/setup", params: { lang } })
 					}
+					passedWords={round.passedWords}
 					pendingWord={round.pendingWord}
 				/>
 			) : null}

@@ -72,3 +72,18 @@ export const plural = (
 	const rule = pluralRuleFor(locale).select(count);
 	return interpolate(rule === "one" ? forms.one : forms.other, { count });
 };
+
+/** `A, B and C` in the reader's language, cached like the plural rules. */
+const listFormatters = new Map<Locale, Intl.ListFormat>();
+
+export const formatList = (locale: Locale, items: string[]): string => {
+	let formatter = listFormatters.get(locale);
+	if (!formatter) {
+		formatter = new Intl.ListFormat(locale, {
+			style: "long",
+			type: "conjunction",
+		});
+		listFormatters.set(locale, formatter);
+	}
+	return formatter.format(items);
+};

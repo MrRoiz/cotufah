@@ -6,6 +6,7 @@ import type { CategoryChoice, CustomCategory } from "@/decks/categories";
 import { type CustomDeck, customCategoryId } from "@/decks/custom-decks";
 import { getMessages, plural } from "@/i18n";
 import { cn } from "@/lib/utils";
+import { textLinkClass } from "@/ui/text-link";
 
 /** Decks written on this phone, listed under the themed packs. */
 export const CustomDeckPicker = ({
@@ -26,7 +27,7 @@ export const CustomDeckPicker = ({
 			<div className="flex items-center justify-between gap-2">
 				<span className="font-bold text-sm">{m.decks.pickerTitle}</span>
 				<Link
-					className="font-bold text-sm underline-offset-4 hover:underline"
+					className={cn("text-sm", textLinkClass)}
 					params={{ lang: locale }}
 					to="/$lang/decks"
 				>

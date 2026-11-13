@@ -1,4 +1,4 @@
-import { HANDOFF_SECONDS } from "@/games/spy/rules";
+import { HANDOFF_MS } from "@/games/spy/rules";
 import { TimerBar } from "@/games/timer-bar";
 import { secondsLeft } from "@/games/use-countdown";
 import type { Messages } from "@/i18n";
@@ -37,7 +37,7 @@ export const HandoffPanel = ({
 				<TimerBar
 					className="h-2.5 w-48"
 					remainingMs={remainingMs}
-					totalMs={HANDOFF_SECONDS * 1000}
+					totalMs={HANDOFF_MS}
 				/>
 			</div>
 

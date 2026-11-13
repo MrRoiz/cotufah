@@ -182,6 +182,8 @@ export const es: Messages = {
 		playerLabel: "Jugador {n}",
 		addPlayer: "Agregar jugador",
 		removePlayer: "Quitar",
+		fewerSpies: "Un espía menos",
+		moreSpies: "Un espía más",
 		spiesTitle: "Espías",
 		spiesHint: "Cuántos van a mentir en esta ronda.",
 		start: "Repartir roles",

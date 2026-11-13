@@ -19,6 +19,4 @@ export const getRoundFn = createServerFn({ method: "GET" })
 			category: z.enum(categoryChoices),
 		}),
 	)
-	.handler(({ data }) =>
-		getRoundWords(data.game, data.locale, data.count, data.category),
-	);
+	.handler(({ data }) => getRoundWords(data));

@@ -1,16 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type TiltDirection = "down" | "up";
+import { hasGravity } from "@/games/charades/motion-sensor";
 
-/** |g| ≈ 9.8 on a real accelerometer; browsers with no sensor emit zeros. */
-const hasGravity = (event: DeviceMotionEvent): boolean => {
-	const gravity = event.accelerationIncludingGravity;
-	if (!gravity) {
-		return false;
-	}
-	const magnitude = Math.hypot(gravity.x ?? 0, gravity.y ?? 0, gravity.z ?? 0);
-	return magnitude > 3;
-};
+type TiltDirection = "down" | "up";
 
 /** m/s² away from the calibrated pose before it counts as a tilt. */
 const TILT_THRESHOLD = 5.5;
@@ -18,6 +10,8 @@ const TILT_THRESHOLD = 5.5;
 const TILT_COOLDOWN_MS = 1100;
 /** The tilt has to stay past the threshold this long to count (ms). */
 const TILT_HOLD_MS = 120;
+/** Re-arm only once the phone is back inside this share of the threshold. */
+const TILT_RELEASE_RATIO = 0.4;
 
 type TiltOptions = {
 	enabled: boolean;
@@ -54,6 +48,8 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 	const tiltHandler = useRef(onTilt);
 	tiltHandler.current = onTilt;
 
+	/** A ref too: the sensor fires ~60 times a second, one state write is enough. */
+	const supportedRef = useRef(false);
 	const [supported, setSupported] = useState(false);
 
 	useEffect(() => {
@@ -71,7 +67,10 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 				return;
 			}
 
-			setSupported(true);
+			if (!supportedRef.current) {
+				supportedRef.current = true;
+				setSupported(true);
+			}
 
 			// Low-pass: raw accelerometer data is noisy enough to fire on a twitch.
 			smoothed.current =
@@ -89,7 +88,7 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 
 			// Hysteresis: re-arm only once the phone is close to neutral again, so
 			// jitter around the threshold cannot fire twice.
-			if (Math.abs(difference) < TILT_THRESHOLD * 0.4) {
+			if (Math.abs(difference) < TILT_THRESHOLD * TILT_RELEASE_RATIO) {
 				armed.current = true;
 				pastSince.current = null;
 				pastDirection.current = null;
@@ -139,89 +138,4 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 	}, []);
 
 	return { supported, recalibrate };
-};
-
-type PermissionRequester = {
-	requestPermission?: () => Promise<"granted" | "denied" | "default">;
-};
-
-/**
- * iOS 13+ gates motion sensors behind a user gesture. Must be called from a
- * tap; whether it is granted only changes which controls the round offers, and
- * the round detects that from the events themselves.
- */
-export const requestMotionPermission = async (): Promise<void> => {
-	if (typeof DeviceMotionEvent === "undefined") {
-		return;
-	}
-
-	const requester = DeviceMotionEvent as unknown as PermissionRequester;
-	if (typeof requester.requestPermission !== "function") {
-		return;
-	}
-
-	try {
-		await requester.requestPermission();
-	} catch {
-		// Denied: the round falls back to the tap zones.
-	}
-};
-
-/**
- * Cheap sensor probe for the intro: if no motion event arrives shortly after
- * mount, the device/browser will not give us tilts, so the UI can teach the
- * tap zones instead. Skipped when the platform asks for permission first (iOS),
- * because there we cannot know until the user grants it.
- */
-export const useMotionProbe = (enabled: boolean): "unknown" | "yes" | "no" => {
-	const [state, setState] = useState<"unknown" | "yes" | "no">("unknown");
-
-	useEffect(() => {
-		if (!enabled) {
-			return;
-		}
-
-		let settled = false;
-		const onMotion = (event: DeviceMotionEvent) => {
-			// Browsers with no sensor still emit events, just with zeros, so the
-			// probe checks for a plausible gravity vector instead of any event.
-			if (settled || !hasGravity(event)) {
-				return;
-			}
-			settled = true;
-			setState("yes");
-		};
-
-		window.addEventListener("devicemotion", onMotion);
-		const timer = setTimeout(() => {
-			if (settled) {
-				return;
-			}
-			settled = true;
-			setState("no");
-		}, 1200);
-
-		return () => {
-			window.removeEventListener("devicemotion", onMotion);
-			clearTimeout(timer);
-		};
-	}, [enabled]);
-
-	return state;
-};
-
-/**
- * Whether the sensor probe can be trusted on the intro screen. Only iOS gates
- * motion behind a prompt before any events can arrive, so only there we have to
- * wait for the user's answer instead of guessing.
- */
-export const motionProbeReliable = (): boolean => {
-	if (typeof navigator === "undefined") {
-		return false;
-	}
-	const ua = navigator.userAgent;
-	const ios =
-		/iPad|iPhone|iPod/.test(ua) ||
-		(/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-	return !ios;
 };

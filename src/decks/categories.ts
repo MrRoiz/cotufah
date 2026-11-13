@@ -18,6 +18,8 @@ export const themedCategories = [
 	"brands",
 ] as const;
 
+export type ThemedCategory = (typeof themedCategories)[number];
+
 export const packChoices = ["clasico", ...themedCategories] as const;
 
 export const categoryChoices = ["mixed", ...packChoices] as const;
@@ -38,7 +40,7 @@ export type ServerCategory = (typeof categoryChoices)[number];
 export const isCustomCategory = (value: string): value is CustomCategory =>
 	value.startsWith(CUSTOM_PREFIX);
 
-export const isCategoryChoice = (value: unknown): value is CategoryChoice =>
+const isCategoryChoice = (value: unknown): value is CategoryChoice =>
 	typeof value === "string" &&
 	((categoryChoices as readonly string[]).includes(value) ||
 		isCustomCategory(value));
@@ -49,3 +51,10 @@ export const DEFAULT_CATEGORY = "clasico" as const;
 /** Narrow a search param to a deck choice, or `undefined` when it is not one. */
 export const toCategoryChoice = (value: unknown): CategoryChoice | undefined =>
 	isCategoryChoice(value) ? value : undefined;
+
+/** Both setup screens carry the deck the same way: the URL survives a detour. */
+export const categorySearch = (
+	search: Record<string, unknown>,
+): { category?: CategoryChoice } => ({
+	category: toCategoryChoice(search.category),
+});

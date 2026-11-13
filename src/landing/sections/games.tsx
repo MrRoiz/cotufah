@@ -3,6 +3,7 @@ import { ComingSoonCard } from "@/games/coming-soon-card";
 import { GameCard } from "@/games/game-card";
 import { games } from "@/games/registry";
 import { getMessages } from "@/i18n";
+import { SectionHeading } from "@/ui/section-heading";
 
 /** The game catalog: every registered game plus the "coming soon" slot. */
 export const Games = ({ lang }: { lang: Locale }) => {
@@ -10,10 +11,10 @@ export const Games = ({ lang }: { lang: Locale }) => {
 
 	return (
 		<section className="flex flex-col gap-5 py-10">
-			<div className="flex flex-col gap-1">
-				<h2 className="font-display text-3xl uppercase">{m.home.gamesTitle}</h2>
-				<p className="text-muted-foreground">{m.home.gamesSubtitle}</p>
-			</div>
+			<SectionHeading
+				title={m.home.gamesTitle}
+				subtitle={m.home.gamesSubtitle}
+			/>
 
 			<div className="grid gap-4 md:grid-cols-2">
 				{games.map((game) => (

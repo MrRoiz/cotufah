@@ -7,7 +7,7 @@ import { localeLabel, otherLocale } from "@/i18n";
 export const LocaleSwitch = ({
 	lang,
 	to,
-	className,
+	className = "rounded-full px-2 py-1 font-bold text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline",
 }: {
 	lang: Locale;
 	to: "/$lang" | "/$lang/legal" | "/$lang/about";

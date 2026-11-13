@@ -69,11 +69,16 @@ const itemsFor = (deck: Deck, category: ServerCategory): string[] => {
 };
 
 /** Words for one round. Fetched once, when the round starts. */
-export const getRoundWords = (
-	game: Deck["game"],
-	locale: Deck["locale"],
-	count: number,
-	category: ServerCategory,
-): string[] => {
+export const getRoundWords = ({
+	game,
+	locale,
+	count,
+	category,
+}: {
+	game: Deck["game"];
+	locale: Deck["locale"];
+	count: number;
+	category: ServerCategory;
+}): string[] => {
 	return pick(itemsFor(findDeck(game, locale), category), count);
 };

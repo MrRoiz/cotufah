@@ -1,4 +1,4 @@
-import { DISCUSS_SECONDS } from "@/games/spy/rules";
+import { DISCUSS_MS } from "@/games/spy/rules";
 import { TimerBar } from "@/games/timer-bar";
 import { FINAL_SECONDS, formatClock, secondsLeft } from "@/games/use-countdown";
 import type { Messages } from "@/i18n";
@@ -38,7 +38,7 @@ export const DiscussPanel = ({
 					<TimerBar
 						className="h-2.5 w-56"
 						remainingMs={remainingMs}
-						totalMs={DISCUSS_SECONDS * 1000}
+						totalMs={DISCUSS_MS}
 						urgent={remaining <= FINAL_SECONDS}
 					/>
 				</div>

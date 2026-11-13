@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/config/app";
 import { type CategoryChoice, MAX_ROUND_WORDS } from "@/decks/categories";
 import { useRoundWords } from "@/decks/use-round-words";
+import { requestMotionPermission } from "@/games/charades/motion-sensor";
 import type {
 	CharadesAnswer,
 	CharadesPhase,
@@ -10,20 +11,21 @@ import type {
 } from "@/games/charades/rules";
 import {
 	motionProbeReliable,
-	requestMotionPermission,
 	useMotionProbe,
-	useTilt,
-} from "@/games/charades/use-tilt";
+} from "@/games/charades/use-motion-probe";
+import { useTilt } from "@/games/charades/use-tilt";
 import { haptic } from "@/games/haptics";
-import {
-	FINAL_SECONDS,
-	secondsLeft,
-	useCountdown,
-} from "@/games/use-countdown";
+import { useCountdown } from "@/games/use-countdown";
+import { useRoundCues } from "@/games/use-round-cues";
 import { useWakeLock } from "@/games/use-wake-lock";
 import { playSound } from "@/lib/sound";
 
 const COUNTDOWN_FROM = 3;
+/** Each number of the 3-2-1, and the pause before "go". */
+const COUNTDOWN_STEP_MS = 700;
+const COUNTDOWN_GO_MS = 650;
+/** How long the correct/pass flash covers the stage. */
+const FLASH_MS = 320;
 /** Ignore answers that land within this window: taps are easy to double. */
 const ANSWER_COOLDOWN_MS = 700;
 /** Give a working sensor a moment before replacing it with tap zones. */
@@ -50,11 +52,11 @@ export const useCharadesRound = ({
 
 	const [phase, setPhase] = useState<CharadesPhase>("intro");
 	const [countdown, setCountdown] = useState(COUNTDOWN_FROM);
+	const totalMs = duration * 1000;
 	const { remainingMs, reset: resetTimer } = useCountdown(
-		duration * 1000,
+		totalMs,
 		phase === "playing",
 	);
-	const [index, setIndex] = useState(0);
 	const [answers, setAnswers] = useState<CharadesAnswer[]>([]);
 	const [flash, setFlash] = useState<"correct" | "pass" | null>(null);
 	const [zonesVisible, setZonesVisible] = useState(false);
@@ -99,66 +101,46 @@ export const useCharadesRound = ({
 			return;
 		}
 		if (countdown > 0) {
-			const tick = setTimeout(() => setCountdown((value) => value - 1), 700);
+			const tick = setTimeout(
+				() => setCountdown((value) => value - 1),
+				COUNTDOWN_STEP_MS,
+			);
 			return () => clearTimeout(tick);
 		}
 		const go = setTimeout(() => {
 			setPhase("playing");
 			recalibrate();
-		}, 650);
+		}, COUNTDOWN_GO_MS);
 		return () => clearTimeout(go);
 	}, [phase, countdown, recalibrate]);
 
-	// Same tick as the round's last seconds, so the 3-2-1 reads as a clock.
-	const lastCountTick = useRef<number | null>(null);
-	useEffect(() => {
-		if (phase !== "countdown" || countdown <= 0) {
-			lastCountTick.current = null;
-			return;
-		}
-		if (lastCountTick.current === countdown) {
-			return;
-		}
-		lastCountTick.current = countdown;
-		playSound("tick");
-	}, [phase, countdown]);
-
-	// The countdown hitting zero is the start gun; a ref keeps it to one shot
-	// even if the effect runs again while the word is coming up.
-	const startCuePlayed = useRef(false);
+	// The 3-2-1 ticks and the start gun, keyed by the number on screen.
+	const lastCue = useRef<number | null>(null);
+	const startPlayed = useRef(false);
 	useEffect(() => {
 		if (phase !== "countdown") {
-			startCuePlayed.current = false;
+			lastCue.current = null;
+			startPlayed.current = false;
 			return;
 		}
-		if (countdown !== 0 || startCuePlayed.current) {
+		if (countdown > 0) {
+			if (lastCue.current !== countdown) {
+				lastCue.current = countdown;
+				playSound("tick");
+			}
 			return;
 		}
-		startCuePlayed.current = true;
-		playSound("start");
+		if (!startPlayed.current) {
+			startPlayed.current = true;
+			playSound("start");
+		}
 	}, [phase, countdown]);
 
-	useEffect(() => {
-		if (phase === "playing" && remainingMs <= 0) {
-			playSound("end");
-			haptic("end");
-			setPhase("results");
-		}
-	}, [phase, remainingMs]);
-
-	// One tick per second for the last five, keyed by the second shown on screen.
-	const lastTick = useRef<number | null>(null);
-	useEffect(() => {
-		if (phase !== "playing") {
-			lastTick.current = null;
-			return;
-		}
-		const second = secondsLeft(remainingMs);
-		if (second > 0 && second <= FINAL_SECONDS && lastTick.current !== second) {
-			lastTick.current = second;
-			playSound("tick");
-		}
-	}, [phase, remainingMs]);
+	useRoundCues({
+		active: phase === "playing",
+		remainingMs,
+		onEnd: () => setPhase("results"),
+	});
 
 	const answer = (correct: boolean) => {
 		if (phase !== "playing") {
@@ -171,22 +153,17 @@ export const useCharadesRound = ({
 		}
 		lastAnswerAt.current = now;
 
-		if (index >= words.length) {
-			setPhase("results");
-			return;
-		}
-
 		setFlash(correct ? "correct" : "pass");
-		flashTimer.current = window.setTimeout(() => setFlash(null), 320);
+		flashTimer.current = window.setTimeout(() => setFlash(null), FLASH_MS);
 		haptic(correct ? "correct" : "pass");
 		playSound(correct ? "correct" : "pass");
-		setAnswers((current) => [...current, { word: words[index], correct }]);
 
-		if (index + 1 >= words.length) {
+		const word = words[answers.length];
+		setAnswers((current) => [...current, { word, correct }]);
+
+		if (answers.length + 1 >= words.length) {
 			setPhase("results");
-			return;
 		}
-		setIndex((value) => value + 1);
 	};
 
 	const startRound = async () => {
@@ -199,7 +176,6 @@ export const useCharadesRound = ({
 
 	const restart = () => {
 		setAnswers([]);
-		setIndex(0);
 		resetTimer();
 		setCountdown(COUNTDOWN_FROM);
 		setPhase("countdown");
@@ -207,27 +183,39 @@ export const useCharadesRound = ({
 		refetch();
 	};
 
+	// One pass, because the results screen shows both lists and the score.
+	const correctWords: string[] = [];
+	const passedWords: string[] = [];
+	for (const entry of answers) {
+		if (entry.correct) {
+			correctWords.push(entry.word);
+		} else {
+			passedWords.push(entry.word);
+		}
+	}
+
 	return {
 		phase,
 		countdown,
-		words,
-		index,
 		remainingMs,
-		totalMs: duration * 1000,
-		answers,
+		totalMs,
 		flash,
 		zonesVisible,
 		probe,
 		probing,
 		isPending,
 		isFetching,
-		correctCount: answers.filter((entry) => entry.correct).length,
+		hasWords: words.length > 0,
+		word: words[answers.length] ?? "",
+		correctWords,
+		passedWords,
+		correctCount: correctWords.length,
 		finished: answers.length >= words.length,
 		// The word still on screen when time runs out was never answered, so it
 		// is not in `answers`; the results show it instead of losing it.
 		pendingWord:
 			phase === "results" && answers.length < words.length
-				? (words[index] ?? null)
+				? (words[answers.length] ?? null)
 				: null,
 		startRound,
 		answer,

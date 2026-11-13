@@ -1,124 +1,66 @@
 import { app, type Locale } from "@/config/app";
+import { DocumentPage } from "@/documents/document-page";
+import { DocumentList, DocumentSection } from "@/documents/document-section";
 import { getMessages } from "@/i18n";
 import { ExternalLink } from "@/ui/external-link";
-import { Kicker } from "@/ui/kicker";
-import { PageHeader } from "@/ui/page-header";
 
 export const LegalPage = ({ lang }: { lang: Locale }) => {
 	const m = getMessages(lang);
 
 	return (
-		<div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 md:px-8">
-			<PageHeader lang={lang} to="/$lang/legal" />
+		<DocumentPage
+			accent="cyan"
+			footer={m.legal.footer}
+			intro={m.legal.intro}
+			kicker={m.legal.kicker}
+			lang={lang}
+			note={m.legal.notLawyers}
+			title={m.legal.title}
+			to="/$lang/legal"
+		>
+			<DocumentSection title={m.legal.termsTitle}>
+				<p>{m.legal.termsBody}</p>
+			</DocumentSection>
 
-			<article className="flex flex-1 flex-col gap-8 pb-10">
-				<header className="flex flex-col gap-3">
-					<Kicker accent="cyan">{m.legal.kicker}</Kicker>
-					<h1 className="font-display text-5xl uppercase leading-[0.9]">
-						{m.legal.title}
-					</h1>
-					<p>{m.legal.intro}</p>
-					<p className="rounded-xl border-2 border-foreground bg-accent-lime px-4 py-3 text-accent-ink shadow-sticker-sm">
-						{m.legal.notLawyers}
-					</p>
-				</header>
+			<DocumentSection title={m.legal.liabilityTitle}>
+				<p>{m.legal.termsWarranty}</p>
+				<p>{m.legal.liabilityBody}</p>
+			</DocumentSection>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.termsTitle}
-					</h2>
-					<p>{m.legal.termsBody}</p>
-				</section>
+			<DocumentSection title={m.legal.privacyTitle}>
+				<p className="font-bold">{m.legal.privacyIntro}</p>
+				<DocumentList items={m.legal.privacyList} />
+			</DocumentSection>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.liabilityTitle}
-					</h2>
-					<p>{m.legal.termsWarranty}</p>
-					<p>{m.legal.liabilityBody}</p>
-				</section>
+			<DocumentSection title={m.legal.dataTitle}>
+				<DocumentList items={m.legal.dataList} />
+			</DocumentSection>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.privacyTitle}
-					</h2>
-					<p className="font-bold">{m.legal.privacyIntro}</p>
-					<ul className="flex flex-col gap-2">
-						{m.legal.privacyList.map((item) => (
-							<li className="flex gap-2" key={item}>
-								<span
-									aria-hidden="true"
-									className="font-bold text-accent-fuchsia"
-								>
-									•
-								</span>
-								{item}
-							</li>
-						))}
-					</ul>
-				</section>
+			<DocumentSection title={m.legal.cookiesTitle}>
+				<p>{m.legal.cookiesBody}</p>
+			</DocumentSection>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.dataTitle}
-					</h2>
-					<ul className="flex flex-col gap-2">
-						{m.legal.dataList.map((item) => (
-							<li className="flex gap-2" key={item}>
-								<span
-									aria-hidden="true"
-									className="font-bold text-accent-fuchsia"
-								>
-									•
-								</span>
-								{item}
-							</li>
-						))}
-					</ul>
-				</section>
+			<DocumentSection title={m.legal.faqTitle}>
+				<dl className="flex flex-col gap-3">
+					{m.legal.faq.map((item) => (
+						<div className="flex flex-col gap-1" key={item.q}>
+							<dt className="font-bold">{item.q}</dt>
+							<dd className="text-muted-foreground">{item.a}</dd>
+						</div>
+					))}
+				</dl>
+			</DocumentSection>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.cookiesTitle}
-					</h2>
-					<p>{m.legal.cookiesBody}</p>
-				</section>
+			<DocumentSection title={m.legal.changesTitle}>
+				<p>{m.legal.changesBody}</p>
+			</DocumentSection>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.faqTitle}
-					</h2>
-					<dl className="flex flex-col gap-3">
-						{m.legal.faq.map((item) => (
-							<div className="flex flex-col gap-1" key={item.q}>
-								<dt className="font-bold">{item.q}</dt>
-								<dd className="text-muted-foreground">{item.a}</dd>
-							</div>
-						))}
-					</dl>
-				</section>
-
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.changesTitle}
-					</h2>
-					<p>{m.legal.changesBody}</p>
-				</section>
-
-				<section className="flex flex-col gap-3">
-					<h2 className="font-display text-2xl uppercase">
-						{m.legal.openSourceTitle}
-					</h2>
-					<p>{m.legal.openSourceBody}</p>
-					<ExternalLink className="w-fit" href={app.repo}>
-						GitHub
-					</ExternalLink>
-				</section>
-
-				<footer className="mt-auto border-t-2 border-border pt-4 text-muted-foreground">
-					{m.legal.footer}
-				</footer>
-			</article>
-		</div>
+			<DocumentSection title={m.legal.openSourceTitle}>
+				<p>{m.legal.openSourceBody}</p>
+				<ExternalLink className="w-fit" href={app.repo}>
+					GitHub
+				</ExternalLink>
+			</DocumentSection>
+		</DocumentPage>
 	);
 };

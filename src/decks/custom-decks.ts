@@ -5,7 +5,6 @@ import {
 	type CustomCategory,
 	isCustomCategory,
 } from "@/decks/categories";
-import { deflateText, inflateText } from "@/decks/deflate";
 
 /** Brand-free key: a rename must not lose anyone's decks. */
 const STORAGE_KEY = "app.decks";
@@ -15,16 +14,17 @@ export const MIN_WORDS = 4;
 export const MAX_WORDS = 60;
 export const MAX_NAME = 40;
 export const MAX_WORD = 40;
-/** Past this width a QR stops scanning reliably on a phone camera. */
-export const MAX_SHARE_URL = 1200;
+
+/** The one word rule: storage and share links must agree on it. */
+export const wordsSchema = z
+	.array(z.string().trim().min(1).max(MAX_WORD))
+	.min(MIN_WORDS)
+	.max(MAX_WORDS);
 
 export const customDeckSchema = z.object({
 	id: z.string().min(1).max(64),
 	name: z.string().trim().min(1).max(MAX_NAME),
-	words: z
-		.array(z.string().trim().min(1).max(MAX_WORD))
-		.min(MIN_WORDS)
-		.max(MAX_WORDS),
+	words: wordsSchema,
 });
 
 export type CustomDeck = z.infer<typeof customDeckSchema>;
@@ -126,6 +126,7 @@ const writeDecks = (decks: CustomDeck[]): DeckWriteFailure | null => {
 };
 
 export const saveCustomDeck = (deck: CustomDeck): DeckWriteFailure | null => {
+	// Read the store, not the cache: another tab may have written since it was filled.
 	const decks = readCustomDecks();
 	const exists = decks.some((candidate) => candidate.id === deck.id);
 	// Refuse at the cap instead of silently dropping someone else's deck.
@@ -148,76 +149,4 @@ export const findCustomDeck = (category: string): CustomDeck | undefined => {
 	}
 	const id = deckIdFor(category);
 	return getCustomDecksSnapshot().find((deck) => deck.id === id);
-};
-
-const shareSchema = z.object({
-	v: z.literal(1),
-	i: z.string().min(1).max(64),
-	n: z.string().trim().min(1).max(MAX_NAME),
-	w: z
-		.array(z.string().trim().min(1).max(MAX_WORD))
-		.min(MIN_WORDS)
-		.max(MAX_WORDS),
-});
-
-/** New links deflate the JSON first; links without this prefix are legacy. */
-const COMPRESSED_PREFIX = "2.";
-
-const bytesToBase64Url = (bytes: Uint8Array): string => {
-	let binary = "";
-	for (const byte of bytes) {
-		binary += String.fromCharCode(byte);
-	}
-	return btoa(binary)
-		.replaceAll("+", "-")
-		.replaceAll("/", "_")
-		.replace(/=+$/, "");
-};
-
-const base64UrlToBytes = (value: string): Uint8Array => {
-	const binary = atob(value.replaceAll("-", "+").replaceAll("_", "/"));
-	return Uint8Array.from(binary, (char) => char.charCodeAt(0));
-};
-
-/**
- * The whole deck travels in the link: no server, no account. JSON is deflated
- * before base64url so even a 60 x 40-character deck fits a QR (~330 chars).
- */
-export const encodeDeck = async (deck: CustomDeck): Promise<string> => {
-	const json = JSON.stringify({
-		v: 1,
-		i: deck.id,
-		n: deck.name,
-		w: deck.words,
-	});
-	return COMPRESSED_PREFIX + bytesToBase64Url(await deflateText(json));
-};
-
-export const decodeDeck = async (
-	payload: string,
-): Promise<CustomDeck | null> => {
-	if (!payload || payload.length > MAX_SHARE_URL * 2) {
-		return null;
-	}
-	try {
-		const compressed = payload.startsWith(COMPRESSED_PREFIX);
-		const bytes = base64UrlToBytes(
-			compressed ? payload.slice(COMPRESSED_PREFIX.length) : payload,
-		);
-		// Old links shipped plain base64url JSON; keep them readable.
-		const json = compressed
-			? await inflateText(bytes)
-			: new TextDecoder().decode(bytes);
-		const parsed = shareSchema.safeParse(JSON.parse(json));
-		if (!parsed.success) {
-			return null;
-		}
-		return {
-			id: parsed.data.i,
-			name: parsed.data.n,
-			words: parsed.data.w,
-		};
-	} catch {
-		return null;
-	}
 };

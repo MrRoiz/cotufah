@@ -70,12 +70,7 @@ export const DeckForm = ({
 					? interpolate(m.decks.limitError, { max: MAX_DECKS })
 					: m.decks.saveError,
 			);
-			return;
 		}
-
-		setName("");
-		setWords("");
-		setError(null);
 	};
 
 	return (

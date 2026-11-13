@@ -1,37 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
 import { useRoundWords } from "@/decks/use-round-words";
-import { haptic } from "@/games/haptics";
 import { assignSpies } from "@/games/spy/assign";
-import {
-	DISCUSS_SECONDS,
-	HANDOFF_SECONDS,
-	type SpyPhase,
-} from "@/games/spy/rules";
-import {
-	FINAL_SECONDS,
-	secondsLeft,
-	useCountdown,
-} from "@/games/use-countdown";
+import { DISCUSS_MS, HANDOFF_MS, type SpyPhase } from "@/games/spy/rules";
+import { useCountdown } from "@/games/use-countdown";
+import { useRoundCues } from "@/games/use-round-cues";
 import { useWakeLock } from "@/games/use-wake-lock";
-import { playSound } from "@/lib/sound";
-
-const listFormatters = new Map<Locale, Intl.ListFormat>();
-
-const listFormatter = (locale: Locale): Intl.ListFormat => {
-	const cached = listFormatters.get(locale);
-	if (cached) {
-		return cached;
-	}
-	const formatter = new Intl.ListFormat(locale, {
-		style: "long",
-		type: "conjunction",
-	});
-	listFormatters.set(locale, formatter);
-	return formatter;
-};
+import { formatList } from "@/i18n";
 
 /** Round state for Spy: one word, one assignment, one phase at a time. */
 export const useSpyRound = ({
@@ -56,38 +33,15 @@ export const useSpyRound = ({
 	const [revealed, setRevealed] = useState(false);
 	const [peeked, setPeeked] = useState(false);
 	const [paused, setPaused] = useState(false);
-	const handoffTimer = useCountdown(
-		HANDOFF_SECONDS * 1000,
-		phase === "handoff",
-	);
-	const discussTimer = useCountdown(
-		DISCUSS_SECONDS * 1000,
-		phase === "discuss" && !paused,
-	);
+	const handoffTimer = useCountdown(HANDOFF_MS, phase === "handoff");
+	const discussTimer = useCountdown(DISCUSS_MS, phase === "discuss" && !paused);
 	const [accused, setAccused] = useState<number | null>(null);
 
-	const lastTick = useRef<number | null>(null);
-	const ended = useRef(false);
-	useEffect(() => {
-		if (phase !== "discuss") {
-			lastTick.current = null;
-			ended.current = false;
-			return;
-		}
-		if (paused) {
-			return;
-		}
-		const second = secondsLeft(discussTimer.remainingMs);
-		if (second > 0 && second <= FINAL_SECONDS && lastTick.current !== second) {
-			lastTick.current = second;
-			playSound("tick");
-		}
-		if (second === 0 && !ended.current) {
-			ended.current = true;
-			playSound("end");
-			haptic("end");
-		}
-	}, [phase, paused, discussTimer.remainingMs]);
+	useRoundCues({
+		// The clock is frozen while paused, so a pause needs no extra guard.
+		active: phase === "discuss",
+		remainingMs: discussTimer.remainingMs,
+	});
 
 	const { words, isPending, refetch, isFetching } = useRoundWords({
 		game: "spy",
@@ -101,24 +55,25 @@ export const useSpyRound = ({
 		() => assignment.map((spyIndex) => players[spyIndex] ?? "").filter(Boolean),
 		[assignment, players],
 	);
-	const spyList = useMemo(
-		() => listFormatter(lang).format(spyNames),
-		[lang, spyNames],
-	);
+	const spyList = useMemo(() => formatList(lang, spyNames), [lang, spyNames]);
+
+	/** Nobody but the player holding the phone may see the role. */
+	const hideRole = useCallback(() => {
+		setRevealed(false);
+		setPeeked(false);
+	}, []);
 
 	useEffect(() => {
 		if (phase !== "handoff" || handoffTimer.remainingMs > 0) {
 			return;
 		}
 		setIndex((value) => value + 1);
-		setPeeked(false);
-		setRevealed(false);
+		hideRole();
 		setPhase("deal");
-	}, [phase, handoffTimer.remainingMs]);
+	}, [phase, handoffTimer.remainingMs, hideRole]);
 
 	const nextPlayer = () => {
-		setRevealed(false);
-		setPeeked(false);
+		hideRole();
 		if (index + 1 >= players.length) {
 			setPhase("discuss");
 			return;
@@ -131,8 +86,7 @@ export const useSpyRound = ({
 	const again = () => {
 		setAssignment(assignSpies(players.length, spyCount));
 		setIndex(-1);
-		setRevealed(false);
-		setPeeked(false);
+		hideRole();
 		setAccused(null);
 		discussTimer.reset();
 		setPaused(false);

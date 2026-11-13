@@ -25,12 +25,8 @@ export const LandingPage = ({ lang }: { lang: Locale }) => {
 					{app.name}
 				</Link>
 				<div className="flex items-center gap-2">
-					<LocaleSwitch
-						className="rounded-full px-2 py-1 font-bold text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
-						lang={lang}
-						to="/$lang"
-					/>
-					<ModeToggle className="rounded-full border-2" locale={lang} />
+					<LocaleSwitch lang={lang} to="/$lang" />
+					<ModeToggle locale={lang} />
 				</div>
 			</header>
 

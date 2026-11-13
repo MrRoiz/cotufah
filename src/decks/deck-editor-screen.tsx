@@ -22,12 +22,12 @@ export const DeckEditorScreen = ({
 		? decks.find((candidate) => candidate.id === deckId)
 		: undefined;
 
-	const title = (() => {
-		if (deckId === undefined) {
-			return m.decks.createTitle;
-		}
-		return deck ? m.decks.editTitle : m.decks.title;
-	})();
+	const title =
+		deckId === undefined
+			? m.decks.createTitle
+			: deck
+				? m.decks.editTitle
+				: m.decks.title;
 
 	return (
 		<AppShell>

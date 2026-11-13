@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import { textLinkClass } from "@/ui/text-link";
 
 type ExternalLinkProps = {
 	href: string;
@@ -18,10 +19,7 @@ export const ExternalLink = ({
 	className,
 }: ExternalLinkProps) => (
 	<a
-		className={cn(
-			"font-bold underline-offset-4 hover:text-foreground hover:underline",
-			className,
-		)}
+		className={cn(textLinkClass, className)}
 		href={href}
 		rel="noreferrer"
 		target="_blank"

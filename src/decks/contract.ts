@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { locales } from "@/config/app";
 import { gameSlugs } from "@/config/games";
+import { type ThemedCategory, themedCategories } from "@/decks/categories";
 
 /**
  * Deck contract, validated at server boot. The client-safe taxonomy lives in
@@ -20,23 +21,15 @@ export const deckSchema = z.object({
 	items: words,
 });
 
+// One key per themed pack, so the taxonomy is the only list of packs to edit.
+const packCategories = Object.fromEntries(
+	themedCategories.map((category) => [category, words]),
+) as Record<ThemedCategory, typeof words>;
+
 export const packSchema = z.object({
 	locale: z.enum(locales),
 	label: z.string().min(1),
-	categories: z.object({
-		movies: words,
-		disney: words,
-		actors: words,
-		objects: words,
-		kitchen: words,
-		gaming: words,
-		animals: words,
-		music: words,
-		sports: words,
-		food: words,
-		places: words,
-		brands: words,
-	}),
+	categories: z.object(packCategories),
 });
 
 export type Deck = z.infer<typeof deckSchema>;

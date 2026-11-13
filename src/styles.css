@@ -89,14 +89,13 @@
 
 	--sticker-color: oklch(0.34 0.035 306);
 
-	--game-spy-from: var(--accent-plum);
 	--game-spy-to: oklch(0.1201 0.0153 305.14);
 	--game-spy-foreground: var(--foreground);
 }
 
 @theme inline {
 	--font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
-	--font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-display: var(--font-sans);
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);

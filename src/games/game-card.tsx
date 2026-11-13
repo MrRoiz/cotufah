@@ -29,7 +29,8 @@ export const GameCard = ({
 }) => {
 	const m = getMessages(lang);
 	const copy = m.games[game.slug];
-	const Heading = variant === "app" ? "h2" : "h3";
+	const isApp = variant === "app";
+	const Heading = isApp ? "h2" : "h3";
 
 	return (
 		<article className="flex flex-col overflow-hidden rounded-xl border-2 border-foreground bg-card">
@@ -46,32 +47,25 @@ export const GameCard = ({
 				<div
 					className={cn(
 						"mt-auto gap-4",
-						variant === "app"
+						isApp
 							? "flex flex-col"
 							: "flex flex-wrap items-center justify-between gap-3",
 					)}
 				>
-					<Badge
-						className={cn("border-2", variant === "app" && "w-fit")}
-						variant="outline"
-					>
+					<Badge className={cn("border-2", isApp && "w-fit")} variant="outline">
 						{copy.players}
 					</Badge>
-					{variant === "app" ? (
-						<Button asChild className="w-full" size="lg" variant="sticker">
-							<Link params={{ lang }} to={game.setupTo}>
-								{m.common.play}
-								<ArrowRightIcon aria-hidden="true" />
-							</Link>
-						</Button>
-					) : (
-						<Button asChild className="px-4" variant="outline">
-							<Link params={{ lang }} to={game.setupTo}>
-								{m.common.play}
-								<ArrowRightIcon aria-hidden="true" />
-							</Link>
-						</Button>
-					)}
+					<Button
+						asChild
+						className={isApp ? "w-full" : "px-4"}
+						size={isApp ? "lg" : "default"}
+						variant={isApp ? "sticker" : "outline"}
+					>
+						<Link params={{ lang }} to={game.setupTo}>
+							{m.common.play}
+							<ArrowRightIcon aria-hidden="true" />
+						</Link>
+					</Button>
 				</div>
 			</div>
 		</article>

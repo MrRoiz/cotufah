@@ -153,17 +153,27 @@ const tone = (
 };
 
 /** A short filtered noise burst: reads as a clock, not as a note. */
-const tick = (ctx: AudioContext) => {
+let tickBuffer: AudioBuffer | null = null;
+
+/** The burst is the same every time, so it is synthesized once per context. */
+const noiseBurst = (ctx: AudioContext): AudioBuffer => {
+	if (tickBuffer) {
+		return tickBuffer;
+	}
 	const length = Math.floor(ctx.sampleRate * 0.03);
-	const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-	const data = buffer.getChannelData(0);
+	tickBuffer = ctx.createBuffer(1, length, ctx.sampleRate);
+	const data = tickBuffer.getChannelData(0);
 
 	for (let i = 0; i < length; i += 1) {
 		data[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 4;
 	}
 
+	return tickBuffer;
+};
+
+const tick = (ctx: AudioContext) => {
 	const source = ctx.createBufferSource();
-	source.buffer = buffer;
+	source.buffer = noiseBurst(ctx);
 
 	const filter = ctx.createBiquadFilter();
 	filter.type = "highpass";
@@ -216,7 +226,7 @@ const glide = (
 	gain.gain.exponentialRampToValueAtTime(volume, start + 0.01);
 	gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
 
-	oscillator.connect(gain).connect(ctx.destination);
+	oscillator.connect(gain).connect(output(ctx));
 	oscillator.start(start);
 	oscillator.stop(start + duration + 0.02);
 };

@@ -2,8 +2,14 @@ import { app, type Locale } from "@/config/app";
 import { absoluteUrl } from "@/config/site";
 import { getMessages, otherLocale } from "@/i18n";
 
+/** Open Graph wants a language_TERRITORY code; one entry per locale. */
+const ogLocales: Record<Locale, string> = {
+	es: "es_CO",
+	en: "en_US",
+};
+
 /** The card changes with the language, so it belongs to the dynamic metadata. */
-export const ogImageMeta = (lang: Locale) => {
+const ogImageMeta = (lang: Locale) => {
 	const image = absoluteUrl(`/og-${lang}.png`);
 	if (!image) {
 		return [];
@@ -13,15 +19,41 @@ export const ogImageMeta = (lang: Locale) => {
 		{ property: "og:image", content: image },
 		{ property: "og:image:width", content: "1200" },
 		{ property: "og:image:height", content: "630" },
-		{ property: "og:image:alt", content: `${app.name} — ${app.tagline[lang]}` },
+		{
+			property: "og:image:alt",
+			content: `${app.name} — ${getMessages(lang).common.appTagline}`,
+		},
 		{ name: "twitter:image", content: image },
 	];
 };
 
+const canonicalLinks = (canonical: string | null) =>
+	canonical ? [{ rel: "canonical", href: canonical }] : [];
+
+/**
+ * The tags every page shares. Search and social read one title and one summary
+ * from here, so a page can never ship with one and not the other.
+ */
+const baseMeta = ({
+	lang,
+	title,
+	description,
+}: {
+	lang: Locale;
+	title: string;
+	description: string;
+}) => [
+	{ title },
+	{ name: "description", content: description },
+	{ property: "og:title", content: title },
+	{ property: "og:description", content: description },
+	{ property: "og:locale", content: ogLocales[lang] },
+	...ogImageMeta(lang),
+];
+
 /**
  * Dynamic per-route metadata: title, description, canonical/`og:url`, locale
- * and the noindex flag. Search and social tags share one title and summary, so
- * a page can never ship with one and not the other.
+ * and the noindex flag.
  *
  * Static site-wide tags (`og:type`, `og:site_name`, `twitter:card`) live in
  * `src/routes/__root.tsx`. Never repeat them here: the root applies to every
@@ -53,15 +85,10 @@ export const pageMeta = ({
 	return {
 		meta: [
 			...(noindex ? [{ name: "robots", content: "noindex" }] : []),
-			{ title: fullTitle },
-			{ name: "description", content: summary },
-			{ property: "og:title", content: fullTitle },
-			{ property: "og:description", content: summary },
-			{ property: "og:locale", content: lang === "es" ? "es_CO" : "en_US" },
-			...ogImageMeta(lang),
+			...baseMeta({ lang, title: fullTitle, description: summary }),
 			...(canonical ? [{ property: "og:url", content: canonical }] : []),
 		],
-		links: canonical ? [{ rel: "canonical", href: canonical }] : [],
+		links: canonicalLinks(canonical),
 	};
 };
 
@@ -77,16 +104,11 @@ export const landingMeta = (lang: Locale) => {
 
 	return {
 		meta: [
-			{ title },
-			{ name: "description", content: app.description[lang] },
-			{ property: "og:title", content: title },
-			{ property: "og:description", content: app.description[lang] },
-			{ property: "og:locale", content: lang === "es" ? "es_CO" : "en_US" },
-			...ogImageMeta(lang),
+			...baseMeta({ lang, title, description: app.description[lang] }),
 			...(canonical ? [{ property: "og:url", content: canonical }] : []),
 		],
 		links: [
-			...(canonical ? [{ rel: "canonical", href: canonical }] : []),
+			...canonicalLinks(canonical),
 			...(alternate
 				? [{ rel: "alternate", hrefLang: otherLocale(lang), href: alternate }]
 				: []),

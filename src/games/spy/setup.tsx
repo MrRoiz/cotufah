@@ -1,14 +1,15 @@
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
-import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
+import { PlusIcon, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
 import { CategoryField } from "@/decks/components/category-field";
+import { SpyCountField } from "@/games/spy/components/spy-count-field";
 import {
+	clampSpyCount,
 	MAX_PLAYERS,
 	MIN_PLAYERS,
-	maxSpies,
 	serializePlayers,
 } from "@/games/spy/rules";
 import { createPlayersSchema } from "@/games/spy/setup-schema";
@@ -49,7 +50,7 @@ export const SpySetup = ({
 				search: {
 					category,
 					players: serializePlayers(names),
-					spies: Math.min(spies, maxSpies(names.length)),
+					spies: clampSpyCount(spies, names.length),
 				},
 			});
 		},
@@ -101,15 +102,16 @@ export const SpySetup = ({
 												{(sub) => {
 													const invalid =
 														sub.state.meta.isTouched && !sub.state.meta.isValid;
+													const label = interpolate(m.spy.playerLabel, {
+														n: index + 1,
+													});
 													return (
 														<Field className="flex-1" data-invalid={invalid}>
 															<Label
 																className="sr-only"
 																htmlFor={`player-${index}`}
 															>
-																{interpolate(m.spy.playerLabel, {
-																	n: index + 1,
-																})}
+																{label}
 															</Label>
 															<Input
 																aria-invalid={invalid}
@@ -121,9 +123,7 @@ export const SpySetup = ({
 																onChange={(event) =>
 																	sub.handleChange(event.target.value)
 																}
-																placeholder={interpolate(m.spy.playerLabel, {
-																	n: index + 1,
-																})}
+																placeholder={label}
 																value={sub.state.value}
 															/>
 															{invalid && (
@@ -179,44 +179,16 @@ export const SpySetup = ({
 					</form.Field>
 				</section>
 
-				<section className="mt-8 flex flex-col gap-3">
-					<h2 className="font-bold text-lg">{m.spy.spiesTitle}</h2>
-					<p className="text-muted-foreground text-sm">{m.spy.spiesHint}</p>
-					<form.Subscribe selector={(state) => state.values.players.length}>
-						{(count) => {
-							const max = maxSpies(count);
-							return (
-								<div className="flex items-center gap-4 rounded-xl border-2 border-border p-3">
-									<Button
-										aria-label={m.spy.removePlayer}
-										disabled={spies <= 1}
-										onClick={() => setSpies((value) => Math.max(1, value - 1))}
-										size="icon"
-										type="button"
-										variant="outline"
-									>
-										<MinusIcon aria-hidden="true" />
-									</Button>
-									<span className="flex-1 text-center font-display text-3xl">
-										{Math.min(spies, max)}
-									</span>
-									<Button
-										aria-label={m.spy.addPlayer}
-										disabled={spies >= max}
-										onClick={() =>
-											setSpies((value) => Math.min(max, value + 1))
-										}
-										size="icon"
-										type="button"
-										variant="outline"
-									>
-										<PlusIcon aria-hidden="true" />
-									</Button>
-								</div>
-							);
-						}}
-					</form.Subscribe>
-				</section>
+				<form.Subscribe selector={(state) => state.values.players.length}>
+					{(count) => (
+						<SpyCountField
+							m={m}
+							onChange={setSpies}
+							playerCount={count}
+							spies={spies}
+						/>
+					)}
+				</form.Subscribe>
 
 				<CategoryField
 					category={category}

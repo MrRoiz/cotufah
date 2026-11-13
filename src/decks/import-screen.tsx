@@ -1,17 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { SparklesIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { Locale } from "@/config/app";
-import { app } from "@/config/app";
+import { app, type Locale } from "@/config/app";
 import {
 	type CustomDeck,
 	customCategoryId,
 	type DeckWriteFailure,
-	decodeDeck,
 	findCustomDeck,
 	MAX_DECKS,
 	saveCustomDeck,
 } from "@/decks/custom-decks";
+import { decodeDeck } from "@/decks/share-deck";
 import { getMessages, interpolate, plural } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { cn } from "@/lib/utils";
@@ -64,6 +63,7 @@ export const DeckImportScreen = ({
 	};
 
 	const ok = state === "ok";
+	const settled = state !== "loading" && state !== "confirm";
 	const titles: Record<ImportState, string> = {
 		loading: "",
 		confirm: m.decks.importConfirmTitle,
@@ -164,7 +164,7 @@ export const DeckImportScreen = ({
 					<p className="text-muted-foreground">{m.decks.saveError}</p>
 				) : null}
 
-				{state === "loading" || state === "confirm" ? null : (
+				{settled ? (
 					<div className="mt-2 flex flex-col gap-2">
 						{ok ? (
 							<Button asChild variant="sticker">
@@ -179,7 +179,7 @@ export const DeckImportScreen = ({
 							</Link>
 						</Button>
 					</div>
-				)}
+				) : null}
 			</div>
 		</AppShell>
 	);

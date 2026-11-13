@@ -7,7 +7,7 @@ import {
 	packChoices,
 } from "@/decks/categories";
 import { CustomDeckPicker } from "@/decks/components/picker-section";
-import { findCustomDeck } from "@/decks/custom-decks";
+import { customCategoryId } from "@/decks/custom-decks";
 import { packIcons } from "@/decks/pack-icons";
 import { useCustomDecks } from "@/decks/use-custom-decks";
 import { getMessages, plural } from "@/i18n";
@@ -47,7 +47,11 @@ export const CategoryField = ({
 			};
 		}
 		if (isCustomCategory(category)) {
-			const deck = findCustomDeck(category);
+			// Read the subscribed list, not localStorage: the store gives the
+			// server snapshot while hydrating, so the summary cannot flash.
+			const deck = decks.find(
+				(candidate) => customCategoryId(candidate.id) === category,
+			);
 			if (deck) {
 				return {
 					icon: SparklesIcon,

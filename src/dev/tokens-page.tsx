@@ -1,6 +1,6 @@
 import { CheckIcon, SparklesIcon } from "lucide-react";
-import { toast } from "sonner";
 import { app } from "@/config/app";
+import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { useTheme } from "@/providers/theme-provider";
 import { Badge } from "@/ui/badge";
@@ -58,7 +58,7 @@ export const TokensPage = () => {
 				</span>
 				<h1 className="text-display font-display uppercase">{app.name}</h1>
 				<p className="text-muted-foreground">
-					{app.tagline[app.defaultLocale]}
+					{getMessages("es").common.appTagline}
 				</p>
 			</header>
 
@@ -329,13 +329,6 @@ export const TokensPage = () => {
 								</DialogFooter>
 							</DialogContent>
 						</Dialog>
-
-						<Button
-							variant="secondary"
-							onClick={() => toast.success("Ronda guardada")}
-						>
-							Toast
-						</Button>
 					</div>
 				</Section>
 

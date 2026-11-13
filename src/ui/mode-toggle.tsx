@@ -18,7 +18,7 @@ const icons: Record<Theme, typeof SunIcon> = {
 
 export const ModeToggle = ({
 	locale,
-	className,
+	className = "rounded-full border-2",
 }: {
 	locale: Locale;
 	className?: string;

@@ -1,11 +1,8 @@
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/config/app";
-import {
-	type CustomDeck,
-	encodeDeck,
-	MAX_SHARE_URL,
-} from "@/decks/custom-decks";
+import type { CustomDeck } from "@/decks/custom-decks";
+import { encodeDeck, MAX_SHARE_URL } from "@/decks/share-deck";
 import { getMessages, interpolate, localizedPath } from "@/i18n";
 import { Button } from "@/ui/button";
 import { QrCode } from "@/ui/qr-code";
@@ -73,7 +70,7 @@ export const ShareDeckSheet = ({
 		try {
 			await navigator.clipboard.writeText(url);
 			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
+			copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
 		} catch {
 			// Clipboard blocked: the QR is still on screen.
 		}

@@ -5,6 +5,7 @@ import { appVersion } from "@/config/version";
 import { getMessages } from "@/i18n";
 import { ExternalLink } from "@/ui/external-link";
 import { LocaleSwitch } from "@/ui/locale-switch";
+import { textLinkClass } from "@/ui/text-link";
 
 export const Footer = ({ lang }: { lang: Locale }) => {
 	const m = getMessages(lang);
@@ -18,30 +19,14 @@ export const Footer = ({ lang }: { lang: Locale }) => {
 				</span>
 			</p>
 			<div className="flex items-center gap-4">
-				<LocaleSwitch
-					className="font-bold underline-offset-4 hover:text-foreground hover:underline"
-					lang={lang}
-					to="/$lang"
-				/>
-				<Link
-					className="font-bold underline-offset-4 hover:text-foreground hover:underline"
-					params={{ lang }}
-					to="/$lang/settings"
-				>
+				<LocaleSwitch className={textLinkClass} lang={lang} to="/$lang" />
+				<Link className={textLinkClass} params={{ lang }} to="/$lang/settings">
 					{m.common.settings}
 				</Link>
-				<Link
-					className="font-bold underline-offset-4 hover:text-foreground hover:underline"
-					params={{ lang }}
-					to="/$lang/about"
-				>
+				<Link className={textLinkClass} params={{ lang }} to="/$lang/about">
 					{m.common.about}
 				</Link>
-				<Link
-					className="font-bold underline-offset-4 hover:text-foreground hover:underline"
-					params={{ lang }}
-					to="/$lang/legal"
-				>
+				<Link className={textLinkClass} params={{ lang }} to="/$lang/legal">
 					{m.common.legal}
 				</Link>
 				<ExternalLink href={app.repo}>GitHub</ExternalLink>

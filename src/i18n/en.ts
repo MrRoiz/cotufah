@@ -185,6 +185,8 @@ export const en = {
 		playerLabel: "Player {n}",
 		addPlayer: "Add player",
 		removePlayer: "Remove",
+		fewerSpies: "One spy fewer",
+		moreSpies: "One spy more",
 		spiesTitle: "Spies",
 		spiesHint: "How many liars this round.",
 		start: "Deal the roles",

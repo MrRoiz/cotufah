@@ -16,10 +16,6 @@ type Localized = Record<Locale, string>;
 
 export const app = {
 	name: "Cotufah",
-	tagline: {
-		es: "juegos pa' tu parche",
-		en: "party games for your crew",
-	} satisfies Localized,
 	description: {
 		es: "Juegos de fiesta para tu parche: espía y charadas. Sin cuentas, sin base de datos, directo en tu celular.",
 		en: "Party games for your crew: spy and charades. No accounts, no database, straight on your phone.",

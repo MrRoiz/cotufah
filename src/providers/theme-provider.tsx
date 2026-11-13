@@ -71,9 +71,9 @@ const applyTheme = (theme: Theme): ResolvedTheme => {
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setThemeState] = useState<Theme>(DEFAULT_THEME);
-	const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(
-		DEFAULT_THEME === "system" ? "light" : DEFAULT_THEME,
-	);
+	// The pre-paint script already resolved the class, so light is the only safe
+	// first guess on the server; the effect below syncs the rest.
+	const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>("light");
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {

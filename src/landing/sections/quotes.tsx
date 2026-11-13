@@ -1,5 +1,6 @@
 import type { Locale } from "@/config/app";
 import { getMessages } from "@/i18n";
+import { SectionHeading } from "@/ui/section-heading";
 
 /** Testimonials; copy lives in `home.quotes` in both locales. */
 export const Quotes = ({ lang }: { lang: Locale }) => {
@@ -7,12 +8,10 @@ export const Quotes = ({ lang }: { lang: Locale }) => {
 
 	return (
 		<section className="flex flex-col gap-5 py-10">
-			<div className="flex flex-col gap-1">
-				<h2 className="font-display text-3xl uppercase">
-					{m.home.quotesTitle}
-				</h2>
-				<p className="text-muted-foreground">{m.home.quotesSubtitle}</p>
-			</div>
+			<SectionHeading
+				title={m.home.quotesTitle}
+				subtitle={m.home.quotesSubtitle}
+			/>
 			<div className="grid gap-6 md:grid-cols-3">
 				{m.home.quotes.map((item) => (
 					<blockquote

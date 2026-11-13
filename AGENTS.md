@@ -86,6 +86,7 @@ src/
 │  ├─ games-screen.tsx    # /games list
 │  ├─ timer-bar.tsx       # round bar shared by both games
 │  ├─ use-countdown.ts    # ms countdown + clock helpers
+│  ├─ use-round-cues.ts   # last-seconds ticks + end cue, shared by both games
 │  ├─ use-wake-lock.ts    # screen stays awake during a round
 │  ├─ haptics.ts          # navigator.vibrate patterns
 │  ├─ spy/
@@ -95,20 +96,24 @@ src/
 │  │  ├─ use-round.ts     # round state, cues and handlers
 │  │  ├─ assign.ts        # assignSpies
 │  │  ├─ setup-schema.ts  # player validation
+│  │  ├─ components/spy-count-field.tsx
 │  │  └─ panels/{deal,handoff,discuss,vote,reveal}-panel.tsx
 │  └─ charades/
 │     ├─ setup.tsx        # duration + deck
 │     ├─ play-screen.tsx  # intro → countdown → stage → results
 │     ├─ rules.ts         # durations, phases, answer type
 │     ├─ use-round.ts     # round state, cues and handlers
-│     ├─ use-tilt.ts      # tilt gesture + sensor probe + permission
+│     ├─ motion-sensor.ts # gravity check, permission, iOS detection
+│     ├─ use-motion-probe.ts  # can this device give us tilts?
+│     ├─ use-tilt.ts      # tilt gesture
 │     └─ screens/{intro,countdown,results}-screen.tsx + play-stage.tsx
 ├─ decks/                 # where round words come from: server packs,
 │                         # the shared picker, and the player's own decks (at /decks)
-│  ├─ categories.ts       # zod-free taxonomy (client-safe)
+│  ├─ categories.ts       # zod-free taxonomy + search-param validator (client-safe)
 │  ├─ contract.ts         # zod schemas for the word banks
-│  ├─ custom-decks.ts     # localStorage store + share payload
-│  ├─ deflate.ts          # deflate/inflate for share links
+│  ├─ custom-decks.ts     # localStorage store
+│  ├─ share-deck.ts       # deflate + base64url share payload
+│  ├─ deflate.ts          # deflate/inflate helpers
 │  ├─ functions.ts        # getRoundFn server function (client-safe)
 │  ├─ pick.ts             # random index + remove from pool
 │  ├─ use-custom-decks.ts
@@ -120,11 +125,11 @@ src/
 │  └─ components/{category-field,deck-form,deck-list,picker-section,share-deck-sheet}.tsx
 ├─ landing/{landing-page,sections/*}.tsx
 ├─ settings/settings-screen.tsx
-├─ documents/{about-page.tsx,legal-page.tsx}
+├─ documents/{about-page,error-page,legal-page,not-found-page,document-page,document-section}.tsx
 ├─ ui/                    # shadcn primitives + app-wide visuals and small UI hooks
 ├─ providers/{query,theme}-provider.tsx
 ├─ layout/{app-shell,phone-gate}.tsx
-├─ config/{app,seo,site,version}.ts
+├─ config/{app,games,seo,site,version}.ts
 ├─ i18n/{en,es,index}.ts
 ├─ data/{spy,charades,packs}/  # server-only word banks — the client-bundle
 │                         # boundary; imported only by server/decks.server.ts
@@ -133,7 +138,7 @@ src/
 ├─ dev/tokens-page.tsx    # dev-only styleguide body
 ├─ styles.css             # tokens (@theme inline) + utilities + base layer
 ├─ routes/                # thin adapters only: config, search, head, screen
-│  ├─ __root.tsx          # document shell, <html lang>, providers, toaster
+│  ├─ __root.tsx          # document shell, <html lang>, providers
 │  ├─ index.tsx           # / -> /es
 │  ├─ $lang.tsx           # validates lang, renders Outlet
 │  ├─ $lang/index.tsx     # landing (all devices, indexable)
@@ -163,7 +168,7 @@ the URL map; `data/` + `server/` are the server-only boundary.**
 | tweak a round's timing or limits | `games/<game>/rules.ts` |
 | change round state or cues | `games/<game>/use-round.ts` |
 | add words to a themed pack | `data/packs/{es,en}.ts` |
-| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` + `decks/contract.ts` (schema keys) + `i18n/{en,es}.ts` + `decks/pack-icons.ts` |
+| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` (the only pack list) + `i18n/{en,es}.ts` + `decks/pack-icons.ts`. The zod pack schema derives its keys from the taxonomy. |
 | fix the deck share QR | `decks/components/share-deck-sheet.tsx` |
 | fix custom deck storage | `decks/custom-decks.ts` |
 | change what a URL renders | `routes/**` (each adapter imports its screen) |
@@ -200,8 +205,8 @@ the phone when they tap "siguiente" never sees the next role.
 Charadas plays on a full-viewport `stage-landscape` layer (it leaves the 430px column): the
 phone sits horizontally on the forehead. If the device is rotation-locked the stage is rotated
 90° so the word still reads upright; flip the `rotate: 90deg` in `styles.css` if a device reads
-upside down. Tilt uses `deviceorientation.beta` against a baseline captured at round start,
-with a latch that requires returning near the baseline before the next gesture.
+upside down. Tilt uses `devicemotion.accelerationIncludingGravity.z` against a baseline captured
+at round start, with a latch that requires returning near the baseline before the next gesture.
 
 Data flow — no DB:
 
@@ -289,6 +294,11 @@ placeholders, dead copy, superseded helpers) in the same change.
 
 ## Adding a shadcn component
 
+**Check what is already vendored first.** `src/ui` holds the source of every primitive we use;
+grep it (and `package.json`) before installing anything. If the primitive exists but the part a
+screen needs is missing, extend that file instead of installing a second copy. Only install when
+nothing in `src/ui` does the job, and validate the new file before using it:
+
 ```bash
 pnpm dlx shadcn@latest add <component> -y < /dev/null
 ```
@@ -300,7 +310,15 @@ is used. After adding, always check the new file:
 - imports must be `@/lib/utils`, not `cn` (the registry leaks a `cn` package that
   must not stay in `package.json`);
 - strip `"use client"` directives (not a Next app);
-- the registry may add `cn`/`next-themes` back to `package.json` — remove them.
+- the registry may add `cn`/`next-themes` back to `package.json` — remove them;
+- keep only what the screens use: unused exports, variants nobody selects and props fixed at
+  one value are dead code. `Field`, `DropdownMenu` and `Card` were trimmed this way; add the
+  prop back when a second real caller needs it.
+
+Some primitives are vendored for the styleguide only (`Dialog`, `Tabs`, `Skeleton` and
+`Separator`); prefer composing the ones a screen already uses over adding another.
+When a screen would otherwise hand-roll a control that the registry ships, say which component
+you would add and why before installing it.
 
 Then `pnpm check --write && pnpm typecheck`.
 

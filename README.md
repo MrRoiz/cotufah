@@ -99,7 +99,7 @@ See `AGENTS.md` for the full tree and a task → file map.
 ## How the decks work
 
 ```
-TS deck -> server/decks.server.ts -> getRoundWords(game, locale, count, category) -> useQuery
+TS deck -> server/decks.server.ts -> getRoundWords({ game, locale, count, category }) -> useQuery
 ```
 
 - `src/data/<game>/<locale>.ts` holds each game's classic list.

@@ -14,13 +14,9 @@ import { Route as LangRouteImport } from './routes/$lang'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangAppRouteImport } from './routes/$lang/_app'
 import { Route as LangAboutRouteImport } from './routes/$lang/about'
-import { Route as LangBoomRouteImport } from './routes/$lang/boom'
-import { Route as LangLayoutTestRouteImport } from './routes/$lang/layout-test'
 import { Route as LangLegalRouteImport } from './routes/$lang/legal'
 import { Route as DevTokensRouteImport } from './routes/dev/tokens'
 import { Route as LangAppSettingsRouteImport } from './routes/$lang/_app/settings'
-import { Route as LangLayoutTestLoadRouteImport } from './routes/$lang/layout-test/load'
-import { Route as LangLayoutTestRenderRouteImport } from './routes/$lang/layout-test/render'
 import { Route as LangAppDecksIndexRouteImport } from './routes/$lang/_app/decks/index'
 import { Route as LangAppDecksDeckIdRouteImport } from './routes/$lang/_app/decks/$deckId'
 import { Route as LangAppDecksImportRouteImport } from './routes/$lang/_app/decks/import'
@@ -55,16 +51,6 @@ const LangAboutRoute = LangAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => LangRoute,
 } as any)
-const LangBoomRoute = LangBoomRouteImport.update({
-  id: '/boom',
-  path: '/boom',
-  getParentRoute: () => LangRoute,
-} as any)
-const LangLayoutTestRoute = LangLayoutTestRouteImport.update({
-  id: '/layout-test',
-  path: '/layout-test',
-  getParentRoute: () => LangRoute,
-} as any)
 const LangLegalRoute = LangLegalRouteImport.update({
   id: '/legal',
   path: '/legal',
@@ -79,16 +65,6 @@ const LangAppSettingsRoute = LangAppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => LangAppRoute,
-} as any)
-const LangLayoutTestLoadRoute = LangLayoutTestLoadRouteImport.update({
-  id: '/load',
-  path: '/load',
-  getParentRoute: () => LangLayoutTestRoute,
-} as any)
-const LangLayoutTestRenderRoute = LangLayoutTestRenderRouteImport.update({
-  id: '/render',
-  path: '/render',
-  getParentRoute: () => LangLayoutTestRoute,
 } as any)
 const LangAppDecksIndexRoute = LangAppDecksIndexRouteImport.update({
   id: '/decks/',
@@ -142,14 +118,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteWithChildren
   '/$lang/about': typeof LangAboutRoute
-  '/$lang/boom': typeof LangBoomRoute
-  '/$lang/layout-test': typeof LangLayoutTestRouteWithChildren
   '/$lang/legal': typeof LangLegalRoute
   '/dev/tokens': typeof DevTokensRoute
   '/$lang/': typeof LangIndexRoute
   '/$lang/settings': typeof LangAppSettingsRoute
-  '/$lang/layout-test/load': typeof LangLayoutTestLoadRoute
-  '/$lang/layout-test/render': typeof LangLayoutTestRenderRoute
   '/$lang/decks/$deckId': typeof LangAppDecksDeckIdRoute
   '/$lang/decks/import': typeof LangAppDecksImportRoute
   '/$lang/decks/new': typeof LangAppDecksNewRoute
@@ -164,13 +136,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang': typeof LangIndexRoute
   '/$lang/about': typeof LangAboutRoute
-  '/$lang/boom': typeof LangBoomRoute
-  '/$lang/layout-test': typeof LangLayoutTestRouteWithChildren
   '/$lang/legal': typeof LangLegalRoute
   '/dev/tokens': typeof DevTokensRoute
   '/$lang/settings': typeof LangAppSettingsRoute
-  '/$lang/layout-test/load': typeof LangLayoutTestLoadRoute
-  '/$lang/layout-test/render': typeof LangLayoutTestRenderRoute
   '/$lang/decks/$deckId': typeof LangAppDecksDeckIdRoute
   '/$lang/decks/import': typeof LangAppDecksImportRoute
   '/$lang/decks/new': typeof LangAppDecksNewRoute
@@ -187,14 +155,10 @@ export interface FileRoutesById {
   '/$lang': typeof LangRouteWithChildren
   '/$lang/_app': typeof LangAppRouteWithChildren
   '/$lang/about': typeof LangAboutRoute
-  '/$lang/boom': typeof LangBoomRoute
-  '/$lang/layout-test': typeof LangLayoutTestRouteWithChildren
   '/$lang/legal': typeof LangLegalRoute
   '/dev/tokens': typeof DevTokensRoute
   '/$lang/': typeof LangIndexRoute
   '/$lang/_app/settings': typeof LangAppSettingsRoute
-  '/$lang/layout-test/load': typeof LangLayoutTestLoadRoute
-  '/$lang/layout-test/render': typeof LangLayoutTestRenderRoute
   '/$lang/_app/decks/$deckId': typeof LangAppDecksDeckIdRoute
   '/$lang/_app/decks/import': typeof LangAppDecksImportRoute
   '/$lang/_app/decks/new': typeof LangAppDecksNewRoute
@@ -211,14 +175,10 @@ export interface FileRouteTypes {
     | '/'
     | '/$lang'
     | '/$lang/about'
-    | '/$lang/boom'
-    | '/$lang/layout-test'
     | '/$lang/legal'
     | '/dev/tokens'
     | '/$lang/'
     | '/$lang/settings'
-    | '/$lang/layout-test/load'
-    | '/$lang/layout-test/render'
     | '/$lang/decks/$deckId'
     | '/$lang/decks/import'
     | '/$lang/decks/new'
@@ -233,13 +193,9 @@ export interface FileRouteTypes {
     | '/'
     | '/$lang'
     | '/$lang/about'
-    | '/$lang/boom'
-    | '/$lang/layout-test'
     | '/$lang/legal'
     | '/dev/tokens'
     | '/$lang/settings'
-    | '/$lang/layout-test/load'
-    | '/$lang/layout-test/render'
     | '/$lang/decks/$deckId'
     | '/$lang/decks/import'
     | '/$lang/decks/new'
@@ -255,14 +211,10 @@ export interface FileRouteTypes {
     | '/$lang'
     | '/$lang/_app'
     | '/$lang/about'
-    | '/$lang/boom'
-    | '/$lang/layout-test'
     | '/$lang/legal'
     | '/dev/tokens'
     | '/$lang/'
     | '/$lang/_app/settings'
-    | '/$lang/layout-test/load'
-    | '/$lang/layout-test/render'
     | '/$lang/_app/decks/$deckId'
     | '/$lang/_app/decks/import'
     | '/$lang/_app/decks/new'
@@ -317,20 +269,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangAboutRouteImport
       parentRoute: typeof LangRoute
     }
-    '/$lang/boom': {
-      id: '/$lang/boom'
-      path: '/boom'
-      fullPath: '/$lang/boom'
-      preLoaderRoute: typeof LangBoomRouteImport
-      parentRoute: typeof LangRoute
-    }
-    '/$lang/layout-test': {
-      id: '/$lang/layout-test'
-      path: '/layout-test'
-      fullPath: '/$lang/layout-test'
-      preLoaderRoute: typeof LangLayoutTestRouteImport
-      parentRoute: typeof LangRoute
-    }
     '/$lang/legal': {
       id: '/$lang/legal'
       path: '/legal'
@@ -351,20 +289,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$lang/settings'
       preLoaderRoute: typeof LangAppSettingsRouteImport
       parentRoute: typeof LangAppRoute
-    }
-    '/$lang/layout-test/load': {
-      id: '/$lang/layout-test/load'
-      path: '/load'
-      fullPath: '/$lang/layout-test/load'
-      preLoaderRoute: typeof LangLayoutTestLoadRouteImport
-      parentRoute: typeof LangLayoutTestRoute
-    }
-    '/$lang/layout-test/render': {
-      id: '/$lang/layout-test/render'
-      path: '/render'
-      fullPath: '/$lang/layout-test/render'
-      preLoaderRoute: typeof LangLayoutTestRenderRouteImport
-      parentRoute: typeof LangLayoutTestRoute
     }
     '/$lang/_app/decks/': {
       id: '/$lang/_app/decks/'
@@ -461,25 +385,9 @@ const LangAppRouteChildren: LangAppRouteChildren = {
 const LangAppRouteWithChildren =
   LangAppRoute._addFileChildren(LangAppRouteChildren)
 
-interface LangLayoutTestRouteChildren {
-  LangLayoutTestLoadRoute: typeof LangLayoutTestLoadRoute
-  LangLayoutTestRenderRoute: typeof LangLayoutTestRenderRoute
-}
-
-const LangLayoutTestRouteChildren: LangLayoutTestRouteChildren = {
-  LangLayoutTestLoadRoute: LangLayoutTestLoadRoute,
-  LangLayoutTestRenderRoute: LangLayoutTestRenderRoute,
-}
-
-const LangLayoutTestRouteWithChildren = LangLayoutTestRoute._addFileChildren(
-  LangLayoutTestRouteChildren,
-)
-
 interface LangRouteChildren {
   LangAppRoute: typeof LangAppRouteWithChildren
   LangAboutRoute: typeof LangAboutRoute
-  LangBoomRoute: typeof LangBoomRoute
-  LangLayoutTestRoute: typeof LangLayoutTestRouteWithChildren
   LangLegalRoute: typeof LangLegalRoute
   LangIndexRoute: typeof LangIndexRoute
 }
@@ -487,8 +395,6 @@ interface LangRouteChildren {
 const LangRouteChildren: LangRouteChildren = {
   LangAppRoute: LangAppRouteWithChildren,
   LangAboutRoute: LangAboutRoute,
-  LangBoomRoute: LangBoomRoute,
-  LangLayoutTestRoute: LangLayoutTestRouteWithChildren,
   LangLegalRoute: LangLegalRoute,
   LangIndexRoute: LangIndexRoute,
 }

@@ -18,9 +18,9 @@ export const AppShell = ({
 
 	return (
 		<div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-background">
-			<div className="flex flex-1 flex-col px-safe pt-safe pb-6">
+			<main className="flex flex-1 flex-col px-safe pt-safe pb-6">
 				{children}
-			</div>
+			</main>
 			{footer ? (
 				// Sticks to the bottom so the main action stays reachable on long
 				// lists (a full deck list, a setup form with many players).

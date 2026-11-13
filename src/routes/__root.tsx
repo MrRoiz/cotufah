@@ -27,6 +27,7 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
 		</html>
 	);
 };
+
 export const Route = createRootRoute({
 	// Locale comes from the first path segment, so `<html lang>` and `/$lang`
 	// can never disagree — no client-only detection, no hydration mismatch.
@@ -47,6 +48,7 @@ export const Route = createRootRoute({
 			{ property: "og:type", content: "website" },
 			{ property: "og:site_name", content: app.name },
 			{ name: "twitter:card", content: "summary_large_image" },
+			{ name: "mobile-web-app-capable", content: "yes" },
 			{ name: "apple-mobile-web-app-capable", content: "yes" },
 			{ name: "apple-mobile-web-app-status-bar-style", content: "default" },
 		],

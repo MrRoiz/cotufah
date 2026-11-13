@@ -34,26 +34,28 @@ export const DocumentPage = ({
 		<div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 md:px-8">
 			<PageHeader lang={lang} to={to} />
 
-			<article className="flex flex-1 flex-col gap-8 pb-10">
-				<header className="flex flex-col gap-3">
-					<Kicker accent={accent}>{kicker}</Kicker>
-					<h1 className="font-display text-5xl uppercase leading-[0.9]">
-						{title}
-					</h1>
-					<p>{intro}</p>
-					{note ? (
-						<p className="rounded-xl border-2 border-foreground bg-accent-lime px-4 py-3 text-accent-ink shadow-sticker-sm">
-							{note}
-						</p>
-					) : null}
-				</header>
+			<main className="flex flex-1 flex-col">
+				<article className="flex flex-1 flex-col gap-8 pb-10">
+					<header className="flex flex-col gap-3">
+						<Kicker accent={accent}>{kicker}</Kicker>
+						<h1 className="font-display text-5xl uppercase leading-[0.9]">
+							{title}
+						</h1>
+						<p>{intro}</p>
+						{note ? (
+							<p className="rounded-xl border-2 border-foreground bg-accent-lime px-4 py-3 text-accent-ink shadow-sticker-sm">
+								{note}
+							</p>
+						) : null}
+					</header>
 
-				{children}
+					{children}
 
-				<footer className="mt-auto border-t-2 border-border pt-4 text-muted-foreground">
-					{footer}
-				</footer>
-			</article>
+					<footer className="mt-auto border-t-2 border-border pt-4 text-muted-foreground">
+						{footer}
+					</footer>
+				</article>
+			</main>
 		</div>
 	);
 };

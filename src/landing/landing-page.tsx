@@ -30,13 +30,15 @@ export const LandingPage = ({ lang }: { lang: Locale }) => {
 				</div>
 			</header>
 
-			<Hero lang={lang} />
-			<Games lang={lang} />
-			<PacksMarquee lang={lang} />
-			<CustomDecks lang={lang} />
-			<HowItWorks lang={lang} />
-			<Quotes lang={lang} />
-			<Why lang={lang} />
+			<main className="flex flex-1 flex-col">
+				<Hero lang={lang} />
+				<Games lang={lang} />
+				<PacksMarquee lang={lang} />
+				<CustomDecks lang={lang} />
+				<HowItWorks lang={lang} />
+				<Quotes lang={lang} />
+				<Why lang={lang} />
+			</main>
 			<Footer lang={lang} />
 		</div>
 	);

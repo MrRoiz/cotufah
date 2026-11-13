@@ -6,7 +6,6 @@ import { localeFromPath } from "@/i18n";
 import { QueryProvider } from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import appCss from "@/styles.css?url";
-import { Toaster } from "@/ui/sonner";
 
 const RootDocument = ({ children }: { children: React.ReactNode }) => {
 	const { locale } = Route.useRouteContext();
@@ -20,7 +19,6 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
 				<ThemeProvider>
 					<QueryProvider>
 						{children}
-						<Toaster />
 						{import.meta.env.DEV ? <Devtools /> : null}
 					</QueryProvider>
 				</ThemeProvider>

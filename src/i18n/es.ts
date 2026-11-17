@@ -58,6 +58,7 @@ export const es: Messages = {
 			kitchen: { name: "Cocina", body: "Trastes y comida de cocina." },
 			gaming: { name: "Videojuegos", body: "Juegos, consolas y pantallas." },
 			animals: { name: "Animales", body: "Bichos, bestias y mascotas." },
+			antics: { name: "Animaladas", body: "Bichos haciendo el ridículo." },
 			music: { name: "Música", body: "Instrumentos, ritmos y canciones." },
 			sports: { name: "Deportes", body: "Canchas, gestas y medallas." },
 			food: { name: "Comida", body: "Platos y antojos de todo el mundo." },

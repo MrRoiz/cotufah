@@ -11,6 +11,7 @@ export const themedCategories = [
 	"kitchen",
 	"gaming",
 	"animals",
+	"antics",
 	"music",
 	"sports",
 	"food",

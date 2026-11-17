@@ -59,6 +59,7 @@ export const en = {
 			kitchen: { name: "Kitchen", body: "Pots, pans and cooking." },
 			gaming: { name: "Gaming", body: "Games, consoles and screens." },
 			animals: { name: "Animals", body: "Bugs, beasts and pets." },
+			antics: { name: "Party animals", body: "Animals behaving badly." },
 			music: { name: "Music", body: "Instruments, rhythms and songs." },
 			sports: { name: "Sports", body: "Fields, feats and medals." },
 			food: {

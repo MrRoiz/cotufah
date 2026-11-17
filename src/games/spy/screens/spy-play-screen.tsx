@@ -49,9 +49,7 @@ export const SpyPlayScreen = ({
 		round.phase === "handoff" ? round.index + 2 : round.index + 1;
 
 	return (
-		// The role card is read in dark rooms: a bright screen would light up
-		// the face of whoever is holding it.
-		<AppShell className={round.phase === "deal" ? "dark" : undefined}>
+		<AppShell>
 			<SpyRoundBar
 				category={category}
 				lang={lang}

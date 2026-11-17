@@ -5,7 +5,6 @@ import { Button } from "@/ui/button";
 /**
  * Pass-the-phone role card. The surface is identical for spy and word: only the
  * ink changes, so the screen's glow cannot give the spy away in a dark room.
- * The play screen also renders this phase in the dark tokens for that reason.
  */
 export const DealPanel = ({
 	messages,

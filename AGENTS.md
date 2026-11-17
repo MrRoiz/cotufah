@@ -255,10 +255,6 @@ changes, so the phone's glow cannot give the spy away in a dark room. Every role
 by a 5s hand-off (including the first player and after "Otra ronda") so whoever is holding
 the phone when they tap "siguiente" never sees the next role.
 
-The role card and the Charadas stage always render in the dark tokens, whatever the theme: the
-`dark` class is scoped to that screen (`AppShell className="dark"`, `.stage-landscape dark`), so a
-bright screen never lights up a face in a dark room. No new colours: it reuses the `.dark` block.
-
 "Jugar otra vez" on the games list replays the last round started on this phone. The play
 screens save its setup under the brand-free key `app.lastRound` (`games/last-round.ts`), read
 after mount by `useLastRound`; both setups prefill from it (spy: players and spies;

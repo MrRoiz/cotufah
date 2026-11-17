@@ -14,9 +14,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * The forehead stage: full viewport, word in the middle, timer and score at the
- * edges. Always in the dark tokens: light text on a dark screen reads from
- * across the room and does not glare. Input is tilt (with the gestures as a
- * reminder) or the two tap halves.
+ * edges. Input is tilt (with the gestures as a reminder) or the two tap halves.
  */
 export const CharadesPlayStage = ({
 	lang,
@@ -43,7 +41,7 @@ export const CharadesPlayStage = ({
 	const isUrgent = remaining <= FINAL_SECONDS;
 
 	return (
-		<div className="stage-landscape dark gap-3 text-foreground">
+		<div className="stage-landscape gap-3 text-foreground">
 			{flash ? (
 				<div
 					className={cn(

@@ -1,21 +1,20 @@
-import type { Locale } from "@/config/app";
-import { BackLink } from "@/ui/back-link";
+import type { ReactNode } from "react";
 
 /**
- * Header for the screens below a tab (setups, the deck editor): back, then the
- * title beside it. The tab screens themselves use `TabPageHeader`.
+ * Header for the screens below a tab (setups, the deck editor): back to the
+ * screen's parent (a `BackLink`), then the title beside it. The tab screens themselves use `TabPageHeader`.
  */
 export const AppPageHeader = ({
-	lang,
+	back,
 	title,
 	subtitle,
 }: {
-	lang: Locale;
+	back: ReactNode;
 	title: string;
 	subtitle?: string;
 }) => (
 	<header className="flex items-center gap-3 pt-4 pb-6">
-		<BackLink lang={lang} />
+		{back}
 		<div className="flex min-w-0 flex-col">
 			<h1 className="font-display font-extrabold text-3xl uppercase leading-none">
 				{title}

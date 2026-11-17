@@ -6,6 +6,7 @@ import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";
+import { BackLink } from "@/ui/back-link";
 
 /** One editor for both `/decks/new` and `/decks/$deckId`. */
 export const DeckEditorScreen = ({
@@ -25,7 +26,16 @@ export const DeckEditorScreen = ({
 	if (deckId && !deck) {
 		return (
 			<AppShell>
-				<AppPageHeader lang={lang} title={messages.decks.title} />
+				<AppPageHeader
+					back={
+						<BackLink
+							label={messages.common.back}
+							params={{ lang }}
+							to="/$lang/decks"
+						/>
+					}
+					title={messages.decks.title}
+				/>
 				<p className="text-muted-foreground">{messages.decks.notFound}</p>
 			</AppShell>
 		);

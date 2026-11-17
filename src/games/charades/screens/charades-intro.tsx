@@ -1,5 +1,6 @@
 import { Loader2Icon } from "lucide-react";
 import type { Locale } from "@/config/app";
+import type { CategoryChoice } from "@/decks/categories";
 import { ForeheadIllustration } from "@/games/charades/components/forehead-illustration";
 import { GestureCards } from "@/games/charades/components/gesture-cards";
 import type { MotionProbe } from "@/games/charades/hooks/use-motion-probe";
@@ -14,6 +15,7 @@ import { SummaryButton } from "@/ui/summary-button";
  */
 export const CharadesIntro = ({
 	lang,
+	category,
 	probe,
 	probing,
 	canStart,
@@ -21,6 +23,8 @@ export const CharadesIntro = ({
 	onStart,
 }: {
 	lang: Locale;
+	/** Back returns to the setup with the deck still picked. */
+	category: CategoryChoice;
 	probe: MotionProbe;
 	probing: boolean;
 	canStart: boolean;
@@ -38,7 +42,12 @@ export const CharadesIntro = ({
 	return (
 		<section className="flex flex-1 flex-col gap-5">
 			<div className="flex items-center justify-between gap-3 pt-2">
-				<BackLink lang={lang} />
+				<BackLink
+					label={messages.common.back}
+					params={{ lang }}
+					search={{ category }}
+					to="/$lang/games/charades/setup"
+				/>
 				<span className="flex items-center gap-2 rounded-full border-2 border-border bg-card px-3 py-1.5 font-extrabold text-sm">
 					{probing ? (
 						<Loader2Icon aria-hidden="true" className="size-4 animate-spin" />

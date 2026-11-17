@@ -1,11 +1,12 @@
 import type { Locale } from "@/config/app";
+import { getMessages } from "@/i18n";
 import { BackLink } from "@/ui/back-link";
 import { LocaleSwitch } from "@/ui/locale-switch";
 import { ModeToggle } from "@/ui/mode-toggle";
 
 /**
- * Header for the public document pages (legal, about): back, the other
- * language, and the theme toggle.
+ * Header for the public document pages (legal, about): back to the landing,
+ * the other language, and the theme toggle.
  */
 export const PageHeader = ({
 	lang,
@@ -16,7 +17,11 @@ export const PageHeader = ({
 }) => {
 	return (
 		<header className="flex items-center justify-between gap-4 py-5">
-			<BackLink lang={lang} />
+			<BackLink
+				label={getMessages(lang).common.back}
+				params={{ lang }}
+				to="/$lang"
+			/>
 			<div className="flex items-center gap-2">
 				<LocaleSwitch lang={lang} to={to} />
 				<ModeToggle locale={lang} />

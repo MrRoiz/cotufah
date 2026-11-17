@@ -15,6 +15,7 @@ import {
 import { getMessages, plural } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";
+import { BackLink } from "@/ui/back-link";
 import { SummaryButton } from "@/ui/summary-button";
 
 export const SpySetup = ({
@@ -74,7 +75,13 @@ export const SpySetup = ({
 			}
 		>
 			<AppPageHeader
-				lang={lang}
+				back={
+					<BackLink
+						label={messages.common.back}
+						params={{ lang }}
+						to="/$lang/games"
+					/>
+				}
 				subtitle={messages.spy.setupIntro}
 				title={messages.games.spy.name}
 			/>

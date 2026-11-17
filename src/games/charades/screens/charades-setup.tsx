@@ -12,6 +12,7 @@ import { useLastRound } from "@/games/hooks/use-last-round";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";
+import { BackLink } from "@/ui/back-link";
 import { SummaryButton } from "@/ui/summary-button";
 
 export const CharadesSetup = ({
@@ -53,7 +54,13 @@ export const CharadesSetup = ({
 			}
 		>
 			<AppPageHeader
-				lang={lang}
+				back={
+					<BackLink
+						label={messages.common.back}
+						params={{ lang }}
+						to="/$lang/games"
+					/>
+				}
 				subtitle={messages.charades.setupIntro}
 				title={messages.games.charades.name}
 			/>

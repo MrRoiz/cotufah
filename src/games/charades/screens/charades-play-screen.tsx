@@ -59,6 +59,7 @@ export const CharadesPlayScreen = ({
 			{round.phase === "intro" ? (
 				<CharadesIntro
 					canStart={round.hasWords}
+					category={category}
 					isPending={round.isPending}
 					lang={lang}
 					onStart={round.startRound}

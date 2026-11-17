@@ -7,6 +7,7 @@ import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { BottomNav } from "@/layout/bottom-nav";
 import { Button } from "@/ui/button";
+import { Empty, EmptyDescription } from "@/ui/empty";
 import { TabPageHeader } from "@/ui/tab-page-header";
 
 export const DecksScreen = ({ lang }: { lang: Locale }) => {
@@ -47,9 +48,11 @@ export const DecksScreen = ({ lang }: { lang: Locale }) => {
 						onRemove={remove}
 					/>
 				) : (
-					<p className="rounded-xl border-2 border-input border-dashed p-5 text-center text-muted-foreground">
-						{messages.decks.empty}
-					</p>
+					<Empty>
+						<EmptyDescription className="text-base">
+							{messages.decks.empty}
+						</EmptyDescription>
+					</Empty>
 				)}
 			</div>
 		</AppShell>

@@ -1,122 +1,146 @@
-import { type FormEvent, useState } from "react";
+import { ClipboardIcon, PlusIcon } from "lucide-react";
+import { type KeyboardEvent, useRef, useState } from "react";
 import type { Locale } from "@/config/app";
-import {
-	type CustomDeck,
-	customDeckSchema,
-	type DeckWriteFailure,
-	MAX_DECKS,
-	MAX_NAME,
-	MAX_WORD,
-	MAX_WORDS,
-	MIN_WORDS,
-	newDeckId,
-} from "@/decks/custom-decks";
-import { getMessages, interpolate } from "@/i18n";
+import { PasteWordsSheet } from "@/decks/components/paste-words-sheet";
+import { WordChips } from "@/decks/components/word-chips";
+import { MAX_NAME, MAX_WORDS, MIN_WORDS } from "@/decks/custom-decks";
+import type { DeckDraft } from "@/decks/hooks/use-deck-draft";
+import { getMessages } from "@/i18n";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 
-/** One textarea, one word per line: the least UI that can produce a deck. */
+/**
+ * The deck's name and its words as chips: type one and Enter, or paste a
+ * whole list. Saving lives in the screen's footer, which reads the same draft.
+ */
 export const DeckForm = ({
 	locale,
-	deck,
-	onSave,
+	draft,
 }: {
 	locale: Locale;
-	/** The deck being edited; omitted when writing a new one. */
-	deck?: CustomDeck;
-	onSave: (deck: CustomDeck) => DeckWriteFailure | null;
+	draft: DeckDraft;
 }) => {
 	const m = getMessages(locale);
-	const [name, setName] = useState(deck?.name ?? "");
-	const [words, setWords] = useState(deck?.words.join("\n") ?? "");
-	const [error, setError] = useState<string | null>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [word, setWord] = useState("");
+	const [isPasting, setIsPasting] = useState(false);
+	const hasEnough = draft.words.length >= MIN_WORDS;
+	const fillPercent = Math.min(100, (draft.words.length / MAX_WORDS) * 100);
 
-	const submit = (event: FormEvent<HTMLFormElement>) => {
+	const addTyped = () => {
+		if (draft.addWord(word)) {
+			setWord("");
+		}
+		// The + button takes focus on tap; give it back so the next word flows.
+		inputRef.current?.focus();
+	};
+
+	const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+		if (event.key !== "Enter") {
+			return;
+		}
 		event.preventDefault();
-		const lines = words
-			.split("\n")
-			.map((word) => word.trim())
-			.filter(Boolean);
-
-		// The count can be valid while a single word is too long, so say which.
-		if (lines.some((word) => word.length > MAX_WORD)) {
-			setError(interpolate(m.decks.wordLengthError, { max: MAX_WORD }));
-			return;
-		}
-
-		const parsed = customDeckSchema.safeParse({
-			// Editing keeps the id, so a re-shared QR updates the same deck.
-			id: deck?.id ?? newDeckId(),
-			name,
-			words: lines,
-		});
-
-		if (!parsed.success) {
-			setError(
-				name.trim()
-					? interpolate(m.decks.wordsError, {
-							min: MIN_WORDS,
-							max: MAX_WORDS,
-						})
-					: m.decks.nameError,
-			);
-			return;
-		}
-
-		const failure = onSave(parsed.data);
-		if (failure) {
-			setError(
-				failure === "limit"
-					? interpolate(m.decks.limitError, { max: MAX_DECKS })
-					: m.decks.saveError,
-			);
-		}
+		addTyped();
 	};
 
 	return (
-		<form className="flex flex-col gap-3" onSubmit={submit}>
-			<div className="flex flex-col gap-1.5">
-				<label className="font-bold text-sm" htmlFor="deck-name">
+		<div className="flex flex-col gap-6">
+			<div className="flex flex-col gap-2">
+				<label className="font-bold text-lg" htmlFor="deck-name">
 					{m.decks.nameLabel}
 				</label>
 				<Input
+					className="h-14 rounded-xl border-foreground px-4 font-bold text-lg"
 					id="deck-name"
 					maxLength={MAX_NAME}
-					onChange={(event) => setName(event.target.value)}
+					onChange={(event) => draft.setName(event.target.value)}
 					placeholder={m.decks.namePlaceholder}
-					value={name}
+					value={draft.name}
 				/>
 			</div>
 
-			<div className="flex flex-col gap-1.5">
-				<label className="font-bold text-sm" htmlFor="deck-words">
-					{m.decks.wordsLabel}
-				</label>
-				<textarea
-					className="min-h-40 w-full rounded-lg border-2 border-input bg-card px-3 py-2 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-					id="deck-words"
-					onChange={(event) => setWords(event.target.value)}
-					placeholder={m.decks.wordsPlaceholder}
-					value={words}
-				/>
-			</div>
+			<section className="flex flex-col gap-3">
+				<div className="flex items-baseline justify-between gap-3">
+					<h2 className="font-bold text-lg">{m.decks.wordsLabel}</h2>
+					<span className="font-extrabold text-muted-foreground text-sm tabular-nums">
+						{draft.words.length} / {MAX_WORDS}
+					</span>
+				</div>
+				<div
+					aria-hidden="true"
+					className="h-2.5 overflow-hidden rounded-full border-2 border-foreground bg-card"
+				>
+					<div
+						className={cn(
+							"h-full rounded-full transition-[width]",
+							hasEnough ? "bg-accent-lime" : "bg-accent-fuchsia",
+						)}
+						style={{ width: `${fillPercent}%` }}
+					/>
+				</div>
 
-			<p className="text-muted-foreground text-xs">
-				{interpolate(m.decks.wordsHint, {
-					min: MIN_WORDS,
-					max: MAX_WORDS,
-				})}
-			</p>
+				<WordChips m={m} onRemove={draft.removeWord} words={draft.words} />
 
-			{error ? (
-				<p className="font-bold text-destructive text-sm" role="alert">
-					{error}
+				<div className="flex gap-2">
+					<label className="sr-only" htmlFor="new-word">
+						{m.decks.wordLabel}
+					</label>
+					<Input
+						aria-describedby={draft.error ? "deck-error" : undefined}
+						autoComplete="off"
+						className="h-13 flex-1 rounded-xl px-4"
+						disabled={draft.isFull}
+						enterKeyHint="done"
+						id="new-word"
+						onChange={(event) => setWord(event.target.value)}
+						onKeyDown={onKeyDown}
+						placeholder={m.decks.wordPlaceholder}
+						ref={inputRef}
+						value={word}
+					/>
+					<Button
+						aria-label={m.decks.addWord}
+						className="size-13 rounded-xl"
+						disabled={draft.isFull}
+						onClick={addTyped}
+						size="icon"
+						type="button"
+						variant="sticker"
+					>
+						<PlusIcon aria-hidden="true" />
+					</Button>
+				</div>
+
+				<p className="-mt-1 flex flex-wrap items-center gap-x-1.5 text-muted-foreground text-sm">
+					{m.decks.pasteHint}
+					<button
+						className="inline-flex min-h-11 items-center gap-1.5 px-1 font-extrabold text-foreground underline decoration-2 underline-offset-4"
+						onClick={() => setIsPasting(true)}
+						type="button"
+					>
+						<ClipboardIcon aria-hidden="true" className="size-4" />
+						{m.decks.pasteOpen}
+					</button>
 				</p>
-			) : null}
 
-			<Button className="mt-1" type="submit" variant="sticker">
-				{deck ? m.decks.saveChanges : m.decks.save}
-			</Button>
-		</form>
+				{draft.error ? (
+					<p
+						className="font-bold text-destructive text-sm"
+						id="deck-error"
+						role="alert"
+					>
+						{draft.error}
+					</p>
+				) : null}
+			</section>
+
+			<PasteWordsSheet
+				locale={locale}
+				onOpenChange={setIsPasting}
+				onPaste={draft.pasteWords}
+				open={isPasting}
+			/>
+		</div>
 	);
 };

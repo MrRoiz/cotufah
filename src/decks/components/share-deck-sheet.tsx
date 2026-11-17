@@ -1,10 +1,10 @@
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Locale } from "@/config/app";
+import { ShareActions } from "@/decks/components/share-actions";
+import { ShareSteps } from "@/decks/components/share-steps";
 import type { CustomDeck } from "@/decks/custom-decks";
 import { encodeDeck, MAX_SHARE_URL } from "@/decks/share-deck";
-import { getMessages, interpolate, localizedPath } from "@/i18n";
-import { Button } from "@/ui/button";
+import { getMessages, interpolate, localizedPath, plural } from "@/i18n";
 import { QrCode } from "@/ui/qr-code";
 import {
 	Sheet,
@@ -15,10 +15,12 @@ import {
 } from "@/ui/sheet";
 import { useAbsoluteUrl } from "@/ui/use-absolute-url";
 
+const PREVIEW_WORDS = 3;
+
 /**
  * The deck travels inside the URL, so the other phone needs no account: scan,
- * it lands on /decks/import, the player confirms, the words are stored locally and the QR is never needed
- * again.
+ * it lands on /decks/import, the player confirms, the words are stored locally
+ * and the QR is never needed again.
  */
 export const ShareDeckSheet = ({
 	deck,
@@ -34,8 +36,6 @@ export const ShareDeckSheet = ({
 	const m = getMessages(locale);
 	// Encoding is async (deflate stream), so the link lands in an effect.
 	const [path, setPath] = useState("");
-	const [copied, setCopied] = useState(false);
-	const copyTimer = useRef<number | null>(null);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -49,71 +49,56 @@ export const ShareDeckSheet = ({
 		};
 	}, [deck, locale]);
 
-	useEffect(
-		() => () => {
-			if (copyTimer.current !== null) {
-				window.clearTimeout(copyTimer.current);
-			}
-		},
-		[],
-	);
-
 	// Measured after mount: the origin is not known during SSR.
 	const url = useAbsoluteUrl(path);
-	const ready = path.length > 0;
+	const ready = path.length > 0 && url.length > 0;
 	const tooLong = ready && url.length > MAX_SHARE_URL;
-
-	const copy = async () => {
-		if (!ready || !url) {
-			return;
-		}
-		try {
-			await navigator.clipboard.writeText(url);
-			setCopied(true);
-			copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
-		} catch {
-			// Clipboard blocked: the QR is still on screen.
-		}
-	};
+	const preview = deck.words.slice(0, PREVIEW_WORDS).join(", ");
 
 	return (
 		<Sheet onOpenChange={onOpenChange} open={open}>
-			<SheetContent className="max-h-[85dvh] overflow-y-auto" side="bottom">
+			<SheetContent className="max-h-[90dvh] overflow-y-auto" side="bottom">
 				<SheetHeader>
-					<SheetTitle className="font-display text-xl uppercase">
-						{interpolate(m.decks.shareTitle, { name: deck.name })}
+					<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
+						{m.decks.shareKicker}
+					</span>
+					<SheetTitle className="font-display font-extrabold text-2xl leading-none">
+						{deck.name}
 					</SheetTitle>
-					<SheetDescription>{m.decks.shareBody}</SheetDescription>
+					<SheetDescription>
+						{`${plural(locale, deck.words.length, m.decks.wordCount)} · ${preview}…`}
+					</SheetDescription>
 				</SheetHeader>
 
-				<div className="flex flex-col items-center gap-4 px-4 pb-6">
-					{!ready ? (
-						<div className="size-60" />
-					) : tooLong ? (
-						<p className="text-center text-muted-foreground text-sm">
-							{m.decks.shareTooBig}
-						</p>
-					) : (
-						<QrCode
-							alt={interpolate(m.decks.shareTitle, { name: deck.name })}
-							className="size-60 rounded-xl"
-							path={path}
-						/>
-					)}
-					<Button
-						className="w-full"
-						disabled={!ready || tooLong}
-						onClick={copy}
-						type="button"
-						variant="outline"
-					>
-						{copied ? (
-							<CheckIcon aria-hidden="true" />
+				<div className="flex flex-col items-center gap-5 px-4 pb-6">
+					<div className="flex flex-col items-center gap-2 rounded-xl border-2 border-foreground bg-qr-paper p-4 text-accent-ink shadow-sticker">
+						{!ready ? (
+							<div className="size-60" />
+						) : tooLong ? (
+							<p className="max-w-60 py-6 text-center text-sm">
+								{m.decks.shareTooBig}
+							</p>
 						) : (
-							<CopyIcon aria-hidden="true" />
+							<QrCode
+								alt={interpolate(m.decks.shareTitle, { name: deck.name })}
+								className="size-60"
+								path={path}
+							/>
 						)}
-						{copied ? m.decks.copied : m.decks.copy}
-					</Button>
+					</div>
+
+					<ShareSteps steps={m.decks.shareSteps} />
+
+					<ShareActions
+						disabled={!ready || tooLong}
+						m={m}
+						title={deck.name}
+						url={url}
+					/>
+
+					<p className="text-center text-muted-foreground text-sm">
+						{m.decks.sharePrivacy}
+					</p>
 				</div>
 			</SheetContent>
 		</Sheet>

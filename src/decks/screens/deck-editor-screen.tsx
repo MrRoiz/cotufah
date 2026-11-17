@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 
 import type { Locale } from "@/config/app";
-import { DeckForm } from "@/decks/components/deck-form";
+import { DeckEditor } from "@/decks/components/deck-editor";
 import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
@@ -22,34 +22,29 @@ export const DeckEditorScreen = ({
 		? decks.find((candidate) => candidate.id === deckId)
 		: undefined;
 
-	const title =
-		deckId === undefined
-			? m.decks.createTitle
-			: deck
-				? m.decks.editTitle
-				: m.decks.title;
+	if (deckId && !deck) {
+		return (
+			<AppShell>
+				<AppPageHeader lang={lang} title={m.decks.title} />
+				<p className="text-muted-foreground">{m.decks.notFound}</p>
+			</AppShell>
+		);
+	}
 
 	return (
-		<AppShell>
-			<AppPageHeader lang={lang} title={title} />
-
-			{deckId && !deck ? (
-				<p className="text-muted-foreground">{m.decks.notFound}</p>
-			) : (
-				<DeckForm
-					deck={deck}
-					// Remounts if the id in the URL changes under the same route.
-					key={deck?.id ?? "new"}
-					locale={lang}
-					onSave={(next) => {
-						const failure = save(next);
-						if (!failure) {
-							navigate({ to: "/$lang/decks", params: { lang } });
-						}
-						return failure;
-					}}
-				/>
-			)}
-		</AppShell>
+		<DeckEditor
+			deck={deck}
+			// Remounts if the id in the URL changes under the same route.
+			key={deck?.id ?? "new"}
+			lang={lang}
+			onSave={(next) => {
+				const failure = save(next);
+				if (!failure) {
+					navigate({ to: "/$lang/decks", params: { lang } });
+				}
+				return failure;
+			}}
+			title={deck ? m.decks.editTitle : m.decks.createTitle}
+		/>
 	);
 };

@@ -146,7 +146,6 @@ export const en = {
 		headline: "One phone for the whole crew",
 		promises: ["No accounts", "No installs", "No ads"],
 		sectionsLabel: "Sections",
-		newBadge: "New",
 		gamePlay: "Play {game}",
 		customCta: "Make a deck",
 		ctaDesktop: "Open it on your phone",

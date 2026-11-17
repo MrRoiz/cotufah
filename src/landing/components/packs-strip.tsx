@@ -1,5 +1,5 @@
 import type { Locale } from "@/config/app";
-import { newPack, packChoices } from "@/decks/categories";
+import { packChoices } from "@/decks/categories";
 import { packIcons } from "@/decks/pack-icons";
 import { getMessages, interpolate } from "@/i18n";
 import { cn } from "@/lib/utils";
@@ -11,7 +11,7 @@ const PACK_ACCENTS = [
 	"bg-accent-fuchsia",
 ] as const;
 
-/** Every deck a round can draw from, as one wrap of chips; the newest is flagged. */
+/** Every deck a round can draw from, as one wrap of chips. */
 export const PacksStrip = ({ lang }: { lang: Locale }) => {
 	const m = getMessages(lang);
 
@@ -44,11 +44,6 @@ export const PacksStrip = ({ lang }: { lang: Locale }) => {
 								<Icon aria-hidden="true" className="size-3.5" />
 							</span>
 							{m.category.packs[pack].name}
-							{pack === newPack ? (
-								<span className="rounded-full border-2 border-foreground bg-accent-fuchsia px-2 font-extrabold text-accent-ink text-xs uppercase">
-									{m.home.newBadge}
-								</span>
-							) : null}
 						</li>
 					);
 				})}

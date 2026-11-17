@@ -145,7 +145,6 @@ export const es: Messages = {
 		headline: "Un celular pa' todo el parche",
 		promises: ["Sin cuentas", "Sin descargas", "Sin anuncios"],
 		sectionsLabel: "Secciones",
-		newBadge: "Nuevo",
 		gamePlay: "Jugar {game}",
 		customCta: "Crear una baraja",
 		ctaDesktop: "Ábrelo en tu celular",

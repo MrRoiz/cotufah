@@ -23,9 +23,6 @@ export type ThemedCategory = (typeof themedCategories)[number];
 
 export const packChoices = ["clasico", ...themedCategories] as const;
 
-/** The newest pack, flagged "new" on the landing. Move it when the next one ships. */
-export const newPack: ThemedCategory = "antics";
-
 export const categoryChoices = ["mixed", ...packChoices] as const;
 
 export const CUSTOM_PREFIX = "custom:";

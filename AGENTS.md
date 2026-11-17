@@ -218,7 +218,7 @@ never imports from another game folder — if spy needs it, it goes to `games/`,
 | tweak a round's timing or limits | `games/<game>/rules.ts` |
 | change round state or cues | `games/<game>/hooks/use-<game>-round.ts`, `games/hooks/use-round-cues.ts` |
 | add words to a themed pack | `data/packs/{es,en}.ts` |
-| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` (the only pack list; point `newPack` at it for the landing's "new" sticker) + `i18n/{en,es}.ts` + `decks/pack-icons.ts`. The zod pack schema derives its keys from the taxonomy. |
+| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` (the only pack list) + `i18n/{en,es}.ts` + `decks/pack-icons.ts`. The zod pack schema derives its keys from the taxonomy. |
 | fix the deck share QR | `decks/components/share-deck-sheet.tsx` |
 | fix custom deck storage | `decks/custom-decks.ts` |
 | change what a URL renders | `routes/**` (each adapter imports its screen) |

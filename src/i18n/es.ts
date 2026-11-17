@@ -311,6 +311,23 @@ export const es: Messages = {
 			"Y si llegaste hasta acá, gracias: eres la primera persona. La segunda fue mi mamá, y solo buscaba el botón de cerrar. Esto es un juego de pasar el celular y gritar palabras: sin cuentas, sin base de datos, sin anuncios, sin rastreo. Respira, que no te estamos espiando.",
 		notLawyers:
 			"Aviso legal: no somos abogados, obvio. Si necesitas uno de verdad, contrata uno; nosotros sabemos un poco de código, pero de leyes nada.",
+		summaryTitle: "Lo corto",
+		summary: [
+			"Sin cuentas, correos ni contraseñas.",
+			"Sin anuncios, analítica ni rastreo.",
+			"Solo en tu navegador: idioma, tema, sonido, tus barajas y tu última ronda.",
+		],
+		indexLabel: "En esta página",
+		sections: {
+			terms: "Reglas",
+			liability: "Responsabilidad",
+			privacy: "Privacidad",
+			data: "Datos",
+			cookies: "Cookies",
+			faq: "Preguntas",
+			changes: "Cambios",
+			openSource: "Código",
+		},
 		termsTitle: "Las reglas del parche",
 		termsBody:
 			"No acoses, no amenaces y no le dañes la noche a nadie: para eso ya está la vida real. Si una palabra ofende a alguien, cambien de baraja y sigan.",
@@ -329,14 +346,14 @@ export const es: Messages = {
 			"Cero cuentas, cero correos, cero contraseñas. No hay nada que hackear, ni para un hacker aburrido.",
 			"Cero partidas guardadas. Cierras la pestaña y tu parche se vuelve leyenda urbana.",
 			"Cero analítica, cero anuncios, cero rastreadores. No vendemos datos porque no tenemos datos que vender (ni talento para venderlos).",
-			"En tu navegador guardamos dos cosas: el tema y el idioma. Ese es todo el rastro: ni huellas, ni migas.",
+			"En tu navegador guardamos lo justo: idioma, tema, sonido, tus barajas y tu última ronda. Ese es todo el rastro: ni huellas, ni migas.",
 			"El servidor reparte palabras y se olvida de ti. Sin perfiles, sin historial, sin llamadas al otro día.",
 			"No hay botón de «darse de baja» porque no hay nada de qué darse de baja.",
 			"¿Quieres borrar lo poquito que guardamos? Limpia los datos del sitio y listo: ni rastro.",
 		],
 		dataTitle: "Datos que NO tenemos",
 		dataList: [
-			"Tu nombre. No lo pedimos, no lo guardamos, no lo queremos.",
+			"Tu nombre. No lo pedimos: los nombres del Espía se quedan en tu celular.",
 			"Tu ubicación. Sabemos que estás en algún parche, nada más.",
 			"Tu cámara y tu micrófono. Ni los tocamos: para charadas solo usamos el sensor de movimiento.",
 			"Tu forma de pago. No hay nada que comprar: ni premium, ni monedas, ni vidas extra.",
@@ -366,6 +383,7 @@ export const es: Messages = {
 			"Última actualización: cuando alguien se acordó de que esta página existía. No es asesoría legal, es un juego.",
 	},
 	about: {
+		contactCta: "Abrir un issue en GitHub",
 		kicker: "La historia que nadie pidió",
 		title: "¿Y estos quiénes son?",
 		intro:

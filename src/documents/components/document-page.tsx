@@ -5,8 +5,9 @@ import { Kicker } from "@/ui/kicker";
 import { PageHeader } from "@/ui/page-header";
 
 /**
- * The frame every public document shares: the same column, header, intro block
- * and footer, so about and legal cannot drift apart.
+ * The frame every public document shares: the same column, header and title
+ * block, so about and legal cannot drift apart. Each page brings its own
+ * intro and closing, because they say different things (a card vs. a note).
  */
 export const DocumentPage = ({
 	lang,
@@ -14,9 +15,6 @@ export const DocumentPage = ({
 	accent,
 	kicker,
 	title,
-	intro,
-	note,
-	footer,
 	children,
 }: {
 	lang: Locale;
@@ -24,10 +22,6 @@ export const DocumentPage = ({
 	accent: "cyan" | "fuchsia";
 	kicker: string;
 	title: string;
-	intro: string;
-	/** Highlighted sticker under the intro (legal's "we are not lawyers"). */
-	note?: string;
-	footer: string;
 	children: ReactNode;
 }) => {
 	return (
@@ -35,25 +29,15 @@ export const DocumentPage = ({
 			<PageHeader lang={lang} to={to} />
 
 			<main className="flex flex-1 flex-col">
-				<article className="flex flex-1 flex-col gap-8 pb-10">
-					<header className="flex flex-col gap-3">
+				<article className="flex flex-1 flex-col gap-6 pb-10">
+					<header className="flex flex-col gap-4">
 						<Kicker accent={accent}>{kicker}</Kicker>
-						<h1 className="font-display text-5xl uppercase leading-[0.9]">
+						<h1 className="font-display font-extrabold text-5xl uppercase leading-[0.9] tracking-tight md:text-6xl">
 							{title}
 						</h1>
-						<p>{intro}</p>
-						{note ? (
-							<p className="rounded-xl border-2 border-foreground bg-accent-lime px-4 py-3 text-accent-ink shadow-sticker-sm">
-								{note}
-							</p>
-						) : null}
 					</header>
 
 					{children}
-
-					<footer className="mt-auto border-t-2 border-border pt-4 text-muted-foreground">
-						{footer}
-					</footer>
 				</article>
 			</main>
 		</div>

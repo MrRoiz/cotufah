@@ -315,6 +315,23 @@ export const en = {
 			"And if you got this far, thank you: you are the first person. The second was my mum, and she was only looking for the close button. This is a game about passing a phone around and shouting words: no accounts, no database, no ads, no tracking. Breathe, we are not spying on you.",
 		notLawyers:
 			"Legal notice: we are not lawyers, obviously. If you need a real one, hire one; we know a bit of code, but nothing about law.",
+		summaryTitle: "The short version",
+		summary: [
+			"No accounts, emails or passwords.",
+			"No ads, analytics or tracking.",
+			"Only in your browser: language, theme, sound, your decks and your last round.",
+		],
+		indexLabel: "On this page",
+		sections: {
+			terms: "Rules",
+			liability: "Liability",
+			privacy: "Privacy",
+			data: "Data",
+			cookies: "Cookies",
+			faq: "Questions",
+			changes: "Changes",
+			openSource: "Code",
+		},
 		termsTitle: "The crew rules",
 		termsBody:
 			"Do not harass, do not threaten and do not ruin anyone's evening: real life already does that. If a word offends someone, switch decks and carry on.",
@@ -333,14 +350,14 @@ export const en = {
 			"Zero accounts, zero emails, zero passwords. Nothing to hack, not even for a bored hacker.",
 			"Zero saved matches. Close the tab and your crew becomes an urban legend.",
 			"Zero analytics, zero ads, zero trackers. We do not sell data because we have no data to sell (nor any talent for selling it).",
-			"In your browser we keep two things: the theme and the language. That is the whole trail: no footprints, no crumbs.",
+			"In your browser we keep just the basics: language, theme, sound, your decks and your last round. That is the whole trail: no footprints, no crumbs.",
 			"The server hands out words and forgets you. No profiles, no history, no follow-up calls.",
 			"There is no unsubscribe button because there is nothing to unsubscribe from.",
 			"Want to erase the little we keep? Clear the site data and done: not a trace.",
 		],
 		dataTitle: "Data we do NOT have",
 		dataList: [
-			"Your name. We do not ask, we do not store, we do not want it.",
+			"Your name. We never ask: Spy's player names stay on your phone.",
 			"Your location. We know you are at some party, that is it.",
 			"Your camera and microphone. We never touch them: charades only uses the motion sensor.",
 			"Your payment details. There is nothing to buy: no premium, no coins, no extra lives.",
@@ -370,6 +387,7 @@ export const en = {
 			"Last updated: whenever someone remembered this page existed. Not legal advice, it is a game.",
 	},
 	about: {
+		contactCta: "Open an issue on GitHub",
 		kicker: "The story nobody asked for",
 		title: "So who are these people?",
 		intro:

@@ -3,9 +3,12 @@ import { type FormEvent, useRef, useState } from "react";
 
 import type { Locale } from "@/config/app";
 import { PlayerAvatar } from "@/games/components/player-avatar";
+import { PlayersEmpty } from "@/games/spy/components/players-empty";
+import { PlayersHeader } from "@/games/spy/components/players-header";
+import { useUndoableClear } from "@/games/spy/hooks/use-undoable-clear";
 import { MAX_PLAYERS } from "@/games/spy/rules";
 import { validatePlayerName } from "@/games/spy/validate-player-name";
-import { getMessages, interpolate, plural } from "@/i18n";
+import { getMessages, interpolate } from "@/i18n";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
@@ -28,6 +31,10 @@ export const PlayersField = ({
 	const [draft, setDraft] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const isFull = players.length >= MAX_PLAYERS;
+	const { isUndoable, undoTimeLeft, clear, undo, dismiss } = useUndoableClear({
+		players,
+		onChange,
+	});
 
 	const add = (event: FormEvent) => {
 		event.preventDefault();
@@ -38,6 +45,8 @@ export const PlayersField = ({
 			return;
 		}
 		onChange([...players, name]);
+		// A new name means the cleared list is not coming back; undo would drop it.
+		dismiss();
 		setDraft("");
 		setError(null);
 		// The + button takes focus on tap; give it back so the next name flows.
@@ -49,14 +58,22 @@ export const PlayersField = ({
 		setError(null);
 	};
 
+	const clearAll = () => {
+		clear();
+		setError(null);
+		inputRef.current?.focus();
+	};
+
 	return (
 		<section className="flex flex-col gap-3">
-			<div className="flex items-baseline justify-between gap-3">
-				<h2 className="font-bold text-lg">{messages.spy.playersTitle}</h2>
-				<span className="font-bold text-muted-foreground text-sm">
-					{plural(lang, players.length, messages.spy.playerCount)}
-				</span>
-			</div>
+			<PlayersHeader
+				count={players.length}
+				isUndoable={isUndoable}
+				lang={lang}
+				onClear={clearAll}
+				onUndo={undo}
+				undoTimeLeft={undoTimeLeft}
+			/>
 
 			{players.length > 0 ? (
 				<ul className="flex flex-wrap gap-2">
@@ -78,7 +95,9 @@ export const PlayersField = ({
 						</li>
 					))}
 				</ul>
-			) : null}
+			) : (
+				<PlayersEmpty lang={lang} />
+			)}
 
 			<form className="flex gap-2" noValidate onSubmit={add}>
 				<Label className="sr-only" htmlFor="new-player">

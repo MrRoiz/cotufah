@@ -92,8 +92,8 @@ src/
 │  │  ├─ validate-player-name.ts  # one name before it joins the list
 │  │  ├─ screens/{spy-setup,spy-play-screen}.tsx
 │  │  ├─ panels/{deal,handoff,discuss,vote,reveal}-panel.tsx
-│  │  ├─ components/{players-field,spy-count-field,spy-round-bar,deal-progress,timer-ring}.tsx
-│  │  └─ hooks/use-spy-round.ts
+│  │  ├─ components/{players-field,players-header,players-empty,spy-count-field,spy-round-bar,deal-progress,timer-ring}.tsx
+│  │  └─ hooks/{use-spy-round,use-undoable-clear}.ts
 │  └─ charades/
 │     ├─ rules.ts         # durations, phases, answer type
 │     ├─ duration-label.ts  # "90 seconds" / "2 minutes"

@@ -2,7 +2,7 @@ import { Button } from "@/ui/button";
 
 /**
  * A screen's main action with a second line that says what is about to
- * happen ("5 players · 1 spy · Mixed", "6 words · Mom's birthday") or what
+ * happen ("5 players · 1 spy · Mixed", "6 words · Animals") or what
  * is still missing.
  */
 export const SummaryButton = ({

@@ -9,7 +9,7 @@ import { SummaryButton } from "@/ui/summary-button";
 
 /**
  * Writing or editing one deck: the form, plus a footer button that says what
- * saving will do ("6 words · Mom's birthday") or what is still missing.
+ * saving will do ("6 words · Animals") or what is still missing.
  */
 export const DeckEditor = ({
 	lang,

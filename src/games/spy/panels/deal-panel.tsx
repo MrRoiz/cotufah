@@ -80,10 +80,10 @@ export const DealPanel = ({
 						)
 					) : (
 						<>
-							<span className="flex size-28 items-center justify-center rounded-full border-2 border-muted-foreground border-dashed">
+							<span className="flex size-28 items-center justify-center rounded-full border-2 border-accent-ink bg-accent-lime">
 								<FingerprintIcon
 									aria-hidden="true"
-									className="size-14 text-accent-lime"
+									className="size-14 text-accent-ink"
 									strokeWidth={1.5}
 								/>
 							</span>

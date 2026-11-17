@@ -81,20 +81,23 @@ below are conventions, reviewed by hand.
 ```
 src/
 ├─ games/                 # the catalog, plus what both games share
-│  ├─ games.ts            # catalog: slugs, gradients, setup routes
-│  ├─ components/{game-card,coming-soon-card,timer-bar}.tsx
-│  ├─ hooks/{use-countdown,use-round-cues,use-wake-lock}.ts
+│  ├─ games.ts            # catalog: slugs, gradients, icons, setup routes
+│  ├─ last-round.ts       # "play again" record in localStorage (zod-validated)
+│  ├─ components/{game-tile,last-round-card,decks-row,player-avatar,timer-bar}.tsx
+│  ├─ hooks/{use-countdown,use-last-round,use-round-cues,use-wake-lock}.ts
 │  ├─ screens/games-screen.tsx   # /games list
 │  ├─ spy/
 │  │  ├─ rules.ts         # limits, phases, player encoding
 │  │  ├─ assign-spies.ts  # assignSpies
-│  │  ├─ create-players-schema.ts  # player validation
+│  │  ├─ validate-player-name.ts  # one name before it joins the list
 │  │  ├─ screens/{spy-setup,spy-play-screen}.tsx
 │  │  ├─ panels/{deal,handoff,discuss,vote,reveal}-panel.tsx
-│  │  ├─ components/spy-count-field.tsx
+│  │  ├─ components/{players-field,spy-count-field,spy-round-bar,deal-progress,timer-ring}.tsx
 │  │  └─ hooks/use-spy-round.ts
 │  └─ charades/
 │     ├─ rules.ts         # durations, phases, answer type
+│     ├─ duration-label.ts  # "90 seconds" / "2 minutes"
+│     ├─ components/{duration-field,gesture-cards,forehead-illustration}.tsx
 │     ├─ screens/{charades-setup,charades-play-screen,charades-play-stage}.tsx
 │     ├─ screens/{charades-countdown,charades-intro,charades-results}.tsx
 │     └─ hooks/{use-charades-round,use-tilt,use-motion-probe}.ts
@@ -107,19 +110,22 @@ src/
 │  ├─ deflate.ts          # deflate/inflate helpers
 │  ├─ get-round-fn.ts     # getRoundFn server function (client-safe)
 │  ├─ pack-icons.ts
-│  ├─ components/{category-field,custom-deck-picker,deck-form,deck-list,share-deck-sheet}.tsx
-│  ├─ hooks/{use-custom-decks,use-round-words}.ts
+│  ├─ merge-words.ts      # the one add/paste rule for deck words
+│  ├─ components/{category-field,custom-deck-picker,deck-card,deck-editor,deck-form,deck-list}.tsx
+│  ├─ components/{paste-words-sheet,share-actions,share-deck-sheet,share-steps,word-chips}.tsx
+│  ├─ hooks/{use-category-summary,use-custom-decks,use-deck-draft,use-round-words}.ts
 │  └─ screens/{decks-screen,deck-editor-screen,deck-import-screen}.tsx
 ├─ landing/
 │  ├─ screens/landing-page.tsx
-│  └─ components/{hero,games,packs-marquee,how-it-works,quotes,why,custom-decks,footer}.tsx
+│  └─ components/{hero,phone-mockup,games,game-card,packs-strip,custom-decks,how-it-works,quotes,why,footer}.tsx
 ├─ settings/screens/settings-screen.tsx
 ├─ documents/
 │  ├─ screens/{about,legal,error,not-found}-page.tsx
-│  └─ components/{document-page,document-section,document-list}.tsx
+│  └─ components/{document-page,document-section,document-list,legal-summary}.tsx
 ├─ ui/                    # shadcn primitives + app-wide visuals and small UI hooks
+│                         # (summary-button: the two-line main action of setups and the deck editor)
 ├─ providers/{query,theme}-provider.tsx
-├─ layout/{app-shell,phone-gate}.tsx
+├─ layout/{app-shell,bottom-nav,phone-gate}.tsx   # bottom nav: games, decks, settings tabs
 ├─ config/{app,games,seo,site,version}.ts
 ├─ i18n/{en,es,index}.ts
 ├─ data/{spy,charades,packs}/  # server-only word banks — the client-bundle
@@ -212,7 +218,7 @@ never imports from another game folder — if spy needs it, it goes to `games/`,
 | tweak a round's timing or limits | `games/<game>/rules.ts` |
 | change round state or cues | `games/<game>/hooks/use-<game>-round.ts`, `games/hooks/use-round-cues.ts` |
 | add words to a themed pack | `data/packs/{es,en}.ts` |
-| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` (the only pack list) + `i18n/{en,es}.ts` + `decks/pack-icons.ts`. The zod pack schema derives its keys from the taxonomy. |
+| add a themed pack | `data/packs/{es,en}.ts` + `decks/categories.ts` (the only pack list; point `newPack` at it for the landing's "new" sticker) + `i18n/{en,es}.ts` + `decks/pack-icons.ts`. The zod pack schema derives its keys from the taxonomy. |
 | fix the deck share QR | `decks/components/share-deck-sheet.tsx` |
 | fix custom deck storage | `decks/custom-decks.ts` |
 | change what a URL renders | `routes/**` (each adapter imports its screen) |
@@ -247,6 +253,15 @@ changes, so the phone's glow cannot give the spy away in a dark room. Every role
 by a 5s hand-off (including the first player and after "Otra ronda") so whoever is holding
 the phone when they tap "siguiente" never sees the next role.
 
+The role card and the Charadas stage always render in the dark tokens, whatever the theme: the
+`dark` class is scoped to that screen (`AppShell className="dark"`, `.stage-landscape dark`), so a
+bright screen never lights up a face in a dark room. No new colours: it reuses the `.dark` block.
+
+"Jugar otra vez" on the games list replays the last round started on this phone. The play
+screens save its setup under the brand-free key `app.lastRound` (`games/last-round.ts`), read
+after mount by `useLastRound`; both setups prefill from it (spy: players and spies;
+charades: the round length).
+
 Charadas plays on a full-viewport `stage-landscape` layer (it leaves the 430px column): the
 phone sits horizontally on the forehead. If the device is rotation-locked the stage is rotated
 90° so the word still reads upright; flip the `rotate: 90deg` in `styles.css` if a device reads
@@ -272,7 +287,7 @@ reload starts a fresh round — that is the intended behaviour, not a bug. Play 
 Deck data has two shapes (`decks/contract.ts`): each game owns a classic list
 (`data/<game>/<locale>.ts`, `{ id, game, locale, label, items[] }`), and the themed packs
 are shared by both games per locale (`data/packs/<locale>.ts`, `movies`, `disney`,
-`actors`, `objects`, `kitchen`, `gaming`, `animals`, `music`, `sports`, `food`, `places`,
+`actors`, `objects`, `kitchen`, `gaming`, `animals`, `antics`, `music`, `sports`, `food`, `places`,
 `brands`).
 Word banks are TS modules that `satisfies DeckInput` / `satisfies PackInput`, so a typo or a
 missing pack fails `typecheck`; zod still parses them at server boot as a last guard. They
@@ -360,8 +375,8 @@ is used. After adding, always check the new file:
   one value are dead code. `Field`, `DropdownMenu` and `Card` were trimmed this way; add the
   prop back when a second real caller needs it.
 
-Some primitives are vendored for the styleguide only (`Dialog`, `Tabs`, `Skeleton` and
-`Separator`); prefer composing the ones a screen already uses over adding another.
+Some primitives are vendored for the styleguide only (`Dialog`, `Tabs`, `Skeleton`,
+`Separator` and `Card`); prefer composing the ones a screen already uses over adding another.
 When a screen would otherwise hand-roll a control that the registry ships, say which component
 you would add and why before installing it.
 

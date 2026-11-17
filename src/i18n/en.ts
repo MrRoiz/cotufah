@@ -45,6 +45,8 @@ export const en = {
 		mixedBody: "A bit of everything.",
 		change: "Change",
 		sheetTitle: "Pick the deck",
+		current: "Playing with",
+		themedTitle: "Themed packs",
 		packs: {
 			clasico: {
 				name: "The usual",
@@ -116,7 +118,10 @@ export const en = {
 		copy: "Copy link",
 		copied: "Link copied",
 		pickerTitle: "Your decks",
-		pickerEmpty: "None yet.",
+		pickerEmptyTitle: "Your own words",
+		pickerEmptyBody:
+			"Write a deck for your crew: inside jokes, names, anything. It shows up in both games.",
+		pickerCreate: "Make my deck",
 		manage: "Manage decks",
 		nameError: "Write a name.",
 		wordLengthError: "Each word can be up to {max} characters.",

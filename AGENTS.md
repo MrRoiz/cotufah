@@ -112,6 +112,7 @@ src/
 │  ├─ pack-icons.ts
 │  ├─ merge-words.ts      # the one add/paste rule for deck words
 │  ├─ components/{category-field,custom-deck-picker,deck-card,deck-editor,deck-form,deck-list}.tsx
+│  ├─ components/{deck-option,deck-picker-sheet,themed-pack-grid}.tsx
 │  ├─ components/{paste-words-sheet,share-actions,share-deck-sheet,share-steps,word-chips}.tsx
 │  ├─ hooks/{use-category-summary,use-custom-decks,use-deck-draft,use-round-words}.ts
 │  └─ screens/{decks-screen,deck-editor-screen,deck-import-screen}.tsx

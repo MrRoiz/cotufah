@@ -44,6 +44,8 @@ export const es: Messages = {
 		mixedBody: "Un poco de todo.",
 		change: "Cambiar",
 		sheetTitle: "Escoge la baraja",
+		current: "Jugando con",
+		themedTitle: "Temáticas",
 		packs: {
 			clasico: {
 				name: "De siempre",
@@ -114,7 +116,10 @@ export const es: Messages = {
 		copy: "Copiar link",
 		copied: "Link copiado",
 		pickerTitle: "Tus barajas",
-		pickerEmpty: "Ninguna todavía.",
+		pickerEmptyTitle: "Tus propias palabras",
+		pickerEmptyBody:
+			"Escribe una baraja pa' tu parche: chistes internos, nombres, lo que sea. Sale en los dos juegos.",
+		pickerCreate: "Crear mi baraja",
 		manage: "Administrar",
 		nameError: "Ponle un nombre.",
 		wordLengthError: "Cada palabra puede tener hasta {max} caracteres.",

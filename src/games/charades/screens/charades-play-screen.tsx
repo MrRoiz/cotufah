@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
 import { useCharadesRound } from "@/games/charades/hooks/use-charades-round";
@@ -7,6 +8,7 @@ import { CharadesCountdown } from "@/games/charades/screens/charades-countdown";
 import { CharadesIntro } from "@/games/charades/screens/charades-intro";
 import { CharadesPlayStage } from "@/games/charades/screens/charades-play-stage";
 import { CharadesResults } from "@/games/charades/screens/charades-results";
+import { saveLastRound } from "@/games/last-round";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 
@@ -23,6 +25,11 @@ export const CharadesPlayScreen = ({
 	const navigate = useNavigate();
 	const round = useCharadesRound({ lang, duration, category });
 
+	// Remembered for "play again" on the games list.
+	useEffect(() => {
+		saveLastRound({ game: "charades", category, duration });
+	}, [category, duration]);
+
 	if (round.phase === "countdown") {
 		return <CharadesCountdown countdown={round.countdown} go={m.charades.go} />;
 	}
@@ -31,7 +38,7 @@ export const CharadesPlayScreen = ({
 		return (
 			<CharadesPlayStage
 				flash={round.flash}
-				m={m}
+				lang={lang}
 				onAnswer={round.answer}
 				remainingMs={round.remainingMs}
 				score={round.correctCount}
@@ -48,7 +55,7 @@ export const CharadesPlayScreen = ({
 				<CharadesIntro
 					canStart={!round.isPending && round.hasWords}
 					isPending={round.isPending}
-					m={m}
+					lang={lang}
 					onStart={round.startRound}
 					probe={round.probe}
 					probing={round.probing}
@@ -57,14 +64,17 @@ export const CharadesPlayScreen = ({
 
 			{round.phase === "results" ? (
 				<CharadesResults
-					correctCount={round.correctCount}
 					correctWords={round.correctWords}
 					finished={round.finished}
 					isFetching={round.isFetching}
-					m={m}
+					lang={lang}
 					onAgain={round.restart}
 					onChangeSettings={() =>
-						navigate({ to: "/$lang/games/charades/setup", params: { lang } })
+						navigate({
+							to: "/$lang/games/charades/setup",
+							params: { lang },
+							search: { category },
+						})
 					}
 					passedWords={round.passedWords}
 					pendingWord={round.pendingWord}

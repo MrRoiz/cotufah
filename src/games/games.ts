@@ -1,3 +1,5 @@
+import { EyeIcon, type LucideIcon, SmartphoneIcon } from "lucide-react";
+
 import { type GameSlug, gameSlugs } from "@/config/games";
 
 export type GameEntry = {
@@ -6,6 +8,7 @@ export type GameEntry = {
 	setupTo: "/$lang/games/spy/setup" | "/$lang/games/charades/setup";
 	/** Complete Tailwind classes: they must stay literal for the scanner. */
 	gradient: string;
+	icon: LucideIcon;
 };
 
 /** Keyed by slug so a missing game fails `typecheck` instead of the UI. */
@@ -13,11 +16,13 @@ const entries: Record<GameSlug, Omit<GameEntry, "slug">> = {
 	spy: {
 		setupTo: "/$lang/games/spy/setup",
 		gradient: "from-game-spy-from to-game-spy-to text-game-spy-foreground",
+		icon: EyeIcon,
 	},
 	charades: {
 		setupTo: "/$lang/games/charades/setup",
 		gradient:
 			"from-game-charades-from to-game-charades-to text-game-charades-foreground",
+		icon: SmartphoneIcon,
 	},
 };
 

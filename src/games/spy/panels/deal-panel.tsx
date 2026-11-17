@@ -1,10 +1,11 @@
-import { CheckIcon, ClockIcon } from "lucide-react";
+import { ClockIcon, FingerprintIcon } from "lucide-react";
 import type { Messages } from "@/i18n";
 import { Button } from "@/ui/button";
 
 /**
  * Pass-the-phone role card. The surface is identical for spy and word: only the
  * ink changes, so the screen's glow cannot give the spy away in a dark room.
+ * The play screen also renders this phase in the dark tokens for that reason.
  */
 export const DealPanel = ({
 	m,
@@ -34,7 +35,7 @@ export const DealPanel = ({
 	onNext: () => void;
 }) => {
 	return (
-		<section className="flex flex-1 flex-col gap-4 pt-4">
+		<section className="flex flex-1 flex-col gap-4">
 			{waiting ? (
 				<div className="flex flex-1 items-center justify-center">
 					<ClockIcon
@@ -44,7 +45,7 @@ export const DealPanel = ({
 				</div>
 			) : (
 				<button
-					className="relative flex min-h-[18rem] flex-1 touch-none select-none flex-col items-center justify-center gap-5 rounded-2xl border-2 border-foreground bg-card p-6 text-center"
+					className="relative flex min-h-[22rem] flex-1 touch-none select-none flex-col items-center justify-center gap-5 rounded-[2rem] border-2 border-foreground bg-card p-6 pt-20 text-center shadow-sticker"
 					onContextMenu={(event) => event.preventDefault()}
 					onPointerCancel={onHoldEnd}
 					onPointerDown={onHoldStart}
@@ -52,34 +53,46 @@ export const DealPanel = ({
 					onPointerUp={onHoldEnd}
 					type="button"
 				>
-					<span className="absolute inset-x-0 top-5 text-center font-bold text-muted-foreground text-xs uppercase tracking-widest">
-						{position} / {total}
-					</span>
-
-					<span className="max-w-full truncate rounded-full border-2 border-foreground bg-accent-cyan px-4 py-1 font-display text-2xl text-accent-ink uppercase leading-tight">
-						{player}
+					<span className="absolute inset-x-6 top-6 flex justify-center">
+						<span className="max-w-full truncate rounded-full border-2 border-accent-ink bg-accent-cyan px-5 py-1 font-display font-extrabold text-2xl text-accent-ink uppercase leading-tight">
+							{player}
+						</span>
 					</span>
 
 					{revealed ? (
 						isSpy ? (
 							<>
-								<span className="font-display text-3xl text-accent-fuchsia uppercase">
+								<span className="font-display font-extrabold text-4xl text-accent-fuchsia uppercase leading-none">
 									{m.spy.youAreSpy}
 								</span>
-								<span className="text-muted-foreground text-sm">
-									{m.spy.spyHint}
-								</span>
+								<span className="text-muted-foreground">{m.spy.spyHint}</span>
 							</>
 						) : (
 							<>
-								<span className="font-bold text-sm uppercase tracking-widest">
+								<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
 									{m.spy.yourWord}
 								</span>
-								<span className="font-display text-4xl uppercase">{word}</span>
+								<span className="max-w-full break-words font-display font-extrabold text-5xl uppercase leading-none">
+									{word}
+								</span>
 							</>
 						)
 					) : (
-						<span className="font-bold text-lg">{m.spy.holdToSee}</span>
+						<>
+							<span className="flex size-28 items-center justify-center rounded-full border-2 border-muted-foreground border-dashed">
+								<FingerprintIcon
+									aria-hidden="true"
+									className="size-14 text-accent-lime"
+									strokeWidth={1.5}
+								/>
+							</span>
+							<span className="flex flex-col gap-1">
+								<span className="font-extrabold text-2xl">
+									{m.spy.holdTitle}
+								</span>
+								<span className="text-muted-foreground">{m.spy.holdHint}</span>
+							</span>
+						</>
 					)}
 				</button>
 			)}
@@ -89,12 +102,12 @@ export const DealPanel = ({
 			</p>
 
 			<Button
+				className="w-full"
 				disabled={!peeked}
 				onClick={onNext}
 				size="lg"
 				variant={peeked ? "sticker" : "outline"}
 			>
-				<CheckIcon aria-hidden="true" />
 				{position >= total ? m.spy.startDiscussion : m.spy.next}
 			</Button>
 		</section>

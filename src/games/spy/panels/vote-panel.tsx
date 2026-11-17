@@ -1,4 +1,7 @@
-import type { Messages } from "@/i18n";
+import { CheckIcon } from "lucide-react";
+
+import { PlayerAvatar } from "@/games/components/player-avatar";
+import { interpolate, type Messages } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";
 
@@ -15,33 +18,48 @@ export const VotePanel = ({
 	onAccuse: (index: number) => void;
 	onReveal: () => void;
 }) => {
+	const accusedName = accused === null ? null : players[accused];
+
 	return (
-		<section className="flex flex-1 flex-col justify-center gap-6">
-			<div className="flex flex-col gap-1">
-				<h1 className="font-display text-3xl uppercase">{m.spy.voteTitle}</h1>
-				<p className="text-muted-foreground text-sm">{m.spy.voteBody}</p>
+		<section className="flex flex-1 flex-col gap-6">
+			<div className="flex flex-col gap-1.5">
+				<h1 className="font-display font-extrabold text-4xl uppercase leading-none">
+					{m.spy.voteTitle}
+				</h1>
+				<p className="text-muted-foreground">{m.spy.voteBody}</p>
 			</div>
 
-			<ul className="flex flex-wrap justify-center gap-3">
-				{players.map((name, playerIndex) => {
-					const selected = accused === playerIndex;
+			<ul className="grid grid-cols-2 gap-3">
+				{players.map((name, seat) => {
+					const isSelected = accused === seat;
 					return (
-						<li className="w-[calc(50%-0.375rem)]" key={name}>
+						<li className="min-w-0" key={name}>
 							<button
-								aria-pressed={selected}
+								aria-pressed={isSelected}
 								className={cn(
-									"flex h-28 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 px-2 py-3 transition-colors",
-									selected
-										? "border-foreground bg-accent-lime text-accent-ink shadow-sticker-sm"
+									"relative flex h-28 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 px-2 transition-colors",
+									isSelected
+										? "border-foreground bg-accent-lime text-accent-ink shadow-sticker"
 										: "border-border bg-card",
 								)}
-								onClick={() => onAccuse(playerIndex)}
+								onClick={() => onAccuse(seat)}
 								type="button"
 							>
-								<span className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-current font-display text-xl uppercase">
-									{name.slice(0, 1)}
-								</span>
-								<span className="w-full truncate text-center font-bold text-sm">
+								{isSelected ? (
+									<span className="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-accent-ink text-accent-lime">
+										<CheckIcon
+											aria-hidden="true"
+											className="size-4"
+											strokeWidth={3}
+										/>
+									</span>
+								) : null}
+								<PlayerAvatar
+									className="size-11 text-lg"
+									name={name}
+									seat={seat}
+								/>
+								<span className="w-full truncate text-center font-bold">
 									{name}
 								</span>
 							</button>
@@ -50,15 +68,29 @@ export const VotePanel = ({
 				})}
 			</ul>
 
-			<Button
-				className="w-full"
-				disabled={accused === null}
-				onClick={onReveal}
-				size="lg"
-				variant="sticker"
-			>
-				{m.spy.reveal}
-			</Button>
+			<div className="mt-auto">
+				{accusedName === null ? (
+					<Button
+						className="w-full border-dashed"
+						disabled
+						size="lg"
+						variant="outline"
+					>
+						{m.spy.pickFirst}
+					</Button>
+				) : (
+					<Button
+						className="w-full"
+						onClick={onReveal}
+						size="lg"
+						variant="sticker"
+					>
+						<span className="truncate">
+							{interpolate(m.spy.revealAccused, { name: accusedName })}
+						</span>
+					</Button>
+				)}
+			</div>
 		</section>
 	);
 };

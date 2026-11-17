@@ -9,6 +9,7 @@ import { useWakeLock } from "@/games/hooks/use-wake-lock";
 import { assignSpies } from "@/games/spy/assign-spies";
 import { DISCUSS_MS, HANDOFF_MS, type SpyPhase } from "@/games/spy/rules";
 import { formatList } from "@/i18n";
+import { pick } from "@/lib/pick";
 
 /** Round state for Spy: one word, one assignment, one phase at a time. */
 export const useSpyRound = ({
@@ -36,6 +37,8 @@ export const useSpyRound = ({
 	const handoffTimer = useCountdown(HANDOFF_MS, phase === "handoff");
 	const discussTimer = useCountdown(DISCUSS_MS, phase === "discuss" && !paused);
 	const [accused, setAccused] = useState<number | null>(null);
+	// Who opens the discussion, so nobody has to volunteer the first question.
+	const [starter, setStarter] = useState(() => pick(players, 1)[0] ?? "");
 
 	useRoundCues({
 		// The clock is frozen while paused, so a pause needs no extra guard.
@@ -51,11 +54,21 @@ export const useSpyRound = ({
 	});
 	const word = words[0];
 
-	const spyNames = useMemo(
-		() => assignment.map((spyIndex) => players[spyIndex] ?? "").filter(Boolean),
+	const spies = useMemo(
+		() =>
+			assignment
+				.map((seat) => ({ seat, name: players[seat] ?? "" }))
+				.filter((spy) => spy.name),
 		[assignment, players],
 	);
-	const spyList = useMemo(() => formatList(lang, spyNames), [lang, spyNames]);
+	const spyList = useMemo(
+		() =>
+			formatList(
+				lang,
+				spies.map((spy) => spy.name),
+			),
+		[lang, spies],
+	);
 
 	/** Nobody but the player holding the phone may see the role. */
 	const hideRole = useCallback(() => {
@@ -88,6 +101,7 @@ export const useSpyRound = ({
 		setIndex(-1);
 		hideRole();
 		setAccused(null);
+		setStarter(pick(players, 1)[0] ?? "");
 		discussTimer.reset();
 		setPaused(false);
 		handoffTimer.reset();
@@ -104,7 +118,9 @@ export const useSpyRound = ({
 		remainingMs: discussTimer.remainingMs,
 		paused,
 		accused,
-		assignment,
+		accusedName: accused === null ? "" : (players[accused] ?? ""),
+		starter,
+		spies,
 		word,
 		waiting: isPending || !word,
 		isFetching,

@@ -4,7 +4,7 @@ import type { Locale } from "@/config/app";
 import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
 
-/** The empty slot for the next game, on the landing and the app list. */
+/** The empty slot for the next game on the landing page. */
 export const ComingSoonCard = ({
 	lang,
 	className,

@@ -1,63 +1,41 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import {
-	LanguagesIcon,
-	LayersIcon,
-	type LucideIcon,
-	MoonIcon,
-	PaletteIcon,
-	Volume2Icon,
-} from "lucide-react";
+import { ChevronRightIcon, ExternalLinkIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { app, type Locale, locales } from "@/config/app";
 import { appVersion } from "@/config/version";
 import { getMessages, interpolate, localeLabel } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
+import { BottomNav } from "@/layout/bottom-nav";
 import { playSound, setSoundMuted, useSoundMuted } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { themes, useTheme } from "@/providers/theme-provider";
-import { AppPageHeader } from "@/ui/app-page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
-import { ChoiceButton } from "@/ui/choice-button";
+import { SegmentedControl } from "@/ui/segmented-control";
 import { Switch } from "@/ui/switch";
-import { textLinkClass } from "@/ui/text-link-class";
+import { TabPageHeader } from "@/ui/tab-page-header";
 
-/** One settings block: icon, title, optional body and a control on the right. */
-const SettingsCard = ({
-	icon: Icon,
+const groupClass =
+	"flex flex-col divide-y-2 divide-muted overflow-hidden rounded-xl border-2 bg-card";
+const linkRowClass = "flex min-h-14 items-center gap-3 px-4 font-bold";
+
+/**
+ * One labelled setting inside a group: the label on top, its control below.
+ * The visible label is hidden from screen readers: the control's own legend
+ * already names it, and reading both would say it twice.
+ */
+const SettingRow = ({
 	title,
-	body,
-	trailing,
 	children,
 }: {
-	icon: LucideIcon;
-	title: ReactNode;
-	body?: string;
-	/** A control that belongs on the title row (the sound switch). */
-	trailing?: ReactNode;
-	children?: ReactNode;
-}) => {
-	return (
-		<Card>
-			<CardHeader>
-				<div className="flex items-center justify-between gap-4">
-					<div className="flex min-w-0 flex-col gap-1">
-						<CardTitle className="flex items-center gap-2">
-							<Icon aria-hidden="true" className="size-5" />
-							{title}
-						</CardTitle>
-						{body ? (
-							<p className="text-muted-foreground text-sm">{body}</p>
-						) : null}
-					</div>
-					{trailing}
-				</div>
-			</CardHeader>
-			{children ? <CardContent>{children}</CardContent> : null}
-		</Card>
-	);
-};
-
-const optionRow = "flex gap-2";
+	title: string;
+	children: ReactNode;
+}) => (
+	<div className="flex flex-col gap-2.5 px-4 py-3.5">
+		<span aria-hidden="true" className="font-extrabold">
+			{title}
+		</span>
+		{children}
+	</div>
+);
 
 export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 	const m = getMessages(lang);
@@ -73,59 +51,42 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 	};
 
 	return (
-		<AppShell>
-			<AppPageHeader
-				backLabel={m.common.home}
-				lang={lang}
-				subtitle={m.settings.subtitle}
-				title={m.settings.title}
-			/>
+		<AppShell footer={<BottomNav lang={lang} />}>
+			<TabPageHeader subtitle={m.settings.subtitle} title={m.settings.title} />
 
 			<div className="flex flex-col gap-4">
-				<SettingsCard
-					body={m.settings.languageBody}
-					icon={LanguagesIcon}
-					title={m.common.language}
-				>
-					<div className={optionRow}>
-						{locales.map((locale) => (
-							<ChoiceButton
-								className="flex-1"
-								key={locale}
-								onClick={() => switchLocale(locale)}
-								selected={locale === lang}
-							>
-								{localeLabel(locale)}
-							</ChoiceButton>
-						))}
-					</div>
-				</SettingsCard>
+				<section className={cn(groupClass, "border-foreground")}>
+					<SettingRow title={m.common.language}>
+						<SegmentedControl
+							label={m.common.language}
+							onChange={switchLocale}
+							options={locales.map((locale) => ({
+								value: locale,
+								label: localeLabel(locale),
+							}))}
+							value={lang}
+						/>
+					</SettingRow>
 
-				<SettingsCard
-					body={m.settings.themeBody}
-					icon={MoonIcon}
-					title={m.common.theme}
-				>
-					<div className={optionRow}>
-						{themes.map((option) => (
-							<ChoiceButton
-								className="flex-1"
-								key={option}
-								onClick={() => setTheme(option)}
-								selected={theme === option}
-								size="sm"
-							>
-								{m.common[option]}
-							</ChoiceButton>
-						))}
-					</div>
-				</SettingsCard>
+					<SettingRow title={m.common.theme}>
+						<SegmentedControl
+							label={m.common.theme}
+							onChange={setTheme}
+							options={themes.map((option) => ({
+								value: option,
+								label: m.common[option],
+							}))}
+							value={theme}
+						/>
+					</SettingRow>
 
-				<SettingsCard
-					body={m.settings.soundBody}
-					icon={Volume2Icon}
-					title={m.settings.soundTitle}
-					trailing={
+					<div className="flex items-center gap-3 px-4 py-3.5">
+						<div className="flex min-w-0 flex-1 flex-col gap-0.5">
+							<span className="font-extrabold">{m.settings.soundTitle}</span>
+							<span className="text-muted-foreground text-sm">
+								{m.settings.soundBody}
+							</span>
+						</div>
 						<Switch
 							aria-label={m.settings.soundTitle}
 							checked={!muted}
@@ -136,55 +97,32 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 								}
 							}}
 						/>
-					}
-				/>
-
-				<SettingsCard icon={LayersIcon} title={m.settings.decksTitle}>
-					<p className="text-muted-foreground text-sm">
-						{m.settings.decksBody}
-					</p>
-					<div className="mt-3">
-						<Link
-							className={cn("inline-flex text-sm", textLinkClass)}
-							params={{ lang }}
-							to="/$lang/decks"
-						>
-							{m.decks.manage}
-						</Link>
 					</div>
-				</SettingsCard>
+				</section>
 
-				<SettingsCard
-					icon={PaletteIcon}
-					title={
-						<>
-							{m.settings.aboutTitle}
-							<span className="ml-auto rounded-full border border-border px-2 py-0.5 font-mono font-normal text-muted-foreground text-xs">
-								v{appVersion}
-							</span>
-						</>
-					}
-				>
-					<p className="text-muted-foreground text-sm">
-						{interpolate(m.settings.aboutBody, { app: app.name })}
-					</p>
-					<div className="mt-3 flex gap-4">
-						<Link
-							className={cn("inline-flex text-sm", textLinkClass)}
-							params={{ lang }}
-							to="/$lang/about"
-						>
-							{m.common.about}
-						</Link>
-						<Link
-							className={cn("inline-flex text-sm", textLinkClass)}
-							params={{ lang }}
-							to="/$lang/legal"
-						>
-							{m.common.legal}
-						</Link>
-					</div>
-				</SettingsCard>
+				<section className={cn(groupClass, "border-border")}>
+					<Link className={linkRowClass} params={{ lang }} to="/$lang/about">
+						<span className="flex-1">{m.common.about}</span>
+						<ChevronRightIcon aria-hidden="true" className="size-5" />
+					</Link>
+					<Link className={linkRowClass} params={{ lang }} to="/$lang/legal">
+						<span className="flex-1">{m.common.legal}</span>
+						<ChevronRightIcon aria-hidden="true" className="size-5" />
+					</Link>
+					<a
+						className={linkRowClass}
+						href={app.repo}
+						rel="noreferrer"
+						target="_blank"
+					>
+						<span className="flex-1">{m.settings.openSource}</span>
+						<ExternalLinkIcon aria-hidden="true" className="size-5" />
+					</a>
+				</section>
+
+				<p className="text-center text-muted-foreground text-sm">
+					{interpolate(m.settings.aboutBody, { version: appVersion })}
+				</p>
 			</div>
 		</AppShell>
 	);

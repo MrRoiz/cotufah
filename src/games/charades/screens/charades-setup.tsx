@@ -1,18 +1,18 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
 import { CategoryField } from "@/decks/components/category-field";
-import {
-	DEFAULT_DURATION,
-	DURATIONS,
-	type Duration,
-} from "@/games/charades/rules";
+import { useCategorySummary } from "@/decks/hooks/use-category-summary";
+import { DurationField } from "@/games/charades/components/duration-field";
+import { GestureCards } from "@/games/charades/components/gesture-cards";
+import { durationLabel } from "@/games/charades/duration-label";
+import { DEFAULT_DURATION, type Duration } from "@/games/charades/rules";
+import { useLastRound } from "@/games/hooks/use-last-round";
 import { getMessages } from "@/i18n";
 import { AppShell } from "@/layout/app-shell";
 import { AppPageHeader } from "@/ui/app-page-header";
-import { Button } from "@/ui/button";
-import { ChoiceButton } from "@/ui/choice-button";
+import { SummaryButton } from "@/ui/summary-button";
 
 export const CharadesSetup = ({
 	lang,
@@ -23,31 +23,33 @@ export const CharadesSetup = ({
 }) => {
 	const m = getMessages(lang);
 	const navigate = useNavigate();
+	const deck = useCategorySummary(lang, category);
+	const lastRound = useLastRound();
 	const [duration, setDuration] = useState<Duration>(DEFAULT_DURATION);
 
-	const labels: Record<Duration, string> = {
-		60: m.charades.duration60,
-		90: m.charades.duration90,
-		120: m.charades.duration120,
-	};
+	// Back from a round ("change time or deck") the last length is kept.
+	useEffect(() => {
+		if (lastRound?.game !== "charades") {
+			return;
+		}
+		setDuration(lastRound.duration);
+	}, [lastRound]);
+
+	const start = () =>
+		navigate({
+			to: "/$lang/games/charades/play",
+			params: { lang },
+			search: { category, duration },
+		});
 
 	return (
 		<AppShell
 			footer={
-				<Button
-					className="w-full"
-					onClick={() =>
-						navigate({
-							to: "/$lang/games/charades/play",
-							params: { lang },
-							search: { category, duration },
-						})
-					}
-					size="lg"
-					variant="sticker"
-				>
-					{m.charades.start}
-				</Button>
+				<SummaryButton
+					label={m.charades.start}
+					onClick={start}
+					summary={`${durationLabel(m, duration)} · ${deck.name}`}
+				/>
 			}
 		>
 			<AppPageHeader
@@ -56,35 +58,27 @@ export const CharadesSetup = ({
 				title={m.games.charades.name}
 			/>
 
-			<section className="flex flex-col gap-3">
-				<h2 className="font-bold text-lg">{m.charades.durationTitle}</h2>
-				<div className="flex flex-col gap-2">
-					{DURATIONS.map((seconds) => (
-						<ChoiceButton
-							className="w-full justify-start"
-							key={seconds}
-							onClick={() => setDuration(seconds)}
-							selected={duration === seconds}
-							size="lg"
-						>
-							{labels[seconds]}
-						</ChoiceButton>
-					))}
-				</div>
-			</section>
+			<div className="flex flex-col gap-6">
+				<DurationField duration={duration} m={m} onChange={setDuration} />
 
-			<CategoryField
-				category={category}
-				locale={lang}
-				onChange={(value) =>
-					navigate({
-						to: "/$lang/games/charades/setup",
-						params: { lang },
-						search: { category: value },
-						replace: true,
-					})
-				}
-			/>
+				<CategoryField
+					category={category}
+					locale={lang}
+					onChange={(value) =>
+						navigate({
+							to: "/$lang/games/charades/setup",
+							params: { lang },
+							search: { category: value },
+							replace: true,
+						})
+					}
+				/>
+
+				<section className="flex flex-col gap-3">
+					<h2 className="font-bold text-lg">{m.charades.answerTitle}</h2>
+					<GestureCards m={m} mode="tilt" />
+				</section>
+			</div>
 		</AppShell>
 	);
 };

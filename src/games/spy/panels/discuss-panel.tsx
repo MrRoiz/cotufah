@@ -1,62 +1,93 @@
-import { TimerBar } from "@/games/components/timer-bar";
+import { PauseIcon, PlayIcon } from "lucide-react";
+
 import {
 	FINAL_SECONDS,
 	formatClock,
 	secondsLeft,
 } from "@/games/hooks/use-countdown";
-import { DISCUSS_MS } from "@/games/spy/rules";
-import type { Messages } from "@/i18n";
+import { TimerRing } from "@/games/spy/components/timer-ring";
+import { DISCUSS_MS, DISCUSS_SECONDS } from "@/games/spy/rules";
+import { interpolate, type Messages } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";
 
 export const DiscussPanel = ({
 	m,
+	starter,
 	remainingMs,
 	paused,
 	onTogglePause,
 	onVote,
 }: {
 	m: Messages;
+	/** Picked at random each round, so nobody has to volunteer first. */
+	starter: string;
 	remainingMs: number;
 	paused: boolean;
 	onTogglePause: () => void;
 	onVote: () => void;
 }) => {
 	const remaining = secondsLeft(remainingMs);
+	const isUrgent = remaining <= FINAL_SECONDS;
 
 	return (
-		<section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-			<h1 className="font-display text-3xl uppercase">{m.spy.discussTitle}</h1>
-			<p className="text-muted-foreground">{m.spy.discussBody}</p>
+		<section className="flex flex-1 flex-col items-center gap-5 text-center">
+			<h1 className="font-display font-extrabold text-4xl uppercase leading-none">
+				{m.spy.discussTitle}
+			</h1>
 
-			<div className="flex flex-col items-center gap-2">
-				<div className="flex flex-col items-center gap-3">
+			<p className="flex max-w-full items-center gap-2 rounded-full border-2 border-foreground bg-card py-1.5 pr-1.5 pl-4">
+				<span className="font-bold text-sm">{m.spy.starter}</span>
+				<span className="truncate rounded-full border-2 border-foreground bg-accent-fuchsia px-3 py-0.5 font-extrabold text-accent-ink uppercase">
+					{starter}
+				</span>
+			</p>
+
+			<div className="flex flex-1 flex-col items-center justify-center gap-4">
+				<TimerRing
+					className="size-60"
+					remainingMs={remainingMs}
+					totalMs={DISCUSS_MS}
+					urgent={isUrgent}
+				>
 					<span
 						className={cn(
-							"font-display text-7xl tabular-nums leading-none",
-							remaining <= FINAL_SECONDS && "text-destructive",
+							"font-display font-extrabold text-6xl tabular-nums leading-none",
+							isUrgent && "text-destructive",
 						)}
+						role="timer"
 					>
 						{formatClock(remaining)}
 					</span>
-					<TimerBar
-						className="h-2.5 w-56"
-						remainingMs={remainingMs}
-						totalMs={DISCUSS_MS}
-						urgent={remaining <= FINAL_SECONDS}
-					/>
-				</div>
+					<span className="font-bold text-muted-foreground text-sm">
+						{interpolate(m.spy.clockOf, {
+							total: formatClock(DISCUSS_SECONDS),
+						})}
+					</span>
+				</TimerRing>
+
 				{remaining <= 0 ? (
 					<span className="font-bold text-destructive">{m.spy.timeUp}</span>
 				) : (
-					<Button onClick={onTogglePause} variant="ghost">
+					<Button
+						className="border-foreground"
+						onClick={onTogglePause}
+						variant="outline"
+					>
+						{paused ? (
+							<PlayIcon aria-hidden="true" />
+						) : (
+							<PauseIcon aria-hidden="true" />
+						)}
 						{paused ? m.spy.resume : m.spy.pause}
 					</Button>
 				)}
 			</div>
 
+			<p className="text-muted-foreground">{m.spy.discussBody}</p>
+
 			<Button className="w-full" onClick={onVote} size="lg" variant="sticker">
-				{m.spy.voteTitle}
+				{m.spy.toVote}
 			</Button>
 		</section>
 	);

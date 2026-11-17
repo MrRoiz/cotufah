@@ -1,32 +1,44 @@
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { clampSpyCount, maxSpies } from "@/games/spy/rules";
-import type { Messages } from "@/i18n";
+
+import type { Locale } from "@/config/app";
+import { clampSpyCount, MIN_PLAYERS, maxSpies } from "@/games/spy/rules";
+import { getMessages, interpolate, plural } from "@/i18n";
 import { Button } from "@/ui/button";
 
 /**
  * The spy counter. It reads the player count, so the stepper and the round
- * agree on how many liars are possible.
+ * agree on how many liars are possible, and says it out loud ("1 of 5").
  */
 export const SpyCountField = ({
-	m,
+	lang,
 	playerCount,
 	spies,
 	onChange,
 }: {
-	m: Messages;
+	lang: Locale;
 	playerCount: number;
 	spies: number;
 	onChange: (value: number) => void;
 }) => {
+	const m = getMessages(lang);
 	const current = clampSpyCount(spies, playerCount);
 	const max = maxSpies(playerCount);
+	// "1 of 0 is lying" reads as a bug; the ratio only shows once a round exists.
+	const hasRound = playerCount >= MIN_PLAYERS;
+	const hint = interpolate(plural(lang, current, m.spy.spiesOf), {
+		total: playerCount,
+	});
 
 	return (
-		<section className="mt-8 flex flex-col gap-3">
-			<h2 className="font-bold text-lg">{m.spy.spiesTitle}</h2>
-			<p className="text-muted-foreground text-sm">{m.spy.spiesHint}</p>
+		<section className="flex items-center justify-between gap-3 rounded-xl border-2 border-foreground bg-card py-3 pr-3 pl-4">
+			<div className="flex flex-col">
+				<h2 className="font-bold text-lg">{m.spy.spiesTitle}</h2>
+				{hasRound ? (
+					<p className="text-muted-foreground text-sm">{hint}</p>
+				) : null}
+			</div>
 
-			<div className="flex items-center gap-4 rounded-xl border-2 border-border p-3">
+			<div className="flex items-center gap-1">
 				<Button
 					aria-label={m.spy.fewerSpies}
 					disabled={current <= 1}
@@ -37,7 +49,10 @@ export const SpyCountField = ({
 				>
 					<MinusIcon aria-hidden="true" />
 				</Button>
-				<span className="flex-1 text-center font-display text-3xl">
+				<span
+					aria-live="polite"
+					className="w-9 text-center font-display font-extrabold text-3xl tabular-nums"
+				>
 					{current}
 				</span>
 				<Button

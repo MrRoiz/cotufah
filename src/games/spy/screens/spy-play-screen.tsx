@@ -1,7 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { Locale } from "@/config/app";
 import type { CategoryChoice } from "@/decks/categories";
+import { saveLastRound } from "@/games/last-round";
+import { SpyRoundBar } from "@/games/spy/components/spy-round-bar";
 import { useSpyRound } from "@/games/spy/hooks/use-spy-round";
 import { DealPanel } from "@/games/spy/panels/deal-panel";
 import { DiscussPanel } from "@/games/spy/panels/discuss-panel";
@@ -30,11 +32,35 @@ export const SpyPlayScreen = ({
 	const players = useMemo(() => parsePlayers(playersParam), [playersParam]);
 	const round = useSpyRound({ lang, players, spyCount, category });
 
+	// Remembered for "play again" on the games list and for the setup form.
+	useEffect(() => {
+		saveLastRound({ game: "spy", category, players, spies: spyCount });
+	}, [category, players, spyCount]);
+
 	const changePlayers = () =>
-		navigate({ to: "/$lang/games/spy/setup", params: { lang } });
+		navigate({
+			to: "/$lang/games/spy/setup",
+			params: { lang },
+			search: { category },
+		});
+
+	// The handoff names the next player; the card shows the one holding it.
+	const position =
+		round.phase === "handoff" ? round.index + 2 : round.index + 1;
 
 	return (
-		<AppShell>
+		// The role card is read in dark rooms: a bright screen would light up
+		// the face of whoever is holding it.
+		<AppShell className={round.phase === "deal" ? "dark" : undefined}>
+			<SpyRoundBar
+				category={category}
+				lang={lang}
+				onBackToDiscussion={() => round.setPhase("discuss")}
+				phase={round.phase}
+				position={position}
+				total={players.length}
+			/>
+
 			{round.phase === "deal" ? (
 				<DealPanel
 					isSpy={round.isSpy}
@@ -47,7 +73,7 @@ export const SpyPlayScreen = ({
 					onNext={round.nextPlayer}
 					peeked={round.peeked}
 					player={round.currentPlayer}
-					position={round.index + 1}
+					position={position}
 					revealed={round.revealed}
 					total={players.length}
 					waiting={round.waiting}
@@ -70,6 +96,7 @@ export const SpyPlayScreen = ({
 					onVote={() => round.setPhase("vote")}
 					paused={round.paused}
 					remainingMs={round.remainingMs}
+					starter={round.starter}
 				/>
 			) : null}
 
@@ -85,13 +112,14 @@ export const SpyPlayScreen = ({
 
 			{round.phase === "reveal" ? (
 				<RevealPanel
+					accusedName={round.accusedName}
 					caught={round.caught}
 					isFetching={round.isFetching}
 					lang={lang}
 					m={m}
 					onAgain={round.again}
 					onChangePlayers={changePlayers}
-					spyCount={round.assignment.length}
+					spies={round.spies}
 					spyList={round.spyList}
 					word={round.word ?? ""}
 				/>

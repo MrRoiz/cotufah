@@ -1,106 +1,90 @@
 import { Loader2Icon } from "lucide-react";
+import type { Locale } from "@/config/app";
+import { ForeheadIllustration } from "@/games/charades/components/forehead-illustration";
+import { GestureCards } from "@/games/charades/components/gesture-cards";
 import type { MotionProbe } from "@/games/charades/hooks/use-motion-probe";
-import type { Messages } from "@/i18n";
+import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { Button } from "@/ui/button";
-
-type GestureRow = { label: string; hint: string; accent: string };
-
-const GestureRow = ({ row }: { row: GestureRow }) => (
-	<div className="flex items-center justify-between gap-3 rounded-xl border-2 border-foreground bg-card px-4 py-3">
-		<span className="font-bold">{row.label}</span>
-		<span
-			className={cn(
-				"rounded-full px-3 py-1 font-bold text-accent-ink text-xs uppercase",
-				row.accent,
-			)}
-		>
-			{row.hint}
-		</span>
-	</div>
-);
+import { BackLink } from "@/ui/back-link";
+import { SummaryButton } from "@/ui/summary-button";
 
 /**
  * Pre-round screen. Teaches tilt or tap depending on what the sensor probe
  * found, and is the only place that explains the fallback.
  */
 export const CharadesIntro = ({
-	m,
+	lang,
 	probe,
 	probing,
 	canStart,
 	isPending,
 	onStart,
 }: {
-	m: Messages;
+	lang: Locale;
 	probe: MotionProbe;
 	probing: boolean;
 	canStart: boolean;
 	isPending: boolean;
 	onStart: () => void;
 }) => {
-	// The two ways to answer the same question: tap halves or a tilt.
-	const rows: GestureRow[] =
-		probe === "no"
-			? [
-					{
-						label: m.charades.tapLeft,
-						hint: m.charades.pass,
-						accent: "bg-accent-fuchsia",
-					},
-					{
-						label: m.charades.tapRight,
-						hint: m.charades.correct,
-						accent: "bg-accent-lime",
-					},
-				]
-			: [
-					{
-						label: m.charades.tiltCorrect,
-						hint: m.charades.tiltCorrectHint,
-						accent: "bg-accent-lime",
-					},
-					{
-						label: m.charades.tiltPass,
-						hint: m.charades.tiltPassHint,
-						accent: "bg-accent-fuchsia",
-					},
-				];
+	const m = getMessages(lang);
+	const hasNoSensor = probe === "no";
+	const sensorLabel = probing
+		? m.charades.checkingSensor
+		: hasNoSensor
+			? m.charades.sensorMissing
+			: m.charades.sensorReady;
 
 	return (
-		<section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-			<h1 className="font-display text-3xl uppercase">
-				{m.charades.introTitle}
-			</h1>
-			<p className="text-muted-foreground">{m.charades.introBody}</p>
+		<section className="flex flex-1 flex-col gap-5">
+			<div className="flex items-center justify-between gap-3 pt-2">
+				<BackLink label={m.common.back} lang={lang} />
+				<span className="flex items-center gap-2 rounded-full border-2 border-border bg-card px-3 py-1.5 font-extrabold text-sm">
+					{probing ? (
+						<Loader2Icon aria-hidden="true" className="size-4 animate-spin" />
+					) : (
+						<span
+							aria-hidden="true"
+							className={cn(
+								"size-2.5 rounded-full border-2 border-foreground",
+								hasNoSensor ? "bg-accent-fuchsia" : "bg-accent-lime",
+							)}
+						/>
+					)}
+					{sensorLabel}
+				</span>
+			</div>
 
-			{probing ? (
-				<div className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border bg-card px-4 py-6 text-muted-foreground text-sm">
-					<Loader2Icon aria-hidden="true" className="size-4 animate-spin" />
-					{m.charades.checkingSensor}
-				</div>
-			) : (
-				<div className="flex w-full flex-col gap-3 pt-2">
-					{rows.map((row) => (
-						<GestureRow key={row.label} row={row} />
-					))}
-					{probe === "no" ? (
-						<p className="text-muted-foreground text-sm">
+			<div className="flex flex-col gap-1.5 text-center">
+				<h1 className="font-display font-extrabold text-4xl uppercase leading-none">
+					{m.charades.introTitle}
+				</h1>
+				<p className="text-muted-foreground">{m.charades.introBody}</p>
+			</div>
+
+			<div className="flex justify-center">
+				<ForeheadIllustration />
+			</div>
+
+			{probing ? null : (
+				<div className="flex flex-col gap-2">
+					<GestureCards m={m} mode={hasNoSensor ? "tap" : "tilt"} />
+					{hasNoSensor ? (
+						<p className="text-center text-muted-foreground text-sm">
 							{m.charades.noMotion}
 						</p>
 					) : null}
 				</div>
 			)}
 
-			<Button
-				className="w-full"
-				disabled={isPending || !canStart}
-				onClick={onStart}
-				size="lg"
-				variant="sticker"
-			>
-				{isPending ? "…" : m.charades.startRound}
-			</Button>
+			<div className="mt-auto">
+				<SummaryButton
+					disabled={isPending || !canStart}
+					label={isPending ? "…" : m.charades.startRound}
+					onClick={onStart}
+					summary={m.charades.startHint}
+				/>
+			</div>
 		</section>
 	);
 };

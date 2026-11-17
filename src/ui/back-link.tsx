@@ -1,5 +1,5 @@
 import { useNavigate, useRouter } from "@tanstack/react-router";
-import { ArrowLeftIcon } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
 
 import type { Locale } from "@/config/app";
 
@@ -22,12 +22,13 @@ export const BackLink = ({ label, lang }: { label: string; lang: Locale }) => {
 
 	return (
 		<button
-			className="inline-flex min-h-12 w-fit items-center gap-1 font-bold text-muted-foreground text-sm"
+			aria-label={label}
+			className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-card"
 			onClick={goBack}
+			title={label}
 			type="button"
 		>
-			<ArrowLeftIcon aria-hidden="true" className="size-4" />
-			{label}
+			<ChevronLeftIcon aria-hidden="true" className="size-6" />
 		</button>
 	);
 };

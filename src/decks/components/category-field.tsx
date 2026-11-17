@@ -1,16 +1,12 @@
-import { ChevronDownIcon, ShuffleIcon, SparklesIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, ShuffleIcon } from "lucide-react";
 import { useState } from "react";
 import type { Locale } from "@/config/app";
-import {
-	type CategoryChoice,
-	isCustomCategory,
-	packChoices,
-} from "@/decks/categories";
+import { type CategoryChoice, packChoices } from "@/decks/categories";
 import { CustomDeckPicker } from "@/decks/components/custom-deck-picker";
-import { customCategoryId } from "@/decks/custom-decks";
+import { useCategorySummary } from "@/decks/hooks/use-category-summary";
 import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { packIcons } from "@/decks/pack-icons";
-import { getMessages, plural } from "@/i18n";
+import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
 import {
 	Sheet,
@@ -37,33 +33,7 @@ export const CategoryField = ({
 	const m = getMessages(locale);
 	const [open, setOpen] = useState(false);
 	const { decks } = useCustomDecks();
-
-	const current = (() => {
-		if (category === "mixed") {
-			return {
-				icon: ShuffleIcon,
-				name: m.category.mixed,
-				body: m.category.mixedBody,
-			};
-		}
-		if (isCustomCategory(category)) {
-			// Read the subscribed list, not localStorage: the store gives the
-			// server snapshot while hydrating, so the summary cannot flash.
-			const deck = decks.find(
-				(candidate) => customCategoryId(candidate.id) === category,
-			);
-			if (deck) {
-				return {
-					icon: SparklesIcon,
-					name: deck.name,
-					body: plural(locale, deck.words.length, m.decks.wordCount),
-				};
-			}
-			// Deleted after being picked: show the classic deck instead.
-			return { icon: packIcons.clasico, ...m.category.packs.clasico };
-		}
-		return { icon: packIcons[category], ...m.category.packs[category] };
-	})();
+	const current = useCategorySummary(locale, category);
 	const CurrentIcon = current.icon;
 
 	const choose = (choice: CategoryChoice) => {
@@ -72,9 +42,8 @@ export const CategoryField = ({
 	};
 
 	return (
-		<section className="mt-8 flex flex-col gap-3">
+		<section className="flex flex-col gap-3">
 			<h2 className="font-bold text-lg">{m.category.title}</h2>
-			<p className="text-muted-foreground text-sm">{m.category.body}</p>
 
 			<button
 				aria-expanded={open}
@@ -83,14 +52,16 @@ export const CategoryField = ({
 				onClick={() => setOpen(true)}
 				type="button"
 			>
-				<span className="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-accent-lime text-accent-ink">
+				<span className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-accent-lime text-accent-ink">
 					<CurrentIcon aria-hidden="true" className="size-5" />
 				</span>
-				<span className="flex flex-1 flex-col">
-					<span className="font-bold">{current.name}</span>
-					<span className="text-muted-foreground text-xs">{current.body}</span>
+				<span className="flex min-w-0 flex-1 flex-col">
+					<span className="truncate font-bold">{current.name}</span>
+					<span className="truncate text-muted-foreground text-sm">
+						{current.body}
+					</span>
 				</span>
-				<span className="flex items-center gap-1 font-bold text-muted-foreground text-xs">
+				<span className="flex items-center gap-1 font-bold text-muted-foreground text-sm">
 					{m.category.change}
 					<ChevronDownIcon aria-hidden="true" className="size-4" />
 				</span>
@@ -109,16 +80,22 @@ export const CategoryField = ({
 						<button
 							aria-pressed={category === "mixed"}
 							className={cn(
-								"flex w-full items-center gap-2 rounded-lg border-2 p-3 text-left font-bold",
+								"flex min-h-14 w-full items-center gap-3 rounded-xl border-2 p-3 text-left",
 								category === "mixed"
-									? "border-foreground bg-accent-lime text-accent-ink"
+									? "border-foreground bg-accent-lime text-accent-ink shadow-sticker-sm"
 									: "border-border bg-card",
 							)}
 							onClick={() => choose("mixed")}
 							type="button"
 						>
-							<ShuffleIcon aria-hidden="true" className="size-4" />
-							{m.category.mixed}
+							<ShuffleIcon aria-hidden="true" className="size-5 shrink-0" />
+							<span className="flex flex-1 flex-col">
+								<span className="font-bold">{m.category.mixed}</span>
+								<span className="text-sm">{m.category.mixedBody}</span>
+							</span>
+							{category === "mixed" ? (
+								<CheckIcon aria-hidden="true" className="size-5 shrink-0" />
+							) : null}
 						</button>
 
 						<div className="grid grid-cols-2 gap-2">

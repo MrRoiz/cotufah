@@ -1,20 +1,23 @@
-import { CheckIcon, XIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, CheckIcon, XIcon } from "lucide-react";
 
+import type { Locale } from "@/config/app";
 import { TimerBar } from "@/games/components/timer-bar";
 import {
 	FINAL_SECONDS,
 	formatClock,
 	secondsLeft,
 } from "@/games/hooks/use-countdown";
-import type { Messages } from "@/i18n";
+import { getMessages, plural } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 /**
  * The forehead stage: full viewport, word in the middle, timer and score at the
- * edges. Input is either tilt (no controls) or the two tap halves.
+ * edges. Always in the dark tokens: light text on a dark screen reads from
+ * across the room and does not glare. Input is tilt (with the gestures as a
+ * reminder) or the two tap halves.
  */
 export const CharadesPlayStage = ({
-	m,
+	lang,
 	word,
 	remainingMs,
 	totalMs,
@@ -23,7 +26,7 @@ export const CharadesPlayStage = ({
 	zonesVisible,
 	onAnswer,
 }: {
-	m: Messages;
+	lang: Locale;
 	word: string;
 	remainingMs: number;
 	totalMs: number;
@@ -33,17 +36,17 @@ export const CharadesPlayStage = ({
 	zonesVisible: boolean;
 	onAnswer: (correct: boolean) => void;
 }) => {
+	const m = getMessages(lang);
 	const remaining = secondsLeft(remainingMs);
+	const isUrgent = remaining <= FINAL_SECONDS;
 
 	return (
-		<div className="stage-landscape items-center justify-center gap-6">
+		<div className="stage-landscape dark gap-3 text-foreground">
 			{flash ? (
 				<div
 					className={cn(
-						"pointer-events-none fixed inset-0 z-50 flex animate-in items-center justify-center fade-in duration-100",
-						flash === "correct"
-							? "bg-accent-lime/95 text-accent-ink"
-							: "bg-accent-fuchsia/95 text-accent-ink",
+						"pointer-events-none fixed inset-0 z-50 flex animate-in items-center justify-center text-accent-ink fade-in duration-100",
+						flash === "correct" ? "bg-accent-lime/95" : "bg-accent-fuchsia/95",
 					)}
 				>
 					{flash === "correct" ? (
@@ -54,36 +57,38 @@ export const CharadesPlayStage = ({
 				</div>
 			) : null}
 
-			<div className="flex w-full items-center justify-between gap-3">
+			<div className="flex w-full items-center gap-5">
 				<span
 					className={cn(
-						"font-display text-3xl tabular-nums",
-						remaining <= FINAL_SECONDS && "text-destructive",
+						"font-display font-extrabold text-4xl tabular-nums leading-none",
+						isUrgent && "text-destructive",
 					)}
+					role="timer"
 				>
 					{formatClock(remaining)}
 				</span>
-				<span className="rounded-full border-2 border-foreground px-3 py-1 font-bold">
-					{score}
+				<TimerBar
+					className="h-3 flex-1"
+					remainingMs={remainingMs}
+					totalMs={totalMs}
+					urgent={isUrgent}
+				/>
+				<span className="flex items-center gap-1.5 rounded-full border-2 border-accent-ink bg-accent-lime px-3.5 py-0.5 font-display font-extrabold text-2xl text-accent-ink tabular-nums">
+					<CheckIcon aria-hidden="true" className="size-5" strokeWidth={3} />
+					<span aria-hidden="true">{score}</span>
+					<span className="sr-only">
+						{plural(lang, score, m.charades.score)}
+					</span>
 				</span>
 			</div>
 
-			<div className="flex flex-1 items-center justify-center">
+			<div className="flex min-h-0 flex-1 items-center justify-center">
 				<span
-					className="animate-in text-center font-display text-6xl uppercase leading-none fade-in slide-in-from-bottom-3 duration-150"
+					className="max-w-full animate-in break-words text-center font-display font-extrabold text-7xl uppercase leading-[0.9] tracking-tight fade-in slide-in-from-bottom-3 duration-150"
 					key={word}
 				>
 					{word}
 				</span>
-			</div>
-
-			<div className="flex w-full flex-col gap-3">
-				<TimerBar
-					className="h-2 w-full"
-					remainingMs={remainingMs}
-					totalMs={totalMs}
-					urgent={remaining <= FINAL_SECONDS}
-				/>
 			</div>
 
 			{zonesVisible ? (
@@ -94,7 +99,7 @@ export const CharadesPlayStage = ({
 						onClick={() => onAnswer(false)}
 						type="button"
 					>
-						<span className="inline-flex items-center gap-2 rounded-full border-2 border-border px-4 py-2 font-bold text-muted-foreground text-sm">
+						<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-fuchsia px-4 py-2 font-bold text-accent-fuchsia text-sm">
 							<XIcon aria-hidden="true" />
 							{m.charades.pass}
 						</span>
@@ -105,13 +110,24 @@ export const CharadesPlayStage = ({
 						onClick={() => onAnswer(true)}
 						type="button"
 					>
-						<span className="inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-accent-lime px-4 py-2 font-bold text-accent-ink text-sm">
+						<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-ink bg-accent-lime px-4 py-2 font-bold text-accent-ink text-sm">
 							<CheckIcon aria-hidden="true" />
 							{m.charades.correct}
 						</span>
 					</button>
 				</div>
-			) : null}
+			) : (
+				<div className="flex w-full items-center justify-between gap-3">
+					<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-fuchsia px-3.5 py-1.5 font-extrabold text-accent-fuchsia text-sm">
+						<ArrowUpIcon aria-hidden="true" className="size-4" />
+						{`${m.charades.tiltPass}: ${m.charades.tiltPassHint}`}
+					</span>
+					<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-lime px-3.5 py-1.5 font-extrabold text-accent-lime text-sm">
+						<ArrowDownIcon aria-hidden="true" className="size-4" />
+						{`${m.charades.tiltCorrect}: ${m.charades.tiltCorrectHint}`}
+					</span>
+				</div>
+			)}
 		</div>
 	);
 };

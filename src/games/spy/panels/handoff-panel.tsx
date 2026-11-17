@@ -1,5 +1,5 @@
-import { TimerBar } from "@/games/components/timer-bar";
 import { secondsLeft } from "@/games/hooks/use-countdown";
+import { TimerRing } from "@/games/spy/components/timer-ring";
 import { HANDOFF_MS } from "@/games/spy/rules";
 import type { Messages } from "@/i18n";
 
@@ -16,32 +16,30 @@ export const HandoffPanel = ({
 	const seconds = secondsLeft(remainingMs);
 
 	return (
-		<section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-			<div className="flex flex-col items-center gap-2">
-				<span className="font-bold text-muted-foreground text-xs uppercase tracking-widest">
+		<section className="flex flex-1 flex-col items-center justify-center gap-9 text-center">
+			<div className="flex flex-col items-center gap-3">
+				<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
 					{m.spy.handoffLabel}
 				</span>
-				<span className="max-w-full truncate rounded-full border-2 border-foreground bg-accent-cyan px-5 py-1.5 font-display text-3xl text-accent-ink uppercase leading-tight shadow-sticker-sm">
+				<span className="max-w-full -rotate-2 truncate rounded-full border-2 border-foreground bg-accent-cyan px-6 py-2 font-display font-extrabold text-4xl text-accent-ink uppercase leading-none shadow-sticker">
 					{name}
 				</span>
 			</div>
 
-			<div className="flex flex-col items-center gap-4">
+			<TimerRing
+				className="size-40"
+				remainingMs={remainingMs}
+				totalMs={HANDOFF_MS}
+			>
 				<span
-					className="flex size-28 animate-in items-center justify-center rounded-full border-2 border-foreground bg-card font-display text-6xl tabular-nums shadow-sticker zoom-in-75 duration-200"
+					className="animate-in font-display font-extrabold text-6xl tabular-nums leading-none zoom-in-75 duration-200"
 					key={seconds}
 				>
 					{seconds}
 				</span>
+			</TimerRing>
 
-				<TimerBar
-					className="h-2.5 w-48"
-					remainingMs={remainingMs}
-					totalMs={HANDOFF_MS}
-				/>
-			</div>
-
-			<p className="max-w-xs text-muted-foreground text-sm">{m.spy.dealBody}</p>
+			<p className="max-w-64 text-muted-foreground">{m.spy.dealBody}</p>
 		</section>
 	);
 };

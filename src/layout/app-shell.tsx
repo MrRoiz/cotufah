@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect } from "react";
 
 import { installAudioUnlock } from "@/lib/sound";
+import { cn } from "@/lib/utils";
 
 /**
  * The phone frame. Everything in the app lives inside this 430px column with
@@ -9,15 +10,23 @@ import { installAudioUnlock } from "@/lib/sound";
 export const AppShell = ({
 	children,
 	footer,
+	className,
 }: {
 	children: ReactNode;
 	footer?: ReactNode;
+	/** `dark` scopes the dark tokens to one screen (the role card). */
+	className?: string;
 }) => {
 	// One listener for the first interaction of the page load, then it detaches.
 	useEffect(installAudioUnlock, []);
 
 	return (
-		<div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-background">
+		<div
+			className={cn(
+				"mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-background text-foreground",
+				className,
+			)}
+		>
 			<main className="flex flex-1 flex-col px-safe pt-safe pb-6">
 				{children}
 			</main>

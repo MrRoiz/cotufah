@@ -21,7 +21,7 @@ export const DeckForm = ({
 	locale: Locale;
 	draft: DeckDraft;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [word, setWord] = useState("");
 	const [isPasting, setIsPasting] = useState(false);
@@ -48,21 +48,21 @@ export const DeckForm = ({
 		<div className="flex flex-col gap-6">
 			<div className="flex flex-col gap-2">
 				<label className="font-bold text-lg" htmlFor="deck-name">
-					{m.decks.nameLabel}
+					{messages.decks.nameLabel}
 				</label>
 				<Input
 					className="h-14 rounded-xl border-foreground px-4 font-bold text-lg"
 					id="deck-name"
 					maxLength={MAX_NAME}
 					onChange={(event) => draft.setName(event.target.value)}
-					placeholder={m.decks.namePlaceholder}
+					placeholder={messages.decks.namePlaceholder}
 					value={draft.name}
 				/>
 			</div>
 
 			<section className="flex flex-col gap-3">
 				<div className="flex items-baseline justify-between gap-3">
-					<h2 className="font-bold text-lg">{m.decks.wordsLabel}</h2>
+					<h2 className="font-bold text-lg">{messages.decks.wordsLabel}</h2>
 					<span className="font-extrabold text-muted-foreground text-sm tabular-nums">
 						{draft.words.length} / {MAX_WORDS}
 					</span>
@@ -80,11 +80,15 @@ export const DeckForm = ({
 					/>
 				</div>
 
-				<WordChips m={m} onRemove={draft.removeWord} words={draft.words} />
+				<WordChips
+					messages={messages}
+					onRemove={draft.removeWord}
+					words={draft.words}
+				/>
 
 				<div className="flex gap-2">
 					<label className="sr-only" htmlFor="new-word">
-						{m.decks.wordLabel}
+						{messages.decks.wordLabel}
 					</label>
 					<Input
 						aria-describedby={draft.error ? "deck-error" : undefined}
@@ -95,12 +99,12 @@ export const DeckForm = ({
 						id="new-word"
 						onChange={(event) => setWord(event.target.value)}
 						onKeyDown={onKeyDown}
-						placeholder={m.decks.wordPlaceholder}
+						placeholder={messages.decks.wordPlaceholder}
 						ref={inputRef}
 						value={word}
 					/>
 					<Button
-						aria-label={m.decks.addWord}
+						aria-label={messages.decks.addWord}
 						className="size-13 rounded-xl"
 						disabled={draft.isFull}
 						onClick={addTyped}
@@ -113,14 +117,14 @@ export const DeckForm = ({
 				</div>
 
 				<p className="-mt-1 flex flex-wrap items-center gap-x-1.5 text-muted-foreground text-sm">
-					{m.decks.pasteHint}
+					{messages.decks.pasteHint}
 					<button
 						className="inline-flex min-h-11 items-center gap-1.5 px-1 font-extrabold text-foreground underline decoration-2 underline-offset-4"
 						onClick={() => setIsPasting(true)}
 						type="button"
 					>
 						<ClipboardIcon aria-hidden="true" className="size-4" />
-						{m.decks.pasteOpen}
+						{messages.decks.pasteOpen}
 					</button>
 				</p>
 

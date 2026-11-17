@@ -16,11 +16,11 @@ export const Route = createFileRoute("/$lang/_app/games/spy/setup")({
 	// In the URL so the deck survives a trip to "Manage decks" and back.
 	validateSearch: categorySearch,
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.games.spy.name,
-			description: m.spy.setupIntro,
+			title: messages.games.spy.name,
+			description: messages.spy.setupIntro,
 			noindex: true,
 		});
 	},

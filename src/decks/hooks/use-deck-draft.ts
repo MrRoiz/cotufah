@@ -33,15 +33,15 @@ export const useDeckDraft = ({
 	deck?: CustomDeck;
 	onSave: (deck: CustomDeck) => DeckWriteFailure | null;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const [name, setName] = useState(deck?.name ?? "");
 	const [words, setWords] = useState<string[]>(deck?.words ?? []);
 	const [error, setError] = useState<string | null>(null);
 
 	const problemMessages: Record<WordProblem, string> = {
-		tooLong: interpolate(m.decks.wordLengthError, { max: MAX_WORD }),
-		taken: m.decks.wordTaken,
-		full: interpolate(m.decks.wordsFull, { max: MAX_WORDS }),
+		tooLong: interpolate(messages.decks.wordLengthError, { max: MAX_WORD }),
+		taken: messages.decks.wordTaken,
+		full: interpolate(messages.decks.wordsFull, { max: MAX_WORDS }),
 	};
 
 	/** `true` when at least one word made it in, so the field can clear. */
@@ -66,7 +66,7 @@ export const useDeckDraft = ({
 			words,
 		});
 		if (!parsed.success) {
-			setError(m.decks.nameError);
+			setError(messages.decks.nameError);
 			return;
 		}
 
@@ -74,8 +74,8 @@ export const useDeckDraft = ({
 		if (failure) {
 			setError(
 				failure === "limit"
-					? interpolate(m.decks.limitError, { max: MAX_DECKS })
-					: m.decks.saveError,
+					? interpolate(messages.decks.limitError, { max: MAX_DECKS })
+					: messages.decks.saveError,
 			);
 		}
 	};

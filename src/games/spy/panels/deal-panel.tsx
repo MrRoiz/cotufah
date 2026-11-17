@@ -8,7 +8,7 @@ import { Button } from "@/ui/button";
  * The play screen also renders this phase in the dark tokens for that reason.
  */
 export const DealPanel = ({
-	m,
+	messages,
 	player,
 	position,
 	total,
@@ -21,7 +21,7 @@ export const DealPanel = ({
 	onHoldEnd,
 	onNext,
 }: {
-	m: Messages;
+	messages: Messages;
 	player: string;
 	position: number;
 	total: number;
@@ -63,14 +63,16 @@ export const DealPanel = ({
 						isSpy ? (
 							<>
 								<span className="font-display font-extrabold text-4xl text-accent-fuchsia uppercase leading-none">
-									{m.spy.youAreSpy}
+									{messages.spy.youAreSpy}
 								</span>
-								<span className="text-muted-foreground">{m.spy.spyHint}</span>
+								<span className="text-muted-foreground">
+									{messages.spy.spyHint}
+								</span>
 							</>
 						) : (
 							<>
 								<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
-									{m.spy.yourWord}
+									{messages.spy.yourWord}
 								</span>
 								<span className="max-w-full break-words font-display font-extrabold text-5xl uppercase leading-none">
 									{word}
@@ -88,9 +90,11 @@ export const DealPanel = ({
 							</span>
 							<span className="flex flex-col gap-1">
 								<span className="font-extrabold text-2xl">
-									{m.spy.holdTitle}
+									{messages.spy.holdTitle}
 								</span>
-								<span className="text-muted-foreground">{m.spy.holdHint}</span>
+								<span className="text-muted-foreground">
+									{messages.spy.holdHint}
+								</span>
 							</span>
 						</>
 					)}
@@ -98,7 +102,7 @@ export const DealPanel = ({
 			)}
 
 			<p className="text-center text-muted-foreground text-sm">
-				{m.spy.dealBody}
+				{messages.spy.dealBody}
 			</p>
 
 			<Button
@@ -108,7 +112,7 @@ export const DealPanel = ({
 				size="lg"
 				variant={peeked ? "sticker" : "outline"}
 			>
-				{position >= total ? m.spy.startDiscussion : m.spy.next}
+				{position >= total ? messages.spy.startDiscussion : messages.spy.next}
 			</Button>
 		</section>
 	);

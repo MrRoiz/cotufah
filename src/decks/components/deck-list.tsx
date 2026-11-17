@@ -17,7 +17,7 @@ export const DeckList = ({
 	onEdit: (deck: CustomDeck) => void;
 	onRemove: (id: string) => DeckWriteFailure | null;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const [sharingId, setSharingId] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const sharing = decks.find((deck) => deck.id === sharingId);
@@ -32,7 +32,7 @@ export const DeckList = ({
 						locale={locale}
 						onEdit={() => onEdit(deck)}
 						onRemove={() =>
-							setError(onRemove(deck.id) ? m.decks.removeError : null)
+							setError(onRemove(deck.id) ? messages.decks.removeError : null)
 						}
 						onShare={() => setSharingId(deck.id)}
 					/>

@@ -11,18 +11,18 @@ const STEP_BADGES = [
 
 /** The three-step explainer; the hero CTA anchors here. */
 export const HowItWorks = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
 		<section className="flex flex-col gap-8 py-12" id="how-it-works">
 			<h2 className="font-display font-extrabold text-4xl uppercase leading-none tracking-tight md:text-5xl">
-				{m.home.howTitle}
+				{messages.home.howTitle}
 			</h2>
 			<ol className="grid gap-x-5 gap-y-8 md:grid-cols-3">
 				{[
-					[m.home.step1Title, m.home.step1Body],
-					[m.home.step2Title, m.home.step2Body],
-					[m.home.step3Title, m.home.step3Body],
+					[messages.home.step1Title, messages.home.step1Body],
+					[messages.home.step2Title, messages.home.step2Body],
+					[messages.home.step3Title, messages.home.step3Body],
 				].map(([title, body], index) => (
 					<li
 						className="relative flex flex-col gap-2 rounded-xl border-2 border-foreground bg-card p-6 pt-9"

@@ -16,13 +16,13 @@ export const ThemedPackGrid = ({
 	category: CategoryChoice;
 	onChoose: (value: CategoryChoice) => void;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 
 	return (
 		<>
 			<div className="flex items-baseline justify-between">
 				<h3 className="font-extrabold text-xs uppercase tracking-widest">
-					{m.category.themedTitle}
+					{messages.category.themedTitle}
 				</h3>
 				<span className="font-bold text-muted-foreground text-sm">
 					{themedCategories.length}
@@ -32,7 +32,7 @@ export const ThemedPackGrid = ({
 			<div className="grid grid-cols-2 gap-2">
 				{themedCategories.map((pack, index) => {
 					const Icon = packIcons[pack];
-					const copy = m.category.packs[pack];
+					const copy = messages.category.packs[pack];
 					return (
 						<DeckOption
 							className="min-h-16 items-center gap-2.5 px-3 py-2.5"

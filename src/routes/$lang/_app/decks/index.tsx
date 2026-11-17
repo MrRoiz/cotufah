@@ -14,11 +14,11 @@ export const Route = createFileRoute("/$lang/_app/decks/")({
 	// Decks only exist in localStorage: SSR would paint the empty state first.
 	ssr: false,
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.decks.title,
-			description: m.decks.subtitle,
+			title: messages.decks.title,
+			description: messages.decks.subtitle,
 			noindex: true,
 		});
 	},

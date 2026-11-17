@@ -5,11 +5,11 @@ import type { Messages } from "@/i18n";
 
 /** Five seconds between players, so the passer cannot see the next role. */
 export const HandoffPanel = ({
-	m,
+	messages,
 	name,
 	remainingMs,
 }: {
-	m: Messages;
+	messages: Messages;
 	name: string;
 	remainingMs: number;
 }) => {
@@ -19,7 +19,7 @@ export const HandoffPanel = ({
 		<section className="flex flex-1 flex-col items-center justify-center gap-9 text-center">
 			<div className="flex flex-col items-center gap-3">
 				<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
-					{m.spy.handoffLabel}
+					{messages.spy.handoffLabel}
 				</span>
 				<span className="max-w-full -rotate-2 truncate rounded-full border-2 border-foreground bg-accent-cyan px-6 py-2 font-display font-extrabold text-4xl text-accent-ink uppercase leading-none shadow-sticker">
 					{name}
@@ -39,7 +39,7 @@ export const HandoffPanel = ({
 				</span>
 			</TimerRing>
 
-			<p className="max-w-64 text-muted-foreground">{m.spy.dealBody}</p>
+			<p className="max-w-64 text-muted-foreground">{messages.spy.dealBody}</p>
 		</section>
 	);
 };

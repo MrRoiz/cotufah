@@ -23,7 +23,7 @@ export const PlayersField = ({
 	players: string[];
 	onChange: (players: string[]) => void;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [draft, setDraft] = useState("");
 	const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export const PlayersField = ({
 	const add = (event: FormEvent) => {
 		event.preventDefault();
 		const name = draft.trim();
-		const problem = validatePlayerName({ m, name, players });
+		const problem = validatePlayerName({ messages, name, players });
 		if (problem) {
 			setError(problem);
 			return;
@@ -52,9 +52,9 @@ export const PlayersField = ({
 	return (
 		<section className="flex flex-col gap-3">
 			<div className="flex items-baseline justify-between gap-3">
-				<h2 className="font-bold text-lg">{m.spy.playersTitle}</h2>
+				<h2 className="font-bold text-lg">{messages.spy.playersTitle}</h2>
 				<span className="font-bold text-muted-foreground text-sm">
-					{plural(lang, players.length, m.spy.playerCount)}
+					{plural(lang, players.length, messages.spy.playerCount)}
 				</span>
 			</div>
 
@@ -68,7 +68,7 @@ export const PlayersField = ({
 							<PlayerAvatar name={name} seat={index} />
 							<span className="truncate font-bold">{name}</span>
 							<button
-								aria-label={interpolate(m.spy.removePlayer, { name })}
+								aria-label={interpolate(messages.spy.removePlayer, { name })}
 								className="flex size-12 shrink-0 items-center justify-center rounded-full"
 								onClick={() => remove(index)}
 								type="button"
@@ -82,7 +82,7 @@ export const PlayersField = ({
 
 			<form className="flex gap-2" noValidate onSubmit={add}>
 				<Label className="sr-only" htmlFor="new-player">
-					{m.spy.nameLabel}
+					{messages.spy.nameLabel}
 				</Label>
 				<Input
 					aria-describedby={error ? "new-player-error" : undefined}
@@ -93,12 +93,12 @@ export const PlayersField = ({
 					enterKeyHint="done"
 					id="new-player"
 					onChange={(event) => setDraft(event.target.value)}
-					placeholder={m.spy.namePlaceholder}
+					placeholder={messages.spy.namePlaceholder}
 					ref={inputRef}
 					value={draft}
 				/>
 				<Button
-					aria-label={m.spy.addPlayer}
+					aria-label={messages.spy.addPlayer}
 					className="size-13 rounded-xl"
 					disabled={isFull}
 					size="icon"
@@ -120,7 +120,7 @@ export const PlayersField = ({
 			) : null}
 			{isFull ? (
 				<p className="text-muted-foreground text-sm">
-					{interpolate(m.spy.maxPlayers, { max: MAX_PLAYERS })}
+					{interpolate(messages.spy.maxPlayers, { max: MAX_PLAYERS })}
 				</p>
 			) : null}
 		</section>

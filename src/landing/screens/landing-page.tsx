@@ -18,7 +18,7 @@ const navLinkClass = "font-bold hover:underline underline-offset-4";
 
 /** The marketing page: a header, the sections in reading order, a footer. */
 export const LandingPage = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
 		<div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col px-5 md:px-8">
@@ -35,17 +35,17 @@ export const LandingPage = ({ lang }: { lang: Locale }) => {
 					{app.name}
 				</Link>
 				<nav
-					aria-label={m.home.sectionsLabel}
+					aria-label={messages.home.sectionsLabel}
 					className="hidden items-center gap-7 md:flex"
 				>
 					<a className={navLinkClass} href="#games">
-						{m.nav.games}
+						{messages.nav.games}
 					</a>
 					<a className={navLinkClass} href="#how-it-works">
-						{m.home.howTitle}
+						{messages.home.howTitle}
 					</a>
 					<a className={navLinkClass} href="#decks">
-						{m.nav.decks}
+						{messages.nav.decks}
 					</a>
 				</nav>
 				<div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ export const LandingPage = ({ lang }: { lang: Locale }) => {
 						variant="sticker"
 					>
 						<Link params={{ lang }} to="/$lang/games">
-							{m.home.cta}
+							{messages.home.cta}
 						</Link>
 					</Button>
 				</div>

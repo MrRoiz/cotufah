@@ -11,7 +11,7 @@ export const NotFoundPage = () => {
 	const lang = useRouterState({
 		select: (state) => localeFromPath(state.location.pathname),
 	});
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
 		<main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-8 px-5 py-10 text-center">
@@ -29,14 +29,16 @@ export const NotFoundPage = () => {
 
 			<div className="flex flex-col items-center gap-3">
 				<h1 className="font-display text-4xl uppercase leading-[0.9]">
-					{m.notFound.title}
+					{messages.notFound.title}
 				</h1>
-				<p className="max-w-sm text-muted-foreground">{m.notFound.body}</p>
+				<p className="max-w-sm text-muted-foreground">
+					{messages.notFound.body}
+				</p>
 			</div>
 
 			<Button asChild size="lg" variant="sticker">
 				<Link params={{ lang }} to="/$lang">
-					{m.notFound.home}
+					{messages.notFound.home}
 				</Link>
 			</Button>
 		</main>

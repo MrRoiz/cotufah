@@ -23,14 +23,14 @@ export const CustomDeckPicker = ({
 	selected: CategoryChoice;
 	onChoose: (value: CustomCategory) => void;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const hasDecks = decks.length > 0;
 
 	return (
 		<section className="flex flex-col gap-3 border-border border-t-2 pt-3">
 			<div className="flex min-h-11 items-center justify-between gap-2">
 				<h3 className="font-extrabold text-xs uppercase tracking-widest">
-					{m.decks.pickerTitle}
+					{messages.decks.pickerTitle}
 				</h3>
 				{hasDecks ? (
 					<Link
@@ -38,7 +38,7 @@ export const CustomDeckPicker = ({
 						params={{ lang: locale }}
 						to="/$lang/decks"
 					>
-						{m.decks.manage}
+						{messages.decks.manage}
 					</Link>
 				) : null}
 			</div>
@@ -61,7 +61,7 @@ export const CustomDeckPicker = ({
 									{deck.name}
 								</span>
 								<span className="font-bold text-muted-foreground text-sm group-aria-pressed:text-accent-ink/75">
-									{plural(locale, deck.words.length, m.decks.wordCount)}
+									{plural(locale, deck.words.length, messages.decks.wordCount)}
 								</span>
 							</DeckOption>
 						);
@@ -72,7 +72,7 @@ export const CustomDeckPicker = ({
 						to="/$lang/decks/new"
 					>
 						<PlusIcon aria-hidden="true" className="size-4" />
-						{m.decks.createTitle}
+						{messages.decks.createTitle}
 					</Link>
 				</div>
 			) : (
@@ -85,16 +85,16 @@ export const CustomDeckPicker = ({
 					</span>
 					<span className="flex flex-col gap-1">
 						<span className="font-extrabold text-lg">
-							{m.decks.pickerEmptyTitle}
+							{messages.decks.pickerEmptyTitle}
 						</span>
 						<span className="text-muted-foreground text-sm">
-							{m.decks.pickerEmptyBody}
+							{messages.decks.pickerEmptyBody}
 						</span>
 					</span>
 					<Button asChild variant="sticker">
 						<Link params={{ lang: locale }} to="/$lang/decks/new">
 							<PlusIcon aria-hidden="true" />
-							{m.decks.pickerCreate}
+							{messages.decks.pickerCreate}
 						</Link>
 					</Button>
 				</div>

@@ -12,13 +12,13 @@ const LegalRoute = () => {
 
 export const Route = createFileRoute("/$lang/legal")({
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 
 		return pageMeta({
 			lang: params.lang,
 			path: "/legal",
-			title: m.legal.title,
-			description: m.legal.intro,
+			title: messages.legal.title,
+			description: messages.legal.intro,
 		});
 	},
 	component: LegalRoute,

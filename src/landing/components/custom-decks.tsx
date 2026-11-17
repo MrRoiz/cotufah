@@ -12,8 +12,8 @@ import { SectionHeading } from "@/ui/section-heading";
  * deck drawn from the editor's own placeholders so the two always agree.
  */
 export const CustomDecks = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
-	const exampleWords = m.decks.wordsPlaceholder.split("\n");
+	const messages = getMessages(lang);
+	const exampleWords = messages.decks.wordsPlaceholder.split("\n");
 
 	return (
 		<section
@@ -22,15 +22,15 @@ export const CustomDecks = ({ lang }: { lang: Locale }) => {
 		>
 			<div className="flex flex-col items-start gap-5">
 				<SectionHeading
-					subtitle={m.home.customBody}
-					title={m.home.customTitle}
+					subtitle={messages.home.customBody}
+					title={messages.home.customTitle}
 				/>
 				<Link
 					className="inline-flex min-h-12 items-center rounded-full border-2 border-foreground bg-card px-5 font-extrabold"
 					params={{ lang }}
 					to="/$lang/decks/new"
 				>
-					{m.home.customCta}
+					{messages.home.customCta}
 				</Link>
 			</div>
 
@@ -43,7 +43,7 @@ export const CustomDecks = ({ lang }: { lang: Locale }) => {
 				</span>
 				<span className="flex min-w-0 flex-col gap-2">
 					<span className="font-extrabold text-lg">
-						{m.decks.namePlaceholder}
+						{messages.decks.namePlaceholder}
 					</span>
 					<span className="flex flex-wrap gap-1.5">
 						{exampleWords.map((word, index) => (

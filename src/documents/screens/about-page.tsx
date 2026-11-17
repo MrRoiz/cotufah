@@ -7,15 +7,15 @@ import { getMessages, interpolate } from "@/i18n";
 import { Button } from "@/ui/button";
 
 export const AboutPage = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
-	const lastSection = m.about.sections.length - 1;
+	const messages = getMessages(lang);
+	const lastSection = messages.about.sections.length - 1;
 
 	return (
 		<DocumentPage
 			accent="fuchsia"
-			kicker={m.about.kicker}
+			kicker={messages.about.kicker}
 			lang={lang}
-			title={m.about.title}
+			title={messages.about.title}
 			to="/$lang/about"
 		>
 			<div className="flex gap-4 rounded-xl border-2 border-foreground bg-card p-5 shadow-sticker">
@@ -25,10 +25,10 @@ export const AboutPage = ({ lang }: { lang: Locale }) => {
 				>
 					<UserIcon className="size-7" />
 				</span>
-				<p className="text-lg leading-relaxed">{m.about.intro}</p>
+				<p className="text-lg leading-relaxed">{messages.about.intro}</p>
 			</div>
 
-			{m.about.sections.map((section, index) => (
+			{messages.about.sections.map((section, index) => (
 				<DocumentSection
 					index={index}
 					key={section.title}
@@ -47,7 +47,7 @@ export const AboutPage = ({ lang }: { lang: Locale }) => {
 						>
 							<a href={app.repo} rel="noreferrer" target="_blank">
 								<ExternalLinkIcon aria-hidden="true" />
-								{m.about.contactCta}
+								{messages.about.contactCta}
 							</a>
 						</Button>
 					) : null}
@@ -55,13 +55,15 @@ export const AboutPage = ({ lang }: { lang: Locale }) => {
 			))}
 
 			<footer className="mt-auto flex flex-col gap-4 rounded-xl border-2 border-foreground bg-accent-lime p-5 text-accent-ink">
-				<p className="font-bold text-lg leading-snug">{m.about.footer}</p>
+				<p className="font-bold text-lg leading-snug">
+					{messages.about.footer}
+				</p>
 				<Button
 					asChild
 					className="w-fit border-accent-ink bg-accent-ink text-accent-lime hover:bg-accent-ink/90"
 				>
 					<Link params={{ lang }} to="/$lang/games">
-						{m.home.cta}
+						{messages.home.cta}
 						<ArrowRightIcon aria-hidden="true" />
 					</Link>
 				</Button>

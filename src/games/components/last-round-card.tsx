@@ -22,16 +22,16 @@ export const LastRoundCard = ({
 	lang: Locale;
 	round: LastRound;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const deck = useCategorySummary(lang, round.category);
 
 	const body = (detail: string) => (
 		<span className="flex min-w-0 flex-1 flex-col gap-1">
 			<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
-				{m.games.playAgain}
+				{messages.games.playAgain}
 			</span>
 			<span className="truncate font-extrabold">
-				{[m.games[round.game].name, detail, deck.name].join(" · ")}
+				{[messages.games[round.game].name, detail, deck.name].join(" · ")}
 			</span>
 			{round.game === "spy" ? <CrewPreview players={round.players} /> : null}
 		</span>
@@ -55,7 +55,7 @@ export const LastRoundCard = ({
 				}}
 				to="/$lang/games/spy/play"
 			>
-				{body(plural(lang, round.players.length, m.spy.playerCount))}
+				{body(plural(lang, round.players.length, messages.spy.playerCount))}
 				{playBadge}
 			</Link>
 		);
@@ -68,7 +68,7 @@ export const LastRoundCard = ({
 			search={{ category: round.category, duration: round.duration }}
 			to="/$lang/games/charades/play"
 		>
-			{body(durationLabel(m, round.duration))}
+			{body(durationLabel(messages, round.duration))}
 			{playBadge}
 		</Link>
 	);

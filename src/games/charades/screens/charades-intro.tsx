@@ -27,13 +27,13 @@ export const CharadesIntro = ({
 	isPending: boolean;
 	onStart: () => void;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const hasNoSensor = probe === "no";
 	const sensorLabel = probing
-		? m.charades.checkingSensor
+		? messages.charades.checkingSensor
 		: hasNoSensor
-			? m.charades.sensorMissing
-			: m.charades.sensorReady;
+			? messages.charades.sensorMissing
+			: messages.charades.sensorReady;
 
 	return (
 		<section className="flex flex-1 flex-col gap-5">
@@ -57,9 +57,9 @@ export const CharadesIntro = ({
 
 			<div className="flex flex-col gap-1.5 text-center">
 				<h1 className="font-display font-extrabold text-4xl uppercase leading-none">
-					{m.charades.introTitle}
+					{messages.charades.introTitle}
 				</h1>
-				<p className="text-muted-foreground">{m.charades.introBody}</p>
+				<p className="text-muted-foreground">{messages.charades.introBody}</p>
 			</div>
 
 			<div className="flex justify-center">
@@ -68,10 +68,13 @@ export const CharadesIntro = ({
 
 			{probing ? null : (
 				<div className="flex flex-col gap-2">
-					<GestureCards m={m} mode={hasNoSensor ? "tap" : "tilt"} />
+					<GestureCards
+						messages={messages}
+						mode={hasNoSensor ? "tap" : "tilt"}
+					/>
 					{hasNoSensor ? (
 						<p className="text-center text-muted-foreground text-sm">
-							{m.charades.noMotion}
+							{messages.charades.noMotion}
 						</p>
 					) : null}
 				</div>
@@ -80,9 +83,9 @@ export const CharadesIntro = ({
 			<div className="mt-auto">
 				<SummaryButton
 					disabled={isPending || !canStart}
-					label={isPending ? "…" : m.charades.startRound}
+					label={isPending ? "…" : messages.charades.startRound}
 					onClick={onStart}
-					summary={m.charades.startHint}
+					summary={messages.charades.startHint}
 				/>
 			</div>
 		</section>

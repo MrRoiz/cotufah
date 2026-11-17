@@ -4,11 +4,11 @@ import { interpolate, type Messages } from "@/i18n";
 
 /** A deck's words as removable chips; renders nothing for an empty deck. */
 export const WordChips = ({
-	m,
+	messages,
 	words,
 	onRemove,
 }: {
-	m: Messages;
+	messages: Messages;
 	words: string[];
 	onRemove: (index: number) => void;
 }) => {
@@ -25,7 +25,7 @@ export const WordChips = ({
 				>
 					<span className="truncate font-bold">{word}</span>
 					<button
-						aria-label={interpolate(m.decks.removeWord, { word })}
+						aria-label={interpolate(messages.decks.removeWord, { word })}
 						className="flex size-12 shrink-0 items-center justify-center rounded-full"
 						onClick={() => onRemove(index)}
 						type="button"

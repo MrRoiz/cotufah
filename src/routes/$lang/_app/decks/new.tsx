@@ -13,10 +13,10 @@ const NewDeckRoute = () => {
 export const Route = createFileRoute("/$lang/_app/decks/new")({
 	ssr: false,
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.decks.createTitle,
+			title: messages.decks.createTitle,
 			noindex: true,
 		});
 	},

@@ -22,21 +22,21 @@ export const DeckEditor = ({
 	deck?: CustomDeck;
 	onSave: (deck: CustomDeck) => DeckWriteFailure | null;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const draft = useDeckDraft({ locale: lang, deck, onSave });
 
 	const summary = !draft.hasName
-		? m.decks.nameError
+		? messages.decks.nameError
 		: draft.missingWords > 0
-			? plural(lang, draft.missingWords, m.decks.missingWords)
-			: `${plural(lang, draft.words.length, m.decks.wordCount)} · ${draft.name.trim()}`;
+			? plural(lang, draft.missingWords, messages.decks.missingWords)
+			: `${plural(lang, draft.words.length, messages.decks.wordCount)} · ${draft.name.trim()}`;
 
 	return (
 		<AppShell
 			footer={
 				<SummaryButton
 					disabled={!draft.canSave}
-					label={deck ? m.decks.saveChanges : m.decks.save}
+					label={deck ? messages.decks.saveChanges : messages.decks.save}
 					onClick={draft.save}
 					summary={summary}
 				/>
@@ -44,7 +44,7 @@ export const DeckEditor = ({
 		>
 			<AppPageHeader
 				lang={lang}
-				subtitle={m.decks.editorSubtitle}
+				subtitle={messages.decks.editorSubtitle}
 				title={title}
 			/>
 			<DeckForm draft={draft} locale={lang} />

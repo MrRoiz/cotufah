@@ -24,16 +24,16 @@ export const ModeToggle = ({
 	className?: string;
 }) => {
 	const { setTheme } = useTheme();
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button
-					aria-label={m.common.theme}
+					aria-label={messages.common.theme}
 					className={className}
 					size="icon"
-					title={m.common.theme}
+					title={messages.common.theme}
 					variant="outline"
 				>
 					<SunIcon className="size-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
@@ -46,7 +46,7 @@ export const ModeToggle = ({
 					return (
 						<DropdownMenuItem key={option} onClick={() => setTheme(option)}>
 							<Icon aria-hidden="true" />
-							{m.common[option]}
+							{messages.common[option]}
 						</DropdownMenuItem>
 					);
 				})}

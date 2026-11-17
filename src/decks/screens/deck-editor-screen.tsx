@@ -15,7 +15,7 @@ export const DeckEditorScreen = ({
 	lang: Locale;
 	deckId?: string;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 	const { decks, save } = useCustomDecks();
 	const deck = deckId
@@ -25,8 +25,8 @@ export const DeckEditorScreen = ({
 	if (deckId && !deck) {
 		return (
 			<AppShell>
-				<AppPageHeader lang={lang} title={m.decks.title} />
-				<p className="text-muted-foreground">{m.decks.notFound}</p>
+				<AppPageHeader lang={lang} title={messages.decks.title} />
+				<p className="text-muted-foreground">{messages.decks.notFound}</p>
 			</AppShell>
 		);
 	}
@@ -44,7 +44,7 @@ export const DeckEditorScreen = ({
 				}
 				return failure;
 			}}
-			title={deck ? m.decks.editTitle : m.decks.createTitle}
+			title={deck ? messages.decks.editTitle : messages.decks.createTitle}
 		/>
 	);
 };

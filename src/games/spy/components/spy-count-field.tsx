@@ -20,19 +20,19 @@ export const SpyCountField = ({
 	spies: number;
 	onChange: (value: number) => void;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const current = clampSpyCount(spies, playerCount);
 	const max = maxSpies(playerCount);
 	// "1 of 0 is lying" reads as a bug; the ratio only shows once a round exists.
 	const hasRound = playerCount >= MIN_PLAYERS;
-	const hint = interpolate(plural(lang, current, m.spy.spiesOf), {
+	const hint = interpolate(plural(lang, current, messages.spy.spiesOf), {
 		total: playerCount,
 	});
 
 	return (
 		<section className="flex items-center justify-between gap-3 rounded-xl border-2 border-foreground bg-card py-3 pr-3 pl-4">
 			<div className="flex flex-col">
-				<h2 className="font-bold text-lg">{m.spy.spiesTitle}</h2>
+				<h2 className="font-bold text-lg">{messages.spy.spiesTitle}</h2>
 				{hasRound ? (
 					<p className="text-muted-foreground text-sm">{hint}</p>
 				) : null}
@@ -40,7 +40,7 @@ export const SpyCountField = ({
 
 			<div className="flex items-center gap-1">
 				<Button
-					aria-label={m.spy.fewerSpies}
+					aria-label={messages.spy.fewerSpies}
 					disabled={current <= 1}
 					onClick={() => onChange(clampSpyCount(current - 1, playerCount))}
 					size="icon"
@@ -56,7 +56,7 @@ export const SpyCountField = ({
 					{current}
 				</span>
 				<Button
-					aria-label={m.spy.moreSpies}
+					aria-label={messages.spy.moreSpies}
 					disabled={current >= max}
 					onClick={() => onChange(clampSpyCount(current + 1, playerCount))}
 					size="icon"

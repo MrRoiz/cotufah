@@ -97,10 +97,10 @@ export const pageMeta = ({
  * alternates and the JSON-LD block live with the rest of the metadata.
  */
 export const landingMeta = (lang: Locale) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const canonical = absoluteUrl(`/${lang}`);
 	const alternate = absoluteUrl(`/${otherLocale(lang)}`);
-	const title = `${app.name} — ${m.common.appTagline}`;
+	const title = `${app.name} — ${messages.common.appTagline}`;
 
 	return {
 		meta: [

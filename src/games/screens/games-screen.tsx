@@ -16,7 +16,7 @@ import { TabPageHeader } from "@/ui/tab-page-header";
  * "play again" card appears after mount, once storage can be read.
  */
 export const GamesScreen = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const lastRound = useLastRound();
 
 	return (
@@ -33,7 +33,10 @@ export const GamesScreen = ({ lang }: { lang: Locale }) => {
 				{app.name}
 			</Link>
 
-			<TabPageHeader subtitle={m.games.subtitle} title={m.games.heading} />
+			<TabPageHeader
+				subtitle={messages.games.subtitle}
+				title={messages.games.heading}
+			/>
 
 			<div className="flex flex-col gap-4">
 				{lastRound ? <LastRoundCard lang={lang} round={lastRound} /> : null}
@@ -45,7 +48,7 @@ export const GamesScreen = ({ lang }: { lang: Locale }) => {
 				<DecksRow lang={lang} />
 
 				<p className="flex min-h-12 items-center justify-center rounded-xl border-2 border-input border-dashed px-4 text-center font-bold text-muted-foreground text-sm">
-					{m.games.comingSoon}
+					{messages.games.comingSoon}
 				</p>
 			</div>
 		</AppShell>

@@ -18,10 +18,10 @@ export const Route = createFileRoute("/$lang/_app/decks/import")({
 	}),
 	head: ({ params }) => {
 		// The outcome is only known client-side, so the static title is generic.
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.decks.title,
+			title: messages.decks.title,
 			noindex: true,
 		});
 	},

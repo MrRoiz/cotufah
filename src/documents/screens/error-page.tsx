@@ -30,7 +30,7 @@ export const ErrorPage = ({ error, reset }: ErrorComponentProps) => {
 	const locale = useRouterState({
 		select: (state) => localeFromPath(state.location.pathname),
 	});
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const message = error instanceof Error ? error.message : String(error);
 
 	return (
@@ -44,9 +44,9 @@ export const ErrorPage = ({ error, reset }: ErrorComponentProps) => {
 
 			<div className="flex flex-col items-center gap-3">
 				<h1 className="font-display text-4xl uppercase leading-[0.9]">
-					{m.error.title}
+					{messages.error.title}
 				</h1>
-				<p className="max-w-sm text-muted-foreground">{m.error.body}</p>
+				<p className="max-w-sm text-muted-foreground">{messages.error.body}</p>
 				{message ? (
 					<p className="max-w-sm break-words font-mono text-muted-foreground text-xs">
 						{message}
@@ -57,12 +57,12 @@ export const ErrorPage = ({ error, reset }: ErrorComponentProps) => {
 			<div className="flex w-full max-w-xs flex-col gap-2">
 				<Button onClick={reset} size="lg" variant="sticker">
 					<RotateCcwIcon aria-hidden="true" />
-					{m.error.retry}
+					{messages.error.retry}
 				</Button>
 				<Button asChild size="lg" variant="outline">
 					<Link params={{ lang: locale }} to="/$lang">
 						<HouseIcon aria-hidden="true" />
-						{m.error.home}
+						{messages.error.home}
 					</Link>
 				</Button>
 			</div>

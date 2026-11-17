@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
  * icon, players) so the page shows what opening the app looks like.
  */
 export const GameCard = ({ game, lang }: { game: GameEntry; lang: Locale }) => {
-	const m = getMessages(lang);
-	const copy = m.games[game.slug];
+	const messages = getMessages(lang);
+	const copy = messages.games[game.slug];
 	const Icon = game.icon;
 
 	return (
@@ -37,7 +37,7 @@ export const GameCard = ({ game, lang }: { game: GameEntry; lang: Locale }) => {
 				params={{ lang }}
 				to={game.setupTo}
 			>
-				{interpolate(m.home.gamePlay, { game: copy.name })}
+				{interpolate(messages.home.gamePlay, { game: copy.name })}
 				<ArrowRightIcon aria-hidden="true" className="size-5" />
 			</Link>
 		</article>

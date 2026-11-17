@@ -10,13 +10,16 @@ import { Button } from "@/ui/button";
 import { TabPageHeader } from "@/ui/tab-page-header";
 
 export const DecksScreen = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 	const { decks, remove } = useCustomDecks();
 
 	return (
 		<AppShell footer={<BottomNav lang={lang} />}>
-			<TabPageHeader subtitle={m.decks.subtitle} title={m.decks.title} />
+			<TabPageHeader
+				subtitle={messages.decks.subtitle}
+				title={messages.decks.title}
+			/>
 
 			<div className="flex flex-col gap-4">
 				<Button
@@ -27,7 +30,7 @@ export const DecksScreen = ({ lang }: { lang: Locale }) => {
 				>
 					<Link params={{ lang }} to="/$lang/decks/new">
 						<PlusIcon aria-hidden="true" />
-						{m.decks.createTitle}
+						{messages.decks.createTitle}
 					</Link>
 				</Button>
 
@@ -45,7 +48,7 @@ export const DecksScreen = ({ lang }: { lang: Locale }) => {
 					/>
 				) : (
 					<p className="rounded-xl border-2 border-input border-dashed p-5 text-center text-muted-foreground">
-						{m.decks.empty}
+						{messages.decks.empty}
 					</p>
 				)}
 			</div>

@@ -8,13 +8,15 @@ import { getMessages, interpolate, plural } from "@/i18n";
 
 /** How many decks a round can draw from, and the way to the player's own. */
 export const DecksRow = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const { decks } = useCustomDecks();
 
-	const packs = interpolate(m.games.decksTitle, { count: packChoices.length });
+	const packs = interpolate(messages.games.decksTitle, {
+		count: packChoices.length,
+	});
 	const title =
 		decks.length > 0
-			? `${packs} ${plural(lang, decks.length, m.games.decksCustom)}`
+			? `${packs} ${plural(lang, decks.length, messages.games.decksCustom)}`
 			: packs;
 
 	return (
@@ -27,7 +29,7 @@ export const DecksRow = ({ lang }: { lang: Locale }) => {
 			<span className="flex min-w-0 flex-1 flex-col">
 				<span className="font-extrabold">{title}</span>
 				<span className="truncate text-muted-foreground text-sm">
-					{m.games.decksBody}
+					{messages.games.decksBody}
 				</span>
 			</span>
 			<ChevronRightIcon aria-hidden="true" className="size-5 shrink-0" />

@@ -30,18 +30,18 @@ export const SpyRoundBar = ({
 	total: number;
 	onBackToDiscussion: () => void;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const isDealing = phase === "handoff" || phase === "deal";
 	const phaseLabel: Partial<Record<SpyPhase, string>> = {
-		discuss: m.spy.discussLabel,
-		vote: m.spy.voteLabel,
+		discuss: messages.spy.discussLabel,
+		vote: messages.spy.voteLabel,
 	};
 
 	return (
 		<div className="flex items-center justify-between gap-3 pt-2 pb-4">
 			{phase === "vote" ? (
 				<button
-					aria-label={m.spy.backToDiscussion}
+					aria-label={messages.spy.backToDiscussion}
 					className={roundButtonClass}
 					onClick={onBackToDiscussion}
 					type="button"
@@ -50,7 +50,7 @@ export const SpyRoundBar = ({
 				</button>
 			) : (
 				<Link
-					aria-label={m.spy.exitRound}
+					aria-label={messages.spy.exitRound}
 					className={roundButtonClass}
 					params={{ lang }}
 					search={{ category }}
@@ -62,7 +62,7 @@ export const SpyRoundBar = ({
 
 			{isDealing ? (
 				<DealProgress
-					label={interpolate(m.spy.progress, { n: position, total })}
+					label={interpolate(messages.spy.progress, { n: position, total })}
 					position={position}
 					total={total}
 				/>

@@ -21,7 +21,7 @@ export const CharadesPlayScreen = ({
 	category: CategoryChoice;
 	duration: Duration;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 	const round = useCharadesRound({ lang, duration, category });
 
@@ -31,7 +31,12 @@ export const CharadesPlayScreen = ({
 	}, [category, duration]);
 
 	if (round.phase === "countdown") {
-		return <CharadesCountdown countdown={round.countdown} go={m.charades.go} />;
+		return (
+			<CharadesCountdown
+				countdown={round.countdown}
+				go={messages.charades.go}
+			/>
+		);
 	}
 
 	if (round.phase === "playing") {

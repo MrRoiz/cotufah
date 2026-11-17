@@ -344,9 +344,10 @@ placeholders, dead copy, superseded helpers) in the same change.
 
 - `en.ts` is the source of truth; `es.ts` is typed `Messages`, so a missing or renamed
   key fails `typecheck`. Never read `en` directly in a component.
-- A route gets its copy with `const m = getMessages(lang)`; `lang` comes from
-  `Route.useParams()` on a `/$lang` route.
-- Values use `{placeholders}` and `interpolate(m.some.key, { app: app.name })`.
+- A route gets its copy with `const messages = getMessages(lang)`; `lang` comes from
+  `Route.useParams()` on a `/$lang` route. The copy object is always `messages`, as a
+  variable and as a prop (`messages={messages}`), never `m`.
+- Values use `{placeholders}` and `interpolate(messages.some.key, { app: app.name })`.
 - Counts go through `plural(locale, count, { one, other })` — `Intl.PluralRules`,
   never string concatenation.
 - Switching language navigates to the same path in the other locale. Losing the

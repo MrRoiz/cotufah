@@ -14,7 +14,7 @@ export const PhoneMockup = ({
 	lang: Locale;
 	className?: string;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
 		<div
@@ -29,7 +29,7 @@ export const PhoneMockup = ({
 				{app.name}
 			</span>
 			<span className="font-display font-extrabold text-2xl leading-none tracking-tight">
-				{m.games.heading}
+				{messages.games.heading}
 			</span>
 			{games.map((game) => (
 				<span
@@ -39,7 +39,7 @@ export const PhoneMockup = ({
 					)}
 					key={game.slug}
 				>
-					{m.games[game.slug].name}
+					{messages.games[game.slug].name}
 				</span>
 			))}
 			<span className="mt-auto grid grid-cols-3 gap-1.5">

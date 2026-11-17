@@ -5,16 +5,16 @@ import { SectionHeading } from "@/ui/section-heading";
 
 /** Testimonials as speech bubbles; copy lives in `home.quotes` in both locales. */
 export const Quotes = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
 		<section className="flex flex-col gap-6 py-12">
 			<SectionHeading
-				title={m.home.quotesTitle}
-				subtitle={m.home.quotesSubtitle}
+				title={messages.home.quotesTitle}
+				subtitle={messages.home.quotesSubtitle}
 			/>
 			<div className="grid gap-5 md:grid-cols-3">
-				{m.home.quotes.map((item, index) => (
+				{messages.home.quotes.map((item, index) => (
 					<blockquote
 						className={cn(
 							"flex flex-col justify-between gap-4 rounded-xl rounded-bl-sm border-2 border-foreground p-6",

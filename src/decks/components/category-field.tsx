@@ -19,7 +19,7 @@ export const CategoryField = ({
 	category: CategoryChoice;
 	onChange: (value: CategoryChoice) => void;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const [open, setOpen] = useState(false);
 	const current = useCategorySummary(locale, category);
 	const CurrentIcon = current.icon;
@@ -31,7 +31,7 @@ export const CategoryField = ({
 
 	return (
 		<section className="flex flex-col gap-3">
-			<h2 className="font-bold text-lg">{m.category.title}</h2>
+			<h2 className="font-bold text-lg">{messages.category.title}</h2>
 
 			<button
 				aria-expanded={open}
@@ -50,7 +50,7 @@ export const CategoryField = ({
 					</span>
 				</span>
 				<span className="flex items-center gap-1 font-bold text-muted-foreground text-sm">
-					{m.category.change}
+					{messages.category.change}
 					<ChevronDownIcon aria-hidden="true" className="size-4" />
 				</span>
 			</button>

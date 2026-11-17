@@ -22,10 +22,10 @@ export const Route = createFileRoute("/$lang/_app/games/charades/play")({
 		duration: parseDuration(search.duration),
 	}),
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.games.charades.name,
+			title: messages.games.charades.name,
 			noindex: true,
 		});
 	},

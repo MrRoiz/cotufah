@@ -7,16 +7,16 @@ import { accentFill } from "@/ui/accent-fill";
 
 /** Every deck a round can draw from, as one wrap of chips. */
 export const PacksStrip = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
 		<section className="flex flex-col gap-4 rounded-xl border-2 border-foreground bg-card p-6 shadow-sticker-sm">
 			<div className="flex flex-wrap items-baseline justify-between gap-2">
 				<h2 className="font-display font-extrabold text-2xl uppercase tracking-tight">
-					{interpolate(m.home.packsTitle, { count: packChoices.length })}
+					{interpolate(messages.home.packsTitle, { count: packChoices.length })}
 				</h2>
 				<p className="text-muted-foreground">
-					{interpolate(m.home.packsBody, {
+					{interpolate(messages.home.packsBody, {
 						themed: packChoices.length - 1,
 					})}
 				</p>
@@ -37,7 +37,7 @@ export const PacksStrip = ({ lang }: { lang: Locale }) => {
 							>
 								<Icon aria-hidden="true" className="size-3.5" />
 							</span>
-							{m.category.packs[pack].name}
+							{messages.category.packs[pack].name}
 						</li>
 					);
 				})}

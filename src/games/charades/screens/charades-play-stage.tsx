@@ -38,7 +38,7 @@ export const CharadesPlayStage = ({
 	zonesVisible: boolean;
 	onAnswer: (correct: boolean) => void;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const remaining = secondsLeft(remainingMs);
 	const isUrgent = remaining <= FINAL_SECONDS;
 
@@ -79,7 +79,7 @@ export const CharadesPlayStage = ({
 					<CheckIcon aria-hidden="true" className="size-5" strokeWidth={3} />
 					<span aria-hidden="true">{score}</span>
 					<span className="sr-only">
-						{plural(lang, score, m.charades.score)}
+						{plural(lang, score, messages.charades.score)}
 					</span>
 				</span>
 			</div>
@@ -94,9 +94,9 @@ export const CharadesPlayStage = ({
 			</div>
 
 			{zonesVisible ? (
-				<TapZones m={m} onAnswer={onAnswer} />
+				<TapZones messages={messages} onAnswer={onAnswer} />
 			) : (
-				<TiltHints m={m} />
+				<TiltHints messages={messages} />
 			)}
 		</div>
 	);

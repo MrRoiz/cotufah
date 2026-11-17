@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 
 /** One game in the app list: the whole tile is the link to its setup. */
 export const GameTile = ({ game, lang }: { game: GameEntry; lang: Locale }) => {
-	const m = getMessages(lang);
-	const copy = m.games[game.slug];
+	const messages = getMessages(lang);
+	const copy = messages.games[game.slug];
 	const Icon = game.icon;
 
 	return (

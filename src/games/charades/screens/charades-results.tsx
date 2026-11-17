@@ -24,13 +24,15 @@ export const CharadesResults = ({
 	onAgain: () => void;
 	onChangeSettings: () => void;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const answered = correctWords.length + passedWords.length;
 
 	return (
 		<section className="flex flex-1 flex-col gap-5 pt-4">
 			<h1 className="font-display font-extrabold text-3xl uppercase leading-none">
-				{finished ? m.charades.wordsLeft : m.charades.resultsTitle}
+				{finished
+					? messages.charades.wordsLeft
+					: messages.charades.resultsTitle}
 			</h1>
 
 			{/* Number and label read as one phrase: "2 correct, out of 3 words". */}
@@ -40,10 +42,10 @@ export const CharadesResults = ({
 				</span>
 				<p className="flex flex-col">
 					<span className="font-display font-extrabold text-2xl leading-tight">
-						{plural(lang, correctWords.length, m.charades.scoreLabel)}
+						{plural(lang, correctWords.length, messages.charades.scoreLabel)}
 					</span>
 					<span className="text-muted-foreground">
-						{interpolate(m.charades.scoreOf, { total: answered })}
+						{interpolate(messages.charades.scoreOf, { total: answered })}
 					</span>
 				</p>
 			</div>
@@ -52,7 +54,7 @@ export const CharadesResults = ({
 			{pendingWord ? (
 				<div className="flex flex-col gap-0.5 rounded-xl border-2 border-foreground border-dashed px-4 py-3">
 					<span className="font-bold text-muted-foreground text-sm">
-						{m.charades.resultsFinal}
+						{messages.charades.resultsFinal}
 					</span>
 					<span className="break-words font-display font-extrabold text-xl uppercase leading-tight">
 						{pendingWord}
@@ -64,7 +66,7 @@ export const CharadesResults = ({
 				<section className="flex flex-col gap-2.5">
 					<h2 className="flex items-center gap-2 font-extrabold text-xs uppercase tracking-widest">
 						<CheckIcon aria-hidden="true" className="size-4" strokeWidth={3} />
-						{`${m.charades.resultsCorrect} · ${correctWords.length}`}
+						{`${messages.charades.resultsCorrect} · ${correctWords.length}`}
 					</h2>
 					<ul className="flex flex-wrap gap-2">
 						{correctWords.map((word) => (
@@ -83,7 +85,7 @@ export const CharadesResults = ({
 				<section className="flex flex-col gap-2.5">
 					<h2 className="flex items-center gap-2 font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
 						<XIcon aria-hidden="true" className="size-4" strokeWidth={3} />
-						{`${m.charades.resultsPassed} · ${passedWords.length}`}
+						{`${messages.charades.resultsPassed} · ${passedWords.length}`}
 					</h2>
 					<ul className="flex flex-wrap gap-2">
 						{passedWords.map((word) => (
@@ -106,7 +108,7 @@ export const CharadesResults = ({
 					variant="sticker"
 				>
 					<RotateCcwIcon aria-hidden="true" />
-					{m.charades.again}
+					{messages.charades.again}
 				</Button>
 				<Button
 					className="border-foreground"
@@ -114,7 +116,7 @@ export const CharadesResults = ({
 					variant="outline"
 				>
 					<SettingsIcon aria-hidden="true" />
-					{m.charades.changeSettings}
+					{messages.charades.changeSettings}
 				</Button>
 			</div>
 		</section>

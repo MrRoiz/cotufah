@@ -38,10 +38,10 @@ export const Route = createFileRoute("/$lang/_app/games/spy/play")({
 		}
 	},
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.games.spy.name,
+			title: messages.games.spy.name,
 			noindex: true,
 		});
 	},

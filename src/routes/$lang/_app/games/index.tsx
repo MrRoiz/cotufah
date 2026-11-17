@@ -12,11 +12,11 @@ const GamesRoute = () => {
 
 export const Route = createFileRoute("/$lang/_app/games/")({
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.games.title,
-			description: m.games.subtitle,
+			title: messages.games.title,
+			description: messages.games.subtitle,
 			noindex: true,
 		});
 	},

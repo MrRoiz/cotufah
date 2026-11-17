@@ -12,11 +12,11 @@ const SettingsRoute = () => {
 
 export const Route = createFileRoute("/$lang/_app/settings")({
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.settings.title,
-			description: m.settings.subtitle,
+			title: messages.settings.title,
+			description: messages.settings.subtitle,
 			noindex: true,
 		});
 	},

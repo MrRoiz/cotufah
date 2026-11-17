@@ -27,7 +27,7 @@ export const PasteWordsSheet = ({
 	onOpenChange: (open: boolean) => void;
 	onPaste: (text: string) => void;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const [text, setText] = useState("");
 
 	// Always close: if some words were skipped, the reason shows on the form,
@@ -43,20 +43,20 @@ export const PasteWordsSheet = ({
 			<SheetContent className="max-h-[85dvh] overflow-y-auto" side="bottom">
 				<SheetHeader>
 					<SheetTitle className="font-display text-xl uppercase">
-						{m.decks.pasteTitle}
+						{messages.decks.pasteTitle}
 					</SheetTitle>
-					<SheetDescription>{m.decks.pasteBody}</SheetDescription>
+					<SheetDescription>{messages.decks.pasteBody}</SheetDescription>
 				</SheetHeader>
 
 				<div className="flex flex-col gap-3 px-4 pb-6">
 					<label className="sr-only" htmlFor="paste-words">
-						{m.decks.wordsLabel}
+						{messages.decks.wordsLabel}
 					</label>
 					<textarea
 						className="min-h-48 w-full rounded-xl border-2 border-input bg-card px-4 py-3 outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 						id="paste-words"
 						onChange={(event) => setText(event.target.value)}
-						placeholder={m.decks.wordsPlaceholder}
+						placeholder={messages.decks.wordsPlaceholder}
 						value={text}
 					/>
 					<Button
@@ -66,7 +66,7 @@ export const PasteWordsSheet = ({
 						type="button"
 						variant="sticker"
 					>
-						{m.decks.pasteAdd}
+						{messages.decks.pasteAdd}
 					</Button>
 				</div>
 			</SheetContent>

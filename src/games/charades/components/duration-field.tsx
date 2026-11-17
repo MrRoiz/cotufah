@@ -7,16 +7,16 @@ const MINUTES_FROM = 120;
 
 /** The three round lengths as big tiles: the number is what people scan for. */
 export const DurationField = ({
-	m,
+	messages,
 	duration,
 	onChange,
 }: {
-	m: Messages;
+	messages: Messages;
 	duration: Duration;
 	onChange: (duration: Duration) => void;
 }) => (
 	<section className="flex flex-col gap-3">
-		<h2 className="font-bold text-lg">{m.charades.durationTitle}</h2>
+		<h2 className="font-bold text-lg">{messages.charades.durationTitle}</h2>
 		<div className="grid grid-cols-3 gap-2.5">
 			{DURATIONS.map((seconds) => {
 				const isSelected = duration === seconds;
@@ -43,7 +43,9 @@ export const DurationField = ({
 								!isSelected && "text-muted-foreground",
 							)}
 						>
-							{inMinutes ? m.charades.minutes : m.charades.seconds}
+							{inMinutes
+								? messages.charades.minutes
+								: messages.charades.seconds}
 						</span>
 					</button>
 				);

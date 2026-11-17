@@ -10,7 +10,7 @@ type Spy = { name: string; seat: number };
 /** Verdict first, then who it was and the word, then the way back in. */
 export const RevealPanel = ({
 	lang,
-	m,
+	messages,
 	caught,
 	accusedName,
 	spies,
@@ -20,7 +20,7 @@ export const RevealPanel = ({
 	onChangePlayers,
 }: {
 	lang: Locale;
-	m: Messages;
+	messages: Messages;
 	caught: boolean;
 	accusedName: string;
 	spies: Spy[];
@@ -39,7 +39,7 @@ export const RevealPanel = ({
 			<div className="flex flex-1 flex-col justify-center gap-5">
 				<div className="flex flex-col items-center gap-3 text-center">
 					<span className="font-bold text-muted-foreground">
-						{interpolate(m.spy.accusedLine, { name: accusedName })}
+						{interpolate(messages.spy.accusedLine, { name: accusedName })}
 					</span>
 					<h1
 						className={cn(
@@ -47,7 +47,11 @@ export const RevealPanel = ({
 							caught ? "bg-accent-lime" : "bg-accent-fuchsia",
 						)}
 					>
-						{plural(lang, spies.length, caught ? m.spy.caught : m.spy.escaped)}
+						{plural(
+							lang,
+							spies.length,
+							caught ? messages.spy.caught : messages.spy.escaped,
+						)}
 					</h1>
 				</div>
 
@@ -64,7 +68,7 @@ export const RevealPanel = ({
 					</span>
 					<span className="flex min-w-0 flex-col">
 						<span className="font-extrabold text-xs uppercase tracking-widest">
-							{plural(lang, spies.length, m.spy.spyLabel)}
+							{plural(lang, spies.length, messages.spy.spyLabel)}
 						</span>
 						<span className="break-words font-display font-extrabold text-3xl uppercase leading-tight">
 							{spyList}
@@ -74,7 +78,7 @@ export const RevealPanel = ({
 
 				<div className="rounded-xl border-2 border-foreground bg-card p-4">
 					<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
-						{m.spy.theWordWas}
+						{messages.spy.theWordWas}
 					</span>
 					<p className="break-words font-display font-extrabold text-3xl uppercase leading-tight">
 						{word}
@@ -90,7 +94,7 @@ export const RevealPanel = ({
 					variant="sticker"
 				>
 					<RotateCcwIcon aria-hidden="true" />
-					{m.spy.again}
+					{messages.spy.again}
 				</Button>
 				<Button
 					className="border-foreground"
@@ -98,7 +102,7 @@ export const RevealPanel = ({
 					variant="outline"
 				>
 					<UsersIcon aria-hidden="true" />
-					{m.spy.changePlayers}
+					{messages.spy.changePlayers}
 				</Button>
 			</div>
 		</section>

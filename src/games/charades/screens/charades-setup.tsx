@@ -21,7 +21,7 @@ export const CharadesSetup = ({
 	lang: Locale;
 	category: CategoryChoice;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 	const deck = useCategorySummary(lang, category);
 	const lastRound = useLastRound();
@@ -46,20 +46,24 @@ export const CharadesSetup = ({
 		<AppShell
 			footer={
 				<SummaryButton
-					label={m.charades.start}
+					label={messages.charades.start}
 					onClick={start}
-					summary={`${durationLabel(m, duration)} · ${deck.name}`}
+					summary={`${durationLabel(messages, duration)} · ${deck.name}`}
 				/>
 			}
 		>
 			<AppPageHeader
 				lang={lang}
-				subtitle={m.charades.setupIntro}
-				title={m.games.charades.name}
+				subtitle={messages.charades.setupIntro}
+				title={messages.games.charades.name}
 			/>
 
 			<div className="flex flex-col gap-6">
-				<DurationField duration={duration} m={m} onChange={setDuration} />
+				<DurationField
+					duration={duration}
+					messages={messages}
+					onChange={setDuration}
+				/>
 
 				<CategoryField
 					category={category}
@@ -75,8 +79,8 @@ export const CharadesSetup = ({
 				/>
 
 				<section className="flex flex-col gap-3">
-					<h2 className="font-bold text-lg">{m.charades.answerTitle}</h2>
-					<GestureCards m={m} mode="tilt" />
+					<h2 className="font-bold text-lg">{messages.charades.answerTitle}</h2>
+					<GestureCards messages={messages} mode="tilt" />
 				</section>
 			</div>
 		</AppShell>

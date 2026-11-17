@@ -45,7 +45,7 @@ export const DeckCard = ({
 	onShare: () => void;
 	onRemove: () => void;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const [isArmed, setIsArmed] = useState(false);
 	const category = customCategoryId(deck.id);
 	const preview = deck.words.slice(0, PREVIEW_WORDS).join(", ");
@@ -75,14 +75,16 @@ export const DeckCard = ({
 				<div className="flex min-w-0 flex-1 flex-col">
 					<p className="truncate font-extrabold text-lg">{deck.name}</p>
 					<p className="truncate text-muted-foreground text-sm">
-						{`${plural(locale, deck.words.length, m.decks.wordCount)} · ${preview}`}
+						{`${plural(locale, deck.words.length, messages.decks.wordCount)} · ${preview}`}
 					</p>
 				</div>
 
 				<DropdownMenu onOpenChange={() => setIsArmed(false)}>
 					<DropdownMenuTrigger asChild>
 						<Button
-							aria-label={interpolate(m.decks.moreOptions, { name: deck.name })}
+							aria-label={interpolate(messages.decks.moreOptions, {
+								name: deck.name,
+							})}
 							size="icon"
 							variant="outline"
 						>
@@ -92,7 +94,7 @@ export const DeckCard = ({
 					<DropdownMenuContent align="end" className={menuClass}>
 						<DropdownMenuItem className={itemClass} onSelect={onEdit}>
 							<PencilIcon aria-hidden="true" />
-							{m.decks.edit}
+							{messages.decks.edit}
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className={cn(
@@ -104,7 +106,7 @@ export const DeckCard = ({
 							onSelect={requestRemove}
 						>
 							<Trash2Icon aria-hidden="true" />
-							{isArmed ? m.decks.removeConfirm : m.decks.remove}
+							{isArmed ? messages.decks.removeConfirm : messages.decks.remove}
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
@@ -115,7 +117,7 @@ export const DeckCard = ({
 					<DropdownMenuTrigger asChild>
 						<Button className="border-foreground" variant="outline">
 							<PlayIcon aria-hidden="true" className="size-4 fill-current" />
-							{m.common.play}
+							{messages.common.play}
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className={menuClass}>
@@ -127,7 +129,7 @@ export const DeckCard = ({
 									to={game.setupTo}
 								>
 									<game.icon aria-hidden="true" />
-									{m.games[game.slug].name}
+									{messages.games[game.slug].name}
 								</Link>
 							</DropdownMenuItem>
 						))}
@@ -140,7 +142,7 @@ export const DeckCard = ({
 					variant="outline"
 				>
 					<QrCodeIcon aria-hidden="true" className="size-4" />
-					{m.decks.share}
+					{messages.decks.share}
 				</Button>
 			</div>
 		</li>

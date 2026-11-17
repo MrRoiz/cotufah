@@ -38,7 +38,7 @@ const SettingRow = ({
 );
 
 export const SettingsScreen = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 	const { theme, setTheme } = useTheme();
 	const muted = useSoundMuted();
@@ -52,13 +52,16 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 
 	return (
 		<AppShell footer={<BottomNav lang={lang} />}>
-			<TabPageHeader subtitle={m.settings.subtitle} title={m.settings.title} />
+			<TabPageHeader
+				subtitle={messages.settings.subtitle}
+				title={messages.settings.title}
+			/>
 
 			<div className="flex flex-col gap-4">
 				<section className={cn(groupClass, "border-foreground")}>
-					<SettingRow title={m.common.language}>
+					<SettingRow title={messages.common.language}>
 						<SegmentedControl
-							label={m.common.language}
+							label={messages.common.language}
 							onChange={switchLocale}
 							options={locales.map((locale) => ({
 								value: locale,
@@ -68,13 +71,13 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 						/>
 					</SettingRow>
 
-					<SettingRow title={m.common.theme}>
+					<SettingRow title={messages.common.theme}>
 						<SegmentedControl
-							label={m.common.theme}
+							label={messages.common.theme}
 							onChange={setTheme}
 							options={themes.map((option) => ({
 								value: option,
-								label: m.common[option],
+								label: messages.common[option],
 							}))}
 							value={theme}
 						/>
@@ -82,13 +85,15 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 
 					<div className="flex items-center gap-3 px-4 py-3.5">
 						<div className="flex min-w-0 flex-1 flex-col gap-0.5">
-							<span className="font-extrabold">{m.settings.soundTitle}</span>
+							<span className="font-extrabold">
+								{messages.settings.soundTitle}
+							</span>
 							<span className="text-muted-foreground text-sm">
-								{m.settings.soundBody}
+								{messages.settings.soundBody}
 							</span>
 						</div>
 						<Switch
-							aria-label={m.settings.soundTitle}
+							aria-label={messages.settings.soundTitle}
 							checked={!muted}
 							onCheckedChange={(checked) => {
 								setSoundMuted(!checked);
@@ -102,11 +107,11 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 
 				<section className={cn(groupClass, "border-border")}>
 					<Link className={linkRowClass} params={{ lang }} to="/$lang/about">
-						<span className="flex-1">{m.common.about}</span>
+						<span className="flex-1">{messages.common.about}</span>
 						<ChevronRightIcon aria-hidden="true" className="size-5" />
 					</Link>
 					<Link className={linkRowClass} params={{ lang }} to="/$lang/legal">
-						<span className="flex-1">{m.common.legal}</span>
+						<span className="flex-1">{messages.common.legal}</span>
 						<ChevronRightIcon aria-hidden="true" className="size-5" />
 					</Link>
 					<a
@@ -115,13 +120,13 @@ export const SettingsScreen = ({ lang }: { lang: Locale }) => {
 						rel="noreferrer"
 						target="_blank"
 					>
-						<span className="flex-1">{m.settings.openSource}</span>
+						<span className="flex-1">{messages.settings.openSource}</span>
 						<ExternalLinkIcon aria-hidden="true" className="size-5" />
 					</a>
 				</section>
 
 				<p className="text-center text-muted-foreground text-sm">
-					{interpolate(m.settings.aboutBody, { version: appVersion })}
+					{interpolate(messages.settings.aboutBody, { version: appVersion })}
 				</p>
 			</div>
 		</AppShell>

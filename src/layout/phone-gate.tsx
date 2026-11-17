@@ -20,7 +20,7 @@ export const PhoneGate = () => {
 	// for its copy and the location for the QR, so the layout stays a plain
 	// `PhoneGate + Outlet`.
 	const { lang } = useParams({ from: "/$lang" });
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	// "Open this on your phone" is the gate's own job, so the target is read
 	// here: path and search, so a laptop that clicked a game card hands the
 	// phone that exact game and setup instead of the games list.
@@ -33,31 +33,33 @@ export const PhoneGate = () => {
 			data-gate=""
 		>
 			<Kicker accent="cyan" tilt={false}>
-				{m.gate.badge}
+				{messages.gate.badge}
 			</Kicker>
 
 			<h1 className="max-w-md font-display text-4xl uppercase leading-none">
-				{interpolate(m.gate.title, { app: app.name })}
+				{interpolate(messages.gate.title, { app: app.name })}
 			</h1>
 
-			<p className="max-w-sm text-muted-foreground">{m.gate.body}</p>
+			<p className="max-w-sm text-muted-foreground">{messages.gate.body}</p>
 
 			<div className="rounded-xl border-2 border-accent-ink bg-qr-paper p-4 shadow-sticker">
 				<QrCode
-					alt={interpolate(m.gate.qrAlt, { app: app.name })}
+					alt={interpolate(messages.gate.qrAlt, { app: app.name })}
 					className="size-44"
 					path={href}
 				/>
 			</div>
 
 			<div className="flex flex-col gap-1">
-				<p className="text-muted-foreground text-sm">{m.gate.fallback}</p>
+				<p className="text-muted-foreground text-sm">
+					{messages.gate.fallback}
+				</p>
 				<code className="break-all font-mono text-foreground text-sm">
 					{target || href}
 				</code>
 			</div>
 
-			<p className="text-muted-foreground text-xs">{m.gate.hint}</p>
+			<p className="text-muted-foreground text-xs">{messages.gate.hint}</p>
 		</div>
 	);
 };

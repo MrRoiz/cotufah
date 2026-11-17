@@ -33,10 +33,10 @@ const inactiveTabClass = "border-transparent text-muted-foreground";
  * tab screens only: a round or a setup form never shows it.
  */
 export const BottomNav = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	return (
-		<nav aria-label={m.nav.label} className="grid grid-cols-3 gap-2">
+		<nav aria-label={messages.nav.label} className="grid grid-cols-3 gap-2">
 			{tabs.map((tab) => {
 				const Icon = tab.icon;
 				return (
@@ -50,7 +50,7 @@ export const BottomNav = ({ lang }: { lang: Locale }) => {
 						to={tab.to}
 					>
 						<Icon aria-hidden="true" className="size-5" />
-						{m.nav[tab.label]}
+						{messages.nav[tab.label]}
 					</Link>
 				);
 			})}

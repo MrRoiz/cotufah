@@ -16,11 +16,11 @@ export const Route = createFileRoute("/$lang/_app/games/charades/setup")({
 	// In the URL so the deck survives a trip to "Manage decks" and back.
 	validateSearch: categorySearch,
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.games.charades.name,
-			description: m.charades.setupIntro,
+			title: messages.games.charades.name,
+			description: messages.charades.setupIntro,
 			noindex: true,
 		});
 	},

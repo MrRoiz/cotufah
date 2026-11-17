@@ -24,7 +24,7 @@ export const SpySetup = ({
 	lang: Locale;
 	category: CategoryChoice;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 	const lastRound = useLastRound();
 	const deck = useCategorySummary(lang, category);
@@ -45,11 +45,11 @@ export const SpySetup = ({
 	const canStart = missing <= 0;
 	const summary = canStart
 		? [
-				plural(lang, players.length, m.spy.playerCount),
-				plural(lang, spyCount, m.spy.spyCount),
+				plural(lang, players.length, messages.spy.playerCount),
+				plural(lang, spyCount, messages.spy.spyCount),
 				deck.name,
 			].join(" · ")
-		: plural(lang, missing, m.spy.missingPlayers);
+		: plural(lang, missing, messages.spy.missingPlayers);
 
 	const start = () =>
 		navigate({
@@ -67,7 +67,7 @@ export const SpySetup = ({
 			footer={
 				<SummaryButton
 					disabled={!canStart}
-					label={m.spy.start}
+					label={messages.spy.start}
 					onClick={start}
 					summary={summary}
 				/>
@@ -75,8 +75,8 @@ export const SpySetup = ({
 		>
 			<AppPageHeader
 				lang={lang}
-				subtitle={m.spy.setupIntro}
-				title={m.games.spy.name}
+				subtitle={messages.spy.setupIntro}
+				title={messages.games.spy.name}
 			/>
 
 			<div className="flex flex-col gap-6">

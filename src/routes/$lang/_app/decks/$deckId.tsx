@@ -13,10 +13,10 @@ const EditDeckRoute = () => {
 export const Route = createFileRoute("/$lang/_app/decks/$deckId")({
 	ssr: false,
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: m.decks.editTitle,
+			title: messages.decks.editTitle,
 			noindex: true,
 		});
 	},

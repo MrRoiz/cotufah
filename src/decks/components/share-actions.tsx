@@ -13,12 +13,12 @@ const COPIED_MS = 2000;
  * elsewhere copying is the one action and takes the full row.
  */
 export const ShareActions = ({
-	m,
+	messages,
 	title,
 	url,
 	disabled,
 }: {
-	m: Messages;
+	messages: Messages;
 	title: string;
 	url: string;
 	disabled: boolean;
@@ -67,7 +67,7 @@ export const ShareActions = ({
 				) : (
 					<CopyIcon aria-hidden="true" />
 				)}
-				{copied ? m.decks.copied : m.decks.copy}
+				{copied ? messages.decks.copied : messages.decks.copy}
 			</Button>
 			{canShareNatively ? (
 				<Button
@@ -78,7 +78,7 @@ export const ShareActions = ({
 					variant="sticker"
 				>
 					<Share2Icon aria-hidden="true" />
-					{m.decks.shareNative}
+					{messages.decks.shareNative}
 				</Button>
 			) : null}
 		</div>

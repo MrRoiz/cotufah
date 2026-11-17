@@ -35,7 +35,7 @@ export const DeckPickerSheet = ({
 	onOpenChange: (open: boolean) => void;
 	onChoose: (value: CategoryChoice) => void;
 }) => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	const { decks } = useCustomDecks();
 	const current = useCategorySummary(locale, category);
 
@@ -44,10 +44,14 @@ export const DeckPickerSheet = ({
 		{
 			value: "mixed",
 			icon: ShuffleIcon,
-			name: m.category.mixed,
-			body: m.category.mixedBody,
+			name: messages.category.mixed,
+			body: messages.category.mixedBody,
 		},
-		{ value: "clasico", icon: packIcons.clasico, ...m.category.packs.clasico },
+		{
+			value: "clasico",
+			icon: packIcons.clasico,
+			...messages.category.packs.clasico,
+		},
 	] as const;
 
 	return (
@@ -55,9 +59,9 @@ export const DeckPickerSheet = ({
 			<SheetContent className="max-h-[88dvh] overflow-y-auto" side="bottom">
 				<SheetHeader>
 					<SheetTitle className="font-display font-extrabold text-2xl uppercase">
-						{m.category.sheetTitle}
+						{messages.category.sheetTitle}
 					</SheetTitle>
-					<SheetDescription>{m.category.body}</SheetDescription>
+					<SheetDescription>{messages.category.body}</SheetDescription>
 				</SheetHeader>
 
 				<div className="flex flex-col gap-4 px-4 pb-6">
@@ -70,7 +74,7 @@ export const DeckPickerSheet = ({
 						</span>
 						<span className="flex min-w-0 flex-col">
 							<span className="font-extrabold text-muted-foreground text-xs uppercase tracking-widest">
-								{m.category.current}
+								{messages.category.current}
 							</span>
 							<span className="truncate font-extrabold text-lg leading-tight">
 								{current.name}

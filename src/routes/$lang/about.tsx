@@ -12,13 +12,13 @@ const AboutRoute = () => {
 
 export const Route = createFileRoute("/$lang/about")({
 	head: ({ params }) => {
-		const m = getMessages(params.lang);
+		const messages = getMessages(params.lang);
 
 		return pageMeta({
 			lang: params.lang,
 			path: "/about",
-			title: m.about.title,
-			description: m.about.intro,
+			title: messages.about.title,
+			description: messages.about.intro,
 		});
 	},
 	component: AboutRoute,

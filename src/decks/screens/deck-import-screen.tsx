@@ -27,7 +27,7 @@ export const DeckImportScreen = ({
 	lang: Locale;
 	payload: string;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const [state, setState] = useState<ImportState>("loading");
 	const [deck, setDeck] = useState<CustomDeck | null>(null);
 	const [exists, setExists] = useState(false);
@@ -66,11 +66,11 @@ export const DeckImportScreen = ({
 	const settled = state !== "loading" && state !== "confirm";
 	const titles: Record<ImportState, string> = {
 		loading: "",
-		confirm: m.decks.importConfirmTitle,
-		ok: m.decks.importedTitle,
-		invalid: m.decks.importFailedTitle,
-		limit: m.decks.importSaveTitle,
-		storage: m.decks.importSaveTitle,
+		confirm: messages.decks.importConfirmTitle,
+		ok: messages.decks.importedTitle,
+		invalid: messages.decks.importFailedTitle,
+		limit: messages.decks.importSaveTitle,
+		storage: messages.decks.importSaveTitle,
 	};
 
 	return (
@@ -79,11 +79,11 @@ export const DeckImportScreen = ({
 				state === "confirm" ? (
 					<div className="flex flex-col gap-2">
 						<Button onClick={add} size="lg" variant="sticker">
-							{m.decks.importAdd}
+							{messages.decks.importAdd}
 						</Button>
 						<Button asChild size="lg" variant="outline">
 							<Link params={{ lang }} to="/$lang">
-								{m.decks.importCancel}
+								{messages.decks.importCancel}
 							</Link>
 						</Button>
 					</div>
@@ -106,7 +106,7 @@ export const DeckImportScreen = ({
 							<div className="min-w-0">
 								<p className="break-words font-bold">{deck.name}</p>
 								<p className="text-muted-foreground text-xs">
-									{plural(lang, deck.words.length, m.decks.wordCount)}
+									{plural(lang, deck.words.length, messages.decks.wordCount)}
 								</p>
 							</div>
 							<SparklesIcon
@@ -115,10 +115,12 @@ export const DeckImportScreen = ({
 							/>
 						</div>
 
-						<p className="text-muted-foreground">{m.decks.importConfirmBody}</p>
+						<p className="text-muted-foreground">
+							{messages.decks.importConfirmBody}
+						</p>
 
 						<div className="flex flex-col gap-2">
-							<p className="font-bold text-sm">{m.decks.wordsLabel}</p>
+							<p className="font-bold text-sm">{messages.decks.wordsLabel}</p>
 							<div className="max-h-56 overflow-y-auto overscroll-contain rounded-lg border-2 border-border bg-card p-3">
 								<div className="flex flex-wrap gap-1.5">
 									{[...new Set(deck.words)].map((word) => (
@@ -135,7 +137,7 @@ export const DeckImportScreen = ({
 
 						{exists ? (
 							<p className="rounded-lg border-2 border-border bg-card p-3 text-muted-foreground text-sm">
-								{m.decks.importExists}
+								{messages.decks.importExists}
 							</p>
 						) : null}
 					</>
@@ -143,7 +145,7 @@ export const DeckImportScreen = ({
 
 				{ok && deck ? (
 					<p className="text-muted-foreground">
-						{interpolate(m.decks.importedBody, {
+						{interpolate(messages.decks.importedBody, {
 							name: deck.name,
 							count: deck.words.length,
 						})}
@@ -151,17 +153,19 @@ export const DeckImportScreen = ({
 				) : null}
 
 				{state === "invalid" ? (
-					<p className="text-muted-foreground">{m.decks.importFailedBody}</p>
+					<p className="text-muted-foreground">
+						{messages.decks.importFailedBody}
+					</p>
 				) : null}
 
 				{state === "limit" ? (
 					<p className="text-muted-foreground">
-						{interpolate(m.decks.limitError, { max: MAX_DECKS })}
+						{interpolate(messages.decks.limitError, { max: MAX_DECKS })}
 					</p>
 				) : null}
 
 				{state === "storage" ? (
-					<p className="text-muted-foreground">{m.decks.saveError}</p>
+					<p className="text-muted-foreground">{messages.decks.saveError}</p>
 				) : null}
 
 				{settled ? (
@@ -169,13 +173,13 @@ export const DeckImportScreen = ({
 						{ok ? (
 							<Button asChild variant="sticker">
 								<Link params={{ lang }} to="/$lang/decks">
-									{m.decks.importSee}
+									{messages.decks.importSee}
 								</Link>
 							</Button>
 						) : null}
 						<Button asChild variant={ok ? "outline" : "sticker"}>
 							<Link params={{ lang }} to="/$lang">
-								{m.decks.importHome}
+								{messages.decks.importHome}
 							</Link>
 						</Button>
 					</div>

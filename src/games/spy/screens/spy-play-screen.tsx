@@ -25,7 +25,7 @@ export const SpyPlayScreen = ({
 	playersParam: string;
 	spyCount: number;
 }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 	const navigate = useNavigate();
 
 	// Stable identity: the round memoizes the spy list from these names.
@@ -64,7 +64,7 @@ export const SpyPlayScreen = ({
 			{round.phase === "deal" ? (
 				<DealPanel
 					isSpy={round.isSpy}
-					m={m}
+					messages={messages}
 					onHoldEnd={() => round.setRevealed(false)}
 					onHoldStart={() => {
 						round.setRevealed(true);
@@ -83,7 +83,7 @@ export const SpyPlayScreen = ({
 
 			{round.phase === "handoff" ? (
 				<HandoffPanel
-					m={m}
+					messages={messages}
 					name={round.nextPlayerName}
 					remainingMs={round.handoffMs}
 				/>
@@ -91,7 +91,7 @@ export const SpyPlayScreen = ({
 
 			{round.phase === "discuss" ? (
 				<DiscussPanel
-					m={m}
+					messages={messages}
 					onTogglePause={() => round.setPaused((value) => !value)}
 					onVote={() => round.setPhase("vote")}
 					paused={round.paused}
@@ -104,7 +104,7 @@ export const SpyPlayScreen = ({
 				<VotePanel
 					accused={round.accused}
 					accusedName={round.accusedName}
-					m={m}
+					messages={messages}
 					onAccuse={round.setAccused}
 					onReveal={() => round.setPhase("reveal")}
 					players={players}
@@ -117,7 +117,7 @@ export const SpyPlayScreen = ({
 					caught={round.caught}
 					isFetching={round.isFetching}
 					lang={lang}
-					m={m}
+					messages={messages}
 					onAgain={round.again}
 					onChangePlayers={changePlayers}
 					spies={round.spies}

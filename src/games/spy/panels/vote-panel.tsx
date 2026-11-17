@@ -6,14 +6,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";
 
 export const VotePanel = ({
-	m,
+	messages,
 	players,
 	accused,
 	accusedName,
 	onAccuse,
 	onReveal,
 }: {
-	m: Messages;
+	messages: Messages;
 	players: string[];
 	accused: number | null;
 	accusedName: string;
@@ -24,9 +24,9 @@ export const VotePanel = ({
 		<section className="flex flex-1 flex-col gap-6">
 			<div className="flex flex-col gap-1.5">
 				<h1 className="font-display font-extrabold text-4xl uppercase leading-none">
-					{m.spy.voteTitle}
+					{messages.spy.voteTitle}
 				</h1>
-				<p className="text-muted-foreground">{m.spy.voteBody}</p>
+				<p className="text-muted-foreground">{messages.spy.voteBody}</p>
 			</div>
 
 			<ul className="grid grid-cols-2 gap-3">
@@ -76,7 +76,7 @@ export const VotePanel = ({
 						size="lg"
 						variant="outline"
 					>
-						{m.spy.pickFirst}
+						{messages.spy.pickFirst}
 					</Button>
 				) : (
 					<Button
@@ -86,7 +86,7 @@ export const VotePanel = ({
 						variant="sticker"
 					>
 						<span className="truncate">
-							{interpolate(m.spy.revealAccused, { name: accusedName })}
+							{interpolate(messages.spy.revealAccused, { name: accusedName })}
 						</span>
 					</Button>
 				)}

@@ -9,26 +9,26 @@ const MIN_NAME_LENGTH = 3;
  * Returns the message to show, or `null` when the name can be added.
  */
 export const validatePlayerName = ({
-	m,
+	messages,
 	name,
 	players,
 }: {
-	m: Messages;
+	messages: Messages;
 	name: string;
 	players: string[];
 }): string | null => {
 	if (players.length >= MAX_PLAYERS) {
-		return interpolate(m.spy.maxPlayers, { max: MAX_PLAYERS });
+		return interpolate(messages.spy.maxPlayers, { max: MAX_PLAYERS });
 	}
 
 	if (name.length < MIN_NAME_LENGTH) {
-		return interpolate(m.spy.nameTooShort, { min: MIN_NAME_LENGTH });
+		return interpolate(messages.spy.nameTooShort, { min: MIN_NAME_LENGTH });
 	}
 
 	const key = name.toLocaleLowerCase();
 	const isTaken = players.some((player) => player.toLocaleLowerCase() === key);
 	if (isTaken) {
-		return m.spy.duplicateNames;
+		return messages.spy.duplicateNames;
 	}
 
 	return null;

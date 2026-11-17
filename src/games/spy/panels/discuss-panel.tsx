@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";
 
 export const DiscussPanel = ({
-	m,
+	messages,
 	starter,
 	remainingMs,
 	paused,
 	onTogglePause,
 	onVote,
 }: {
-	m: Messages;
+	messages: Messages;
 	/** Picked at random each round, so nobody has to volunteer first. */
 	starter: string;
 	remainingMs: number;
@@ -33,11 +33,11 @@ export const DiscussPanel = ({
 	return (
 		<section className="flex flex-1 flex-col items-center gap-5 text-center">
 			<h1 className="font-display font-extrabold text-4xl uppercase leading-none">
-				{m.spy.discussTitle}
+				{messages.spy.discussTitle}
 			</h1>
 
 			<p className="flex max-w-full items-center gap-2 rounded-full border-2 border-foreground bg-card py-1.5 pr-1.5 pl-4">
-				<span className="font-bold text-sm">{m.spy.starter}</span>
+				<span className="font-bold text-sm">{messages.spy.starter}</span>
 				<span className="truncate rounded-full border-2 border-foreground bg-accent-fuchsia px-3 py-0.5 font-extrabold text-accent-ink uppercase">
 					{starter}
 				</span>
@@ -60,14 +60,16 @@ export const DiscussPanel = ({
 						{formatClock(remaining)}
 					</span>
 					<span className="font-bold text-muted-foreground text-sm">
-						{interpolate(m.spy.clockOf, {
+						{interpolate(messages.spy.clockOf, {
 							total: formatClock(DISCUSS_SECONDS),
 						})}
 					</span>
 				</TimerRing>
 
 				{remaining <= 0 ? (
-					<span className="font-bold text-destructive">{m.spy.timeUp}</span>
+					<span className="font-bold text-destructive">
+						{messages.spy.timeUp}
+					</span>
 				) : (
 					<Button
 						className="border-foreground"
@@ -79,15 +81,15 @@ export const DiscussPanel = ({
 						) : (
 							<PauseIcon aria-hidden="true" />
 						)}
-						{paused ? m.spy.resume : m.spy.pause}
+						{paused ? messages.spy.resume : messages.spy.pause}
 					</Button>
 				)}
 			</div>
 
-			<p className="text-muted-foreground">{m.spy.discussBody}</p>
+			<p className="text-muted-foreground">{messages.spy.discussBody}</p>
 
 			<Button className="w-full" onClick={onVote} size="lg" variant="sticker">
-				{m.spy.toVote}
+				{messages.spy.toVote}
 			</Button>
 		</section>
 	);

@@ -14,7 +14,7 @@ export const useCategorySummary = (
 	locale: Locale,
 	category: CategoryChoice,
 ): CategorySummary => {
-	const m = getMessages(locale);
+	const messages = getMessages(locale);
 	// Read the subscribed list, not localStorage: the store gives the server
 	// snapshot while hydrating, so the summary cannot flash.
 	const { decks } = useCustomDecks();
@@ -22,8 +22,8 @@ export const useCategorySummary = (
 	if (category === "mixed") {
 		return {
 			icon: ShuffleIcon,
-			name: m.category.mixed,
-			body: m.category.mixedBody,
+			name: messages.category.mixed,
+			body: messages.category.mixedBody,
 		};
 	}
 
@@ -35,12 +35,12 @@ export const useCategorySummary = (
 			return {
 				icon: SparklesIcon,
 				name: deck.name,
-				body: plural(locale, deck.words.length, m.decks.wordCount),
+				body: plural(locale, deck.words.length, messages.decks.wordCount),
 			};
 		}
 		// Deleted after being picked: show the classic deck instead.
-		return { icon: packIcons.clasico, ...m.category.packs.clasico };
+		return { icon: packIcons.clasico, ...messages.category.packs.clasico };
 	}
 
-	return { icon: packIcons[category], ...m.category.packs[category] };
+	return { icon: packIcons[category], ...messages.category.packs[category] };
 };

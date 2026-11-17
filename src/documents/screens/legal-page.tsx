@@ -22,7 +22,7 @@ const SECTION_ORDER = [
 type SectionId = (typeof SECTION_ORDER)[number];
 
 export const LegalPage = ({ lang }: { lang: Locale }) => {
-	const m = getMessages(lang);
+	const messages = getMessages(lang);
 
 	// Each section knows its anchor, its number and its colour from one place.
 	const sectionProps = (id: SectionId) => {
@@ -33,67 +33,79 @@ export const LegalPage = ({ lang }: { lang: Locale }) => {
 	return (
 		<DocumentPage
 			accent="cyan"
-			kicker={m.legal.kicker}
+			kicker={messages.legal.kicker}
 			lang={lang}
-			title={m.legal.title}
+			title={messages.legal.title}
 			to="/$lang/legal"
 		>
 			<p className="text-lg text-muted-foreground leading-relaxed">
-				{m.legal.intro}
+				{messages.legal.intro}
 			</p>
 
-			<LegalSummary items={m.legal.summary} title={m.legal.summaryTitle} />
+			<LegalSummary
+				items={messages.legal.summary}
+				title={messages.legal.summaryTitle}
+			/>
 
 			<p className="rounded-xl border-2 border-foreground border-dashed px-4 py-3">
-				{m.legal.notLawyers}
+				{messages.legal.notLawyers}
 			</p>
 
-			<nav aria-label={m.legal.indexLabel} className="flex flex-wrap gap-2">
+			<nav
+				aria-label={messages.legal.indexLabel}
+				className="flex flex-wrap gap-2"
+			>
 				{SECTION_ORDER.map((id) => (
 					<a
 						className="flex min-h-11 items-center rounded-full border-2 border-border bg-card px-4 font-bold text-sm"
 						href={`#${id}`}
 						key={id}
 					>
-						{m.legal.sections[id]}
+						{messages.legal.sections[id]}
 					</a>
 				))}
 			</nav>
 
-			<DocumentSection {...sectionProps("terms")} title={m.legal.termsTitle}>
-				<p>{m.legal.termsBody}</p>
+			<DocumentSection
+				{...sectionProps("terms")}
+				title={messages.legal.termsTitle}
+			>
+				<p>{messages.legal.termsBody}</p>
 			</DocumentSection>
 
 			<DocumentSection
 				{...sectionProps("liability")}
-				title={m.legal.liabilityTitle}
+				title={messages.legal.liabilityTitle}
 			>
-				<p>{m.legal.termsWarranty}</p>
-				<p>{m.legal.liabilityBody}</p>
+				<p>{messages.legal.termsWarranty}</p>
+				<p>{messages.legal.liabilityBody}</p>
 			</DocumentSection>
 
 			<DocumentSection
 				{...sectionProps("privacy")}
-				title={m.legal.privacyTitle}
+				title={messages.legal.privacyTitle}
 			>
-				<p className="font-bold">{m.legal.privacyIntro}</p>
-				<DocumentList icon={CheckIcon} items={m.legal.privacyList} />
+				<p className="font-bold">{messages.legal.privacyIntro}</p>
+				<DocumentList icon={CheckIcon} items={messages.legal.privacyList} />
 			</DocumentSection>
 
-			<DocumentSection {...sectionProps("data")} title={m.legal.dataTitle}>
-				<DocumentList icon={XIcon} items={m.legal.dataList} />
+			<DocumentSection
+				{...sectionProps("data")}
+				title={messages.legal.dataTitle}
+			>
+				<DocumentList icon={XIcon} items={messages.legal.dataList} />
 			</DocumentSection>
 
 			<DocumentSection
 				{...sectionProps("cookies")}
-				title={m.legal.cookiesTitle}
+				title={messages.legal.cookiesTitle}
 			>
-				<p>{m.legal.cookiesBody}</p>
+				<p>{messages.legal.cookiesBody}</p>
 			</DocumentSection>
 
-			<DocumentSection {...sectionProps("faq")} title={m.legal.faqTitle}>
+			<DocumentSection {...sectionProps("faq")} title={messages.legal.faqTitle}>
 				<dl className="flex flex-col gap-3">
-					{m.legal.faq.map((item) => (
+					{messages.legal.faq.map((item) => (
 						<div
 							className="flex flex-col gap-1 rounded-xl rounded-bl-sm border-2 border-foreground px-4 py-3"
 							key={item.q}
@@ -107,23 +119,23 @@ export const LegalPage = ({ lang }: { lang: Locale }) => {
 
 			<DocumentSection
 				{...sectionProps("changes")}
-				title={m.legal.changesTitle}
+				title={messages.legal.changesTitle}
 			>
-				<p>{m.legal.changesBody}</p>
+				<p>{messages.legal.changesBody}</p>
 			</DocumentSection>
 
 			<DocumentSection
 				{...sectionProps("openSource")}
-				title={m.legal.openSourceTitle}
+				title={messages.legal.openSourceTitle}
 			>
-				<p>{m.legal.openSourceBody}</p>
+				<p>{messages.legal.openSourceBody}</p>
 				<ExternalLink className="w-fit" href={app.repo}>
 					GitHub
 				</ExternalLink>
 			</DocumentSection>
 
 			<footer className="mt-auto border-border border-t-2 pt-4 text-muted-foreground text-sm">
-				{m.legal.footer}
+				{messages.legal.footer}
 			</footer>
 		</DocumentPage>
 	);

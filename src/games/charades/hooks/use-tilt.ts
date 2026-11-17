@@ -15,10 +15,9 @@ const TILT_RELEASE_RATIO = 0.4;
 /** The starting baseline averages this long of samples, so one jolt at "go"
  *  cannot skew it (ms). */
 const CALIBRATION_MS = 250;
-/** A phone held still this long is resting: that pose becomes neutral (ms). */
-const REST_MS = 400;
-/** m/s² the reading may wander and still count as resting. */
-const REST_TOLERANCE = 0.6;
+/** Share of the gap to the reading that neutral closes per sample (~60Hz)
+ *  while the phone is near it: catches up with a posture in about a second. */
+const BASELINE_FOLLOW_RATE = 0.02;
 
 type TiltOptions = {
 	enabled: boolean;
@@ -39,14 +38,14 @@ type TiltOptions = {
  * forward turns the screen toward the floor, which drops z below the baseline
  * → "down"; leaning back turns it toward the ceiling and raises z → "up".
  *
- * Neutral follows the player: whenever the phone rests (still for 400ms) short
- * of the threshold, that pose becomes the baseline and the next gesture is
- * armed. Without it, a player whose posture drifted after a tilt stayed locked
- * out until they found the exact starting angle again.
+ * Neutral follows the player's posture, but only while the phone is near it:
+ * without that, a player whose posture drifted stayed locked out until they
+ * found the exact starting angle again. A held tilt is never adopted as
+ * neutral, or straightening up afterwards would read as the opposite gesture.
  *
  * Spam guards: the tilt must hold for 120ms, the phone must return near neutral
- * (hysteresis at 40% of the threshold) or come to rest before the next gesture,
- * and two answers are at least 1.1s apart.
+ * (hysteresis at 40% of the threshold) before the next gesture, and two answers
+ * are at least 1.1s apart.
  */
 export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 	const baseline = useRef<number | null>(null);
@@ -56,8 +55,6 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 	const calibrationStart = useRef<number | null>(null);
 	const calibrationSum = useRef(0);
 	const calibrationCount = useRef(0);
-	const restAnchor = useRef<number | null>(null);
-	const restSince = useRef(0);
 	const armed = useRef(true);
 	const lastFire = useRef(0);
 	const pastSince = useRef<number | null>(null);
@@ -111,26 +108,12 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 				return;
 			}
 
-			// Rest: the reading has stayed inside a small band for a while.
-			const hasMoved =
-				restAnchor.current === null ||
-				Math.abs(value - restAnchor.current) > REST_TOLERANCE;
-			if (hasMoved) {
-				restAnchor.current = value;
-				restSince.current = now;
-			}
-			const isResting = now - restSince.current >= REST_MS;
-			const isShortOfThreshold =
-				Math.abs(value - baseline.current) < TILT_THRESHOLD;
-			if (isResting && isShortOfThreshold) {
-				baseline.current = value;
-			}
-
 			const difference = value - baseline.current;
 
 			// Hysteresis: re-arm only once the phone is close to neutral again, so
 			// jitter around the threshold cannot fire twice.
 			if (Math.abs(difference) < TILT_THRESHOLD * TILT_RELEASE_RATIO) {
+				baseline.current += BASELINE_FOLLOW_RATE * difference;
 				armed.current = true;
 				pastSince.current = null;
 				pastDirection.current = null;
@@ -176,8 +159,6 @@ export const useTilt = ({ enabled, onTilt }: TiltOptions) => {
 		calibrationStart.current = null;
 		calibrationSum.current = 0;
 		calibrationCount.current = 0;
-		restAnchor.current = null;
-		restSince.current = 0;
 		armed.current = true;
 		pastSince.current = null;
 		pastDirection.current = null;

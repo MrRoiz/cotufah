@@ -1,8 +1,7 @@
 import { RotateCcwIcon, UsersIcon } from "lucide-react";
 import type { Locale } from "@/config/app";
 import { PlayerAvatar } from "@/games/components/player-avatar";
-import type { Messages } from "@/i18n";
-import { interpolate, plural } from "@/i18n";
+import { formatList, interpolate, type Messages, plural } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/button";
 
@@ -15,7 +14,6 @@ export const RevealPanel = ({
 	caught,
 	accusedName,
 	spies,
-	spyList,
 	word,
 	isFetching,
 	onAgain,
@@ -26,12 +24,16 @@ export const RevealPanel = ({
 	caught: boolean;
 	accusedName: string;
 	spies: Spy[];
-	spyList: string;
 	word: string;
 	isFetching: boolean;
 	onAgain: () => void;
 	onChangePlayers: () => void;
 }) => {
+	const spyList = formatList(
+		lang,
+		spies.map((spy) => spy.name),
+	);
+
 	return (
 		<section className="flex flex-1 flex-col gap-5">
 			<div className="flex flex-1 flex-col justify-center gap-5">

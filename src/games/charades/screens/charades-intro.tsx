@@ -38,7 +38,7 @@ export const CharadesIntro = ({
 	return (
 		<section className="flex flex-1 flex-col gap-5">
 			<div className="flex items-center justify-between gap-3 pt-2">
-				<BackLink label={m.common.back} lang={lang} />
+				<BackLink lang={lang} />
 				<span className="flex items-center gap-2 rounded-full border-2 border-border bg-card px-3 py-1.5 font-extrabold text-sm">
 					{probing ? (
 						<Loader2Icon aria-hidden="true" className="size-4 animate-spin" />

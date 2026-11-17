@@ -1,13 +1,7 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-
-/** Complete Tailwind classes: they must stay literal for the scanner. */
-const MARKER_FILLS = [
-	"bg-accent-cyan",
-	"bg-accent-lime",
-	"bg-accent-fuchsia",
-] as const;
+import { accentFill } from "@/ui/accent-fill";
 
 /**
  * A titled block of document prose as a card, with a round marker (a number
@@ -38,7 +32,7 @@ export const DocumentSection = ({
 					aria-hidden="true"
 					className={cn(
 						"flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-foreground text-accent-ink text-base",
-						MARKER_FILLS[index % MARKER_FILLS.length],
+						accentFill(index),
 					)}
 				>
 					{marker}

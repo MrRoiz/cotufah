@@ -24,15 +24,7 @@ export const mergeWords = (
 		}
 
 		const key = word.toLocaleLowerCase();
-		const skipped: WordProblem | null =
-			words.length >= MAX_WORDS
-				? "full"
-				: word.length > MAX_WORD
-					? "tooLong"
-					: seen.has(key)
-						? "taken"
-						: null;
-
+		const skipped = findProblem({ word, key, words, seen });
 		if (skipped) {
 			problem ??= skipped;
 			continue;
@@ -42,6 +34,30 @@ export const mergeWords = (
 	}
 
 	return { words, problem };
+};
+
+/** Why `word` cannot join `words`, or null when it can. */
+const findProblem = ({
+	word,
+	key,
+	words,
+	seen,
+}: {
+	word: string;
+	key: string;
+	words: string[];
+	seen: Set<string>;
+}): WordProblem | null => {
+	if (words.length >= MAX_WORDS) {
+		return "full";
+	}
+	if (word.length > MAX_WORD) {
+		return "tooLong";
+	}
+	if (seen.has(key)) {
+		return "taken";
+	}
+	return null;
 };
 
 /** A pasted list: one word per line, or separated by commas. */

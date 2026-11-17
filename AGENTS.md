@@ -97,7 +97,7 @@ src/
 │  └─ charades/
 │     ├─ rules.ts         # durations, phases, answer type
 │     ├─ duration-label.ts  # "90 seconds" / "2 minutes"
-│     ├─ components/{duration-field,gesture-cards,forehead-illustration}.tsx
+│     ├─ components/{duration-field,gesture-cards,forehead-illustration,tap-zones,tilt-hints}.tsx
 │     ├─ screens/{charades-setup,charades-play-screen,charades-play-stage}.tsx
 │     ├─ screens/{charades-countdown,charades-intro,charades-results}.tsx
 │     └─ hooks/{use-charades-round,use-tilt,use-motion-probe}.ts
@@ -173,9 +173,10 @@ way around the others.
 
 The domain's own modules stay at its root, because they are what the folder is about:
 `games.ts` (the game catalog), `rules.ts` (fixed values, phases, validation),
-`contract.ts` + `categories.ts` (the data shape and its taxonomy), `assign-spies.ts`,
-`create-players-schema.ts`, and the deck modules (`custom-decks.ts`, `share-deck.ts`,
-`deflate.ts`, `pack-icons.ts`, `get-round-fn.ts`). Low-level helpers shared by several domains
+`contract.ts` + `categories.ts` (the data shape and its taxonomy), `last-round.ts`,
+`assign-spies.ts`, `validate-player-name.ts`, `duration-label.ts`, and the deck modules
+(`custom-decks.ts`, `share-deck.ts`, `deflate.ts`, `merge-words.ts`, `pack-icons.ts`,
+`get-round-fn.ts`). Low-level helpers shared by several domains
 live below their consumers in `lib/` (`sound`, `haptic`, `motion-sensor`, `pick`, `utils`).
 `ui/` is a flat primitive library and stays flat on purpose.
 
@@ -373,11 +374,11 @@ is used. After adding, always check the new file:
 - strip `"use client"` directives (not a Next app);
 - the registry may add `cn`/`next-themes` back to `package.json` — remove them;
 - keep only what the screens use: unused exports, variants nobody selects and props fixed at
-  one value are dead code. `Field`, `DropdownMenu` and `Card` were trimmed this way; add the
+  one value are dead code. `DropdownMenu` and `Card` were trimmed this way; add the
   prop back when a second real caller needs it.
 
 Some primitives are vendored for the styleguide only (`Dialog`, `Tabs`, `Skeleton`,
-`Separator` and `Card`); prefer composing the ones a screen already uses over adding another.
+`Separator`, `Card` and `Badge`); prefer composing the ones a screen already uses over adding another.
 When a screen would otherwise hand-roll a control that the registry ships, say which component
 you would add and why before installing it.
 

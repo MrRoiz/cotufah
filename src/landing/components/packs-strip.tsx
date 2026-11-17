@@ -3,13 +3,7 @@ import { packChoices } from "@/decks/categories";
 import { packIcons } from "@/decks/pack-icons";
 import { getMessages, interpolate } from "@/i18n";
 import { cn } from "@/lib/utils";
-
-/** Complete Tailwind classes: they must stay literal for the scanner. */
-const PACK_ACCENTS = [
-	"bg-accent-lime",
-	"bg-accent-cyan",
-	"bg-accent-fuchsia",
-] as const;
+import { accentFill } from "@/ui/accent-fill";
 
 /** Every deck a round can draw from, as one wrap of chips. */
 export const PacksStrip = ({ lang }: { lang: Locale }) => {
@@ -38,7 +32,7 @@ export const PacksStrip = ({ lang }: { lang: Locale }) => {
 							<span
 								className={cn(
 									"flex size-7 items-center justify-center rounded-full border-2 border-foreground text-accent-ink",
-									PACK_ACCENTS[index % PACK_ACCENTS.length],
+									accentFill(index),
 								)}
 							>
 								<Icon aria-hidden="true" className="size-3.5" />

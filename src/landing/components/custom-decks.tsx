@@ -4,14 +4,8 @@ import { QrCodeIcon } from "lucide-react";
 import type { Locale } from "@/config/app";
 import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
+import { accentFill } from "@/ui/accent-fill";
 import { SectionHeading } from "@/ui/section-heading";
-
-/** Complete Tailwind classes: they must stay literal for the scanner. */
-const WORD_FILLS = [
-	"bg-accent-lime",
-	"bg-accent-cyan",
-	"bg-accent-fuchsia",
-] as const;
 
 /**
  * "Write your own words": the pitch, a link to the editor, and an example
@@ -56,7 +50,7 @@ export const CustomDecks = ({ lang }: { lang: Locale }) => {
 							<span
 								className={cn(
 									"rounded-full border-2 border-foreground px-2.5 py-0.5 font-extrabold text-accent-ink text-sm",
-									WORD_FILLS[index % WORD_FILLS.length],
+									accentFill(index),
 								)}
 								key={word}
 							>

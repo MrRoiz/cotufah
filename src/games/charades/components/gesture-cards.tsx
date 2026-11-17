@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 type Gesture = { icon: LucideIcon; label: string; hint: string; fill: string };
 
 /** Tilt is the normal way to answer; tap halves are the no-sensor fallback. */
-export type AnswerMode = "tilt" | "tap";
+type AnswerMode = "tilt" | "tap";
 
 const gesturesFor = (m: Messages, mode: AnswerMode): Gesture[] =>
 	mode === "tilt"
@@ -20,13 +20,13 @@ const gesturesFor = (m: Messages, mode: AnswerMode): Gesture[] =>
 				{
 					icon: ArrowDownIcon,
 					label: m.charades.tiltCorrect,
-					hint: m.charades.tiltCorrectHint,
+					hint: m.charades.correct,
 					fill: "bg-accent-lime",
 				},
 				{
 					icon: ArrowUpIcon,
 					label: m.charades.tiltPass,
-					hint: m.charades.tiltPassHint,
+					hint: m.charades.pass,
 					fill: "bg-accent-fuchsia",
 				},
 			]

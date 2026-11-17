@@ -9,17 +9,17 @@ export const VotePanel = ({
 	m,
 	players,
 	accused,
+	accusedName,
 	onAccuse,
 	onReveal,
 }: {
 	m: Messages;
 	players: string[];
 	accused: number | null;
+	accusedName: string;
 	onAccuse: (index: number) => void;
 	onReveal: () => void;
 }) => {
-	const accusedName = accused === null ? null : players[accused];
-
 	return (
 		<section className="flex flex-1 flex-col gap-6">
 			<div className="flex flex-col gap-1.5">
@@ -69,7 +69,7 @@ export const VotePanel = ({
 			</ul>
 
 			<div className="mt-auto">
-				{accusedName === null ? (
+				{accused === null ? (
 					<Button
 						className="w-full border-dashed"
 						disabled

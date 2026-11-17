@@ -1,6 +1,8 @@
-import { ArrowDownIcon, ArrowUpIcon, CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, XIcon } from "lucide-react";
 
 import type { Locale } from "@/config/app";
+import { TapZones } from "@/games/charades/components/tap-zones";
+import { TiltHints } from "@/games/charades/components/tilt-hints";
 import { TimerBar } from "@/games/components/timer-bar";
 import {
 	FINAL_SECONDS,
@@ -92,41 +94,9 @@ export const CharadesPlayStage = ({
 			</div>
 
 			{zonesVisible ? (
-				<div className="absolute inset-0 z-10 flex">
-					<button
-						aria-label={m.charades.pass}
-						className="flex flex-1 items-end justify-center pb-10 active:bg-accent-fuchsia/15"
-						onClick={() => onAnswer(false)}
-						type="button"
-					>
-						<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-fuchsia px-4 py-2 font-bold text-accent-fuchsia text-sm">
-							<XIcon aria-hidden="true" />
-							{m.charades.pass}
-						</span>
-					</button>
-					<button
-						aria-label={m.charades.correct}
-						className="flex flex-1 items-end justify-center pb-10 active:bg-accent-lime/20"
-						onClick={() => onAnswer(true)}
-						type="button"
-					>
-						<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-ink bg-accent-lime px-4 py-2 font-bold text-accent-ink text-sm">
-							<CheckIcon aria-hidden="true" />
-							{m.charades.correct}
-						</span>
-					</button>
-				</div>
+				<TapZones m={m} onAnswer={onAnswer} />
 			) : (
-				<div className="flex w-full items-center justify-between gap-3">
-					<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-fuchsia px-3.5 py-1.5 font-extrabold text-accent-fuchsia text-sm">
-						<ArrowUpIcon aria-hidden="true" className="size-4" />
-						{`${m.charades.tiltPass}: ${m.charades.tiltPassHint}`}
-					</span>
-					<span className="inline-flex items-center gap-2 rounded-full border-2 border-accent-lime px-3.5 py-1.5 font-extrabold text-accent-lime text-sm">
-						<ArrowDownIcon aria-hidden="true" className="size-4" />
-						{`${m.charades.tiltCorrect}: ${m.charades.tiltCorrectHint}`}
-					</span>
-				</div>
+				<TiltHints m={m} />
 			)}
 		</div>
 	);

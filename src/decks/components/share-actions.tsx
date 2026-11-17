@@ -1,5 +1,5 @@
 import { CheckIcon, CopyIcon, Share2Icon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Messages } from "@/i18n";
 import { Button } from "@/ui/button";
@@ -24,24 +24,21 @@ export const ShareActions = ({
 	disabled: boolean;
 }) => {
 	const [copied, setCopied] = useState(false);
-	const copyTimer = useRef<number | null>(null);
 	const canShareNatively =
 		typeof navigator !== "undefined" && typeof navigator.share === "function";
 
-	useEffect(
-		() => () => {
-			if (copyTimer.current !== null) {
-				window.clearTimeout(copyTimer.current);
-			}
-		},
-		[],
-	);
+	useEffect(() => {
+		if (!copied) {
+			return;
+		}
+		const timer = setTimeout(() => setCopied(false), COPIED_MS);
+		return () => clearTimeout(timer);
+	}, [copied]);
 
 	const copy = async () => {
 		try {
 			await navigator.clipboard.writeText(url);
 			setCopied(true);
-			copyTimer.current = window.setTimeout(() => setCopied(false), COPIED_MS);
 		} catch {
 			// Clipboard blocked: the QR is still on screen.
 		}

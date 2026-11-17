@@ -4,13 +4,7 @@ import { DeckOption } from "@/decks/components/deck-option";
 import { packIcons } from "@/decks/pack-icons";
 import { getMessages } from "@/i18n";
 import { cn } from "@/lib/utils";
-
-/** Complete Tailwind classes: they must stay literal for the scanner. */
-const PACK_DOTS = [
-	"bg-accent-cyan",
-	"bg-accent-lime",
-	"bg-accent-fuchsia",
-] as const;
+import { accentFill } from "@/ui/accent-fill";
 
 /** The themed packs, counted and in two columns, each with its icon and one line. */
 export const ThemedPackGrid = ({
@@ -49,7 +43,7 @@ export const ThemedPackGrid = ({
 							<span
 								className={cn(
 									"flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-foreground text-accent-ink",
-									PACK_DOTS[index % PACK_DOTS.length],
+									accentFill(index),
 								)}
 							>
 								<Icon aria-hidden="true" className="size-4" />

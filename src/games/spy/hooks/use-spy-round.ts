@@ -8,7 +8,6 @@ import { useRoundCues } from "@/games/hooks/use-round-cues";
 import { useWakeLock } from "@/games/hooks/use-wake-lock";
 import { assignSpies } from "@/games/spy/assign-spies";
 import { DISCUSS_MS, HANDOFF_MS, type SpyPhase } from "@/games/spy/rules";
-import { formatList } from "@/i18n";
 import { pick } from "@/lib/pick";
 
 /** Round state for Spy: one word, one assignment, one phase at a time. */
@@ -38,7 +37,8 @@ export const useSpyRound = ({
 	const discussTimer = useCountdown(DISCUSS_MS, phase === "discuss" && !paused);
 	const [accused, setAccused] = useState<number | null>(null);
 	// Who opens the discussion, so nobody has to volunteer the first question.
-	const [starter, setStarter] = useState(() => pick(players, 1)[0] ?? "");
+	const pickStarter = () => pick(players, 1)[0] ?? "";
+	const [starter, setStarter] = useState(pickStarter);
 
 	useRoundCues({
 		// The clock is frozen while paused, so a pause needs no extra guard.
@@ -60,14 +60,6 @@ export const useSpyRound = ({
 				.map((seat) => ({ seat, name: players[seat] ?? "" }))
 				.filter((spy) => spy.name),
 		[assignment, players],
-	);
-	const spyList = useMemo(
-		() =>
-			formatList(
-				lang,
-				spies.map((spy) => spy.name),
-			),
-		[lang, spies],
 	);
 
 	/** Nobody but the player holding the phone may see the role. */
@@ -101,7 +93,7 @@ export const useSpyRound = ({
 		setIndex(-1);
 		hideRole();
 		setAccused(null);
-		setStarter(pick(players, 1)[0] ?? "");
+		setStarter(pickStarter());
 		discussTimer.reset();
 		setPaused(false);
 		handoffTimer.reset();
@@ -127,7 +119,6 @@ export const useSpyRound = ({
 		currentPlayer: players[index] ?? "",
 		nextPlayerName: players[index + 1] ?? "",
 		isSpy: assignment.includes(index),
-		spyList,
 		caught: accused !== null && assignment.includes(accused),
 		setPhase,
 		setRevealed,

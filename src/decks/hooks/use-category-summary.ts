@@ -7,7 +7,7 @@ import { useCustomDecks } from "@/decks/hooks/use-custom-decks";
 import { packIcons } from "@/decks/pack-icons";
 import { getMessages, plural } from "@/i18n";
 
-export type CategorySummary = { icon: LucideIcon; name: string; body: string };
+type CategorySummary = { icon: LucideIcon; name: string; body: string };
 
 /** Icon, name and one-line description of a deck choice, custom ones included. */
 export const useCategorySummary = (

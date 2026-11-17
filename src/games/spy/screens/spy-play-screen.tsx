@@ -103,6 +103,7 @@ export const SpyPlayScreen = ({
 			{round.phase === "vote" ? (
 				<VotePanel
 					accused={round.accused}
+					accusedName={round.accusedName}
 					m={m}
 					onAccuse={round.setAccused}
 					onReveal={() => round.setPhase("reveal")}
@@ -120,7 +121,6 @@ export const SpyPlayScreen = ({
 					onAgain={round.again}
 					onChangePlayers={changePlayers}
 					spies={round.spies}
-					spyList={round.spyList}
 					word={round.word ?? ""}
 				/>
 			) : null}

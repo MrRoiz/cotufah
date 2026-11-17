@@ -53,7 +53,7 @@ export const CharadesPlayScreen = ({
 		<AppShell>
 			{round.phase === "intro" ? (
 				<CharadesIntro
-					canStart={!round.isPending && round.hasWords}
+					canStart={round.hasWords}
 					isPending={round.isPending}
 					lang={lang}
 					onStart={round.startRound}

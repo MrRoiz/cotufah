@@ -142,6 +142,9 @@ export const en = {
 		importSaveTitle: "Couldn't save it",
 		importHome: "Back home",
 		importSee: "See my decks",
+		importPreviewTitle: "Check out this deck",
+		importPreviewBody:
+			"Someone shared a deck of words for Spy and Charades. Open it to add it to your phone.",
 	},
 	home: {
 		kicker: "Party games",

@@ -17,11 +17,14 @@ export const Route = createFileRoute("/$lang/_app/decks/import")({
 		d: typeof search.d === "string" ? search.d : "",
 	}),
 	head: ({ params }) => {
-		// The outcome is only known client-side, so the static title is generic.
+		// This is the link people paste into chats, so its preview invites them in.
+		// It stays generic: decoding the deck here would put its words through the
+		// server, which the share sheet promises never happens.
 		const messages = getMessages(params.lang);
 		return pageMeta({
 			lang: params.lang,
-			title: messages.decks.title,
+			title: messages.decks.importPreviewTitle,
+			description: messages.decks.importPreviewBody,
 			noindex: true,
 		});
 	},

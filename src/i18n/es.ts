@@ -141,6 +141,9 @@ export const es: Messages = {
 		importSaveTitle: "No se pudo guardar",
 		importHome: "Volver al inicio",
 		importSee: "Ver mis barajas",
+		importPreviewTitle: "Mira esta baraja",
+		importPreviewBody:
+			"Te compartieron una baraja de palabras pa' Espía y Charadas. Ábrela y agrégala a tu celular.",
 	},
 	home: {
 		kicker: "Juegos de fiesta",

@@ -9,7 +9,6 @@ export const en = {
 	common: {
 		appTagline: "party games for your crew",
 		settings: "Settings",
-		soon: "Coming soon",
 		legal: "Legal",
 		about: "About us",
 		play: "Play",
@@ -128,6 +127,12 @@ export const en = {
 		intro:
 			"{app} is one phone passed around the room: Spy, Charades, and whatever comes next. No accounts, no installs and no loading screens that make you think it broke.",
 		cta: "Play now",
+		headline: "One phone for the whole crew",
+		promises: ["No accounts", "No installs", "No ads"],
+		sectionsLabel: "Sections",
+		newBadge: "New",
+		gamePlay: "Play {game}",
+		customCta: "Make a deck",
 		ctaDesktop: "Open it on your phone",
 		qrHint: "Scan with your phone camera",
 		qrFallback: "or type this address:",

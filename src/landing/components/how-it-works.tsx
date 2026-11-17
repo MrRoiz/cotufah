@@ -14,28 +14,32 @@ export const HowItWorks = ({ lang }: { lang: Locale }) => {
 	const m = getMessages(lang);
 
 	return (
-		<section className="flex flex-col gap-5 py-10" id="how-it-works">
-			<h2 className="font-display text-3xl uppercase">{m.home.howTitle}</h2>
-			<ol className="grid gap-x-4 gap-y-6 md:grid-cols-3">
+		<section className="flex flex-col gap-8 py-12" id="how-it-works">
+			<h2 className="font-display font-extrabold text-4xl uppercase leading-none tracking-tight md:text-5xl">
+				{m.home.howTitle}
+			</h2>
+			<ol className="grid gap-x-5 gap-y-8 md:grid-cols-3">
 				{[
 					[m.home.step1Title, m.home.step1Body],
 					[m.home.step2Title, m.home.step2Body],
 					[m.home.step3Title, m.home.step3Body],
 				].map(([title, body], index) => (
 					<li
-						className="relative flex flex-col gap-2 rounded-xl border-2 border-foreground bg-card p-5 pt-7 shadow-sticker-sm"
+						className="relative flex flex-col gap-2 rounded-xl border-2 border-foreground bg-card p-6 pt-9"
 						key={title}
 					>
 						<span
 							className={cn(
-								"absolute -top-4 left-4 flex size-10 items-center justify-center rounded-full border-2 border-foreground font-display text-lg text-accent-ink",
+								"absolute -top-5 left-5 flex size-11 items-center justify-center rounded-full border-2 border-foreground font-display font-extrabold text-accent-ink text-xl",
 								STEP_BADGES[index],
 							)}
 						>
 							{index + 1}
 						</span>
-						<span className="font-bold">{title}</span>
-						<span className="text-muted-foreground text-sm">{body}</span>
+						<span className="font-extrabold text-xl">{title}</span>
+						<span className="text-muted-foreground leading-relaxed">
+							{body}
+						</span>
 					</li>
 				))}
 			</ol>

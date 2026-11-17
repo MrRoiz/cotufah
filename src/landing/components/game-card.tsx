@@ -2,42 +2,44 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon } from "lucide-react";
 import type { Locale } from "@/config/app";
 import type { GameEntry } from "@/games/games";
-import { getMessages } from "@/i18n";
+import { getMessages, interpolate } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/ui/badge";
-import { Button } from "@/ui/button";
 
 /**
- * One game on the landing page. The CTA is a quiet outline so the marketing
- * page keeps the hero as its only filled call to action; the app list has its
- * own tile (`GameTile`).
+ * One game on the landing page, drawn like the app's own tile (gradient,
+ * icon, players) so the page shows what opening the app looks like.
  */
 export const GameCard = ({ game, lang }: { game: GameEntry; lang: Locale }) => {
 	const m = getMessages(lang);
 	const copy = m.games[game.slug];
+	const Icon = game.icon;
 
 	return (
-		<article className="flex flex-col overflow-hidden rounded-xl border-2 border-foreground bg-card">
-			<div
-				className={cn("flex flex-col gap-1 bg-linear-to-br p-5", game.gradient)}
+		<article
+			className={cn(
+				"flex flex-col gap-4 rounded-xl border-2 border-foreground bg-linear-to-br p-6 shadow-sticker",
+				game.gradient,
+			)}
+		>
+			<div className="flex items-center justify-between gap-3">
+				<Icon aria-hidden="true" className="size-11" />
+				<span className="rounded-full border-2 border-current px-3 py-0.5 font-extrabold text-sm">
+					{copy.players}
+				</span>
+			</div>
+			<h3 className="font-display font-extrabold text-5xl uppercase leading-[0.9] tracking-tight">
+				{copy.name}
+			</h3>
+			<p className="font-bold text-lg">{copy.tagline}</p>
+			<p className="leading-relaxed">{copy.body}</p>
+			<Link
+				className="mt-auto inline-flex min-h-12 w-fit items-center gap-2 rounded-full border-2 border-foreground bg-card px-5 font-extrabold text-card-foreground"
+				params={{ lang }}
+				to={game.setupTo}
 			>
-				<h3 className="font-display text-2xl uppercase">{copy.name}</h3>
-				<p className="font-bold text-sm opacity-90">{copy.tagline}</p>
-			</div>
-			<div className="flex flex-1 flex-col gap-4 p-5">
-				<p className="text-sm">{copy.body}</p>
-				<div className="mt-auto flex flex-wrap items-center justify-between gap-3">
-					<Badge className="border-2" variant="outline">
-						{copy.players}
-					</Badge>
-					<Button asChild className="px-4" variant="outline">
-						<Link params={{ lang }} to={game.setupTo}>
-							{m.common.play}
-							<ArrowRightIcon aria-hidden="true" />
-						</Link>
-					</Button>
-				</div>
-			</div>
+				{interpolate(m.home.gamePlay, { game: copy.name })}
+				<ArrowRightIcon aria-hidden="true" className="size-5" />
+			</Link>
 		</article>
 	);
 };

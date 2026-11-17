@@ -7,9 +7,11 @@ export const SectionHeading = ({
 	subtitle: string;
 }) => {
 	return (
-		<div className="flex flex-col gap-1">
-			<h2 className="font-display text-3xl uppercase">{title}</h2>
-			<p className="text-muted-foreground">{subtitle}</p>
+		<div className="flex flex-col gap-2">
+			<h2 className="font-display font-extrabold text-4xl uppercase leading-none tracking-tight md:text-5xl">
+				{title}
+			</h2>
+			<p className="text-lg text-muted-foreground">{subtitle}</p>
 		</div>
 	);
 };

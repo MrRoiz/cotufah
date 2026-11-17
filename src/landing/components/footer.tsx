@@ -18,7 +18,7 @@ export const Footer = ({ lang }: { lang: Locale }) => {
 					v{appVersion}
 				</span>
 			</p>
-			<div className="flex items-center gap-4">
+			<div className="flex flex-wrap items-center gap-x-4 gap-y-1 whitespace-nowrap">
 				<LocaleSwitch className={textLinkClass} lang={lang} to="/$lang" />
 				<Link className={textLinkClass} params={{ lang }} to="/$lang/settings">
 					{m.common.settings}

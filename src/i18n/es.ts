@@ -8,7 +8,6 @@ export const es: Messages = {
 	common: {
 		appTagline: "juegos pa' tu parche",
 		settings: "Ajustes",
-		soon: "Pronto",
 		legal: "Legal",
 		about: "Quiénes somos",
 		play: "Jugar",
@@ -126,6 +125,12 @@ export const es: Messages = {
 		intro:
 			"{app} es un solo celular que va de mano en mano: Espía, Charadas y lo que venga. Sin cuentas, sin descargas y sin pantallas de carga que te hagan pensar que se dañó.",
 		cta: "Jugar ahora",
+		headline: "Un celular pa' todo el parche",
+		promises: ["Sin cuentas", "Sin descargas", "Sin anuncios"],
+		sectionsLabel: "Secciones",
+		newBadge: "Nuevo",
+		gamePlay: "Jugar {game}",
+		customCta: "Crear una baraja",
 		ctaDesktop: "Ábrelo en tu celular",
 		qrHint: "Escanea con la cámara del celular",
 		qrFallback: "o escribe esta dirección:",
